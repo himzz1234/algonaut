@@ -2,6 +2,7 @@ export interface AlgorithmMeta {
   name: string;
   category: "sorting" | "searching" | "linkedlist" | "graph";
   description: string;
+  shortDescription: string;
   complexities: {
     best: string;
     average: string;
@@ -9,6 +10,8 @@ export interface AlgorithmMeta {
     space: string;
   };
   pseudocode?: string[];
+  featured?: boolean;
+  href: string;
 }
 
 export const algorithms: Record<string, AlgorithmMeta> = {
@@ -17,6 +20,7 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     category: "sorting",
     description:
       "Bubble Sort repeatedly compares adjacent elements and swaps them if they are in the wrong order. It continues until the array is sorted.",
+    shortDescription: "Simple sort by swapping adjacent elements.",
     complexities: {
       best: "O(N)",
       average: "O(N²)",
@@ -29,12 +33,14 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "      if arr[j] > arr[j+1]:",
       "         swap(arr[j], arr[j+1])",
     ],
+    href: "/sorting?algorithm=bubble-sort",
   },
   "quick-sort": {
     name: "Quick Sort",
     category: "sorting",
     description:
       "Quick Sort is a divide-and-conquer algorithm. It picks a pivot and partitions the array around the pivot, recursively sorting the partitions.",
+    shortDescription: "Divide-and-conquer sorting using a pivot.",
     complexities: {
       best: "O(N log N)",
       average: "O(N log N)",
@@ -49,12 +55,15 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "   right = elements > pivot",
       "   return quicksort(left) + pivot + quicksort(right)",
     ],
+    featured: true,
+    href: "/sorting?algorithm=quick-sort",
   },
   "insertion-sort": {
     name: "Insertion Sort",
     category: "sorting",
     description:
       "Insertion Sort builds the sorted array one element at a time by repeatedly inserting the current element into its correct position among the already-sorted elements.",
+    shortDescription: "Builds sorted array one item at a time.",
     complexities: {
       best: "O(N)",
       average: "O(N²)",
@@ -71,13 +80,15 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "           j = j - 1",
       "       arr[j + 1] = key",
     ],
+    featured: true,
+    href: "/sorting?algorithm=insertion-sort",
   },
-
   "selection-sort": {
     name: "Selection Sort",
     category: "sorting",
     description:
       "Selection Sort repeatedly selects the smallest element from the unsorted portion and swaps it with the first unsorted element, expanding the sorted portion one step at a time.",
+    shortDescription: "Repeatedly selects the smallest element.",
     complexities: {
       best: "O(N²)",
       average: "O(N²)",
@@ -93,13 +104,14 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "               minIndex = j",
       "       swap arr[i] with arr[minIndex]",
     ],
+    href: "/sorting?algorithm=selection-sort",
   },
-
   "merge-sort": {
     name: "Merge Sort",
     category: "sorting",
     description:
       "Merge Sort is a divide-and-conquer algorithm. It recursively splits the array into halves, sorts each half, and then merges the sorted halves back together.",
+    shortDescription: "Splits array and merges sorted halves.",
     complexities: {
       best: "O(N log N)",
       average: "O(N log N)",
@@ -126,13 +138,14 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "   append remaining elements of left and right to result",
       "   return result",
     ],
+    href: "/sorting?algorithm=merge-sort",
   },
-
   "linear-search": {
     name: "Linear Search",
     category: "searching",
     description:
       "Linear Search scans each element in the array sequentially until the target is found or the end of the array is reached.",
+    shortDescription: "Scans elements sequentially for target.",
     complexities: {
       best: "O(1)",
       average: "O(N)",
@@ -146,6 +159,8 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "           return i",
       "   return -1",
     ],
+    href: "/searching?algorithm=linear-search",
+    featured: true,
   },
 
   "binary-search": {
@@ -153,6 +168,7 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     category: "searching",
     description:
       "Binary Search repeatedly divides the search interval in half. It compares the target with the middle element and eliminates half of the array each step, until the element is found or the interval is empty.",
+    shortDescription: "Halves search space to find target fast.",
     complexities: {
       best: "O(1)",
       average: "O(log N)",
@@ -172,5 +188,61 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "           right = mid - 1",
       "   return -1",
     ],
+    featured: true,
+    href: "/searching?algorithm=binary-search",
+  },
+  dfs: {
+    name: "Depth-First Search (DFS)",
+    category: "graph",
+    description:
+      "Depth-First Search explores as far as possible along one branch before backtracking. It is often used to traverse or search graph/tree structures, and can be implemented using recursion or a stack.",
+    shortDescription: "Explores deep paths before backtracking.",
+    complexities: {
+      best: "O(V + E)",
+      average: "O(V + E)",
+      worst: "O(V + E)",
+      space: "O(V)",
+    },
+    pseudocode: [
+      "function DFS(graph, start):",
+      "   visited = set()",
+      "   stack = [start]",
+      "   while stack is not empty:",
+      "       node = stack.pop()",
+      "       if node not in visited:",
+      "           mark node as visited",
+      "           for neighbor in graph[node]:",
+      "               if neighbor not in visited:",
+      "                   stack.push(neighbor)",
+    ],
+    href: "/pathfinding?algorithm=dfs",
+    featured: true,
+  },
+  bfs: {
+    name: "Breadth-First Search (BFS)",
+    category: "graph",
+    description:
+      "Breadth-First Search explores the graph level by level. It visits all neighbors of a node before moving to the next level. BFS is commonly used for finding the shortest path in unweighted graphs.",
+    shortDescription: "Explores graph level by level.",
+    complexities: {
+      best: "O(V + E)",
+      average: "O(V + E)",
+      worst: "O(V + E)",
+      space: "O(V)",
+    },
+    pseudocode: [
+      "function BFS(graph, start):",
+      "   visited = set()",
+      "   queue = [start]",
+      "   while queue is not empty:",
+      "       node = queue.pop(0)",
+      "       if node not in visited:",
+      "           mark node as visited",
+      "           for neighbor in graph[node]:",
+      "               if neighbor not in visited:",
+      "                   queue.append(neighbor)",
+    ],
+    featured: true,
+    href: "/pathfinding?algorithm=bfs",
   },
 };
