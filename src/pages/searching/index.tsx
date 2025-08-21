@@ -39,6 +39,7 @@ export default function SearchingPage() {
   const [stepIndex, setStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const parseMultiplier = (label: string) => parseFloat(label.replace("x", ""));
 
@@ -81,8 +82,10 @@ export default function SearchingPage() {
           setStepIndex={setStepIndex}
           setIsPlaying={setIsPlaying}
           setSpeed={setSpeed}
+          toggleFullScreen={() => setIsFullscreen((f) => !f)}
         />
       }
+      isFullScreen={isFullscreen}
       info={<AlgorithmInfoWrapper algorithmKey={algorithm ?? ""} />}
       logs={logs}
     >
