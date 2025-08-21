@@ -124,7 +124,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
         })}
       </svg>
 
-      <div className="absolute top-5 left-5 flex flex-col items-center">
+      <div className="absolute top-5 right-5 flex flex-col items-center">
         <svg height={BAR_HEIGHT} width={BAR_WIDTH}>
           <g>
             <motion.rect
