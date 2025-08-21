@@ -36,11 +36,34 @@
 }
 
 body {
-  @apply bg-[#0F1115] text-[#FAFAFA] min-h-screen;
+  @apply text-[#FAFAFA] min-h-screen;
   font-family: "Satoshi", sans-serif;
   font-optical-sizing: auto;
+  background: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      rgba(226, 232, 240, 0.15),
+      transparent 70%
+    ),
+    #000000;
 }
 
 .no-scrollbar::-webkit-scrollbar {
   width: 0;
+}
+
+.fade-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
 }
