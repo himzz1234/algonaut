@@ -5,7 +5,7 @@ interface DropdownProps {
   options: string[];
   selected?: string;
   onSelect: (value: string) => void;
-  children: (props: { toggle: () => void; isOpen: boolean }) => ReactNode; // custom trigger
+  children: (props: { toggle: () => void; isOpen: boolean }) => ReactNode;
   placeholder?: string;
   placement?: "top" | "bottom";
 }
@@ -83,7 +83,7 @@ export default function Dropdown({
             setIsOpen(false);
           }}
           className="px-4 py-2 text-white/90 hover:text-white 
-          hover:bg-indigo-500/40 transition-all duration-200 cursor-pointer"
+          hover:bg-green-500/40 transition-all duration-200 cursor-pointer"
         >
           {option}
         </li>
