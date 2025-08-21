@@ -9,6 +9,7 @@ interface VisualizerLayoutProps {
   sidebar?: React.ReactNode;
   info?: React.ReactNode;
   logs?: string[];
+  isFullScreen: boolean;
 }
 
 export default function VisualizerLayout({
@@ -18,6 +19,7 @@ export default function VisualizerLayout({
   sidebar,
   info,
   logs = [],
+  isFullScreen,
 }: VisualizerLayoutProps) {
   const sidebarRef = useRef<HTMLDivElement | null>(null);
 
@@ -35,10 +37,38 @@ export default function VisualizerLayout({
       <Navbar />
       <section className="min-h-[calc(100vh-80px)] max-w-7xl mx-auto px-10 py-8">
         <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-8 border border-gray-700/60 rounded-lg p-4 backdrop-blur-sm">
-            <div className="h-[420px] flex items-center text-gray-500 border border-dashed border-green-600/40 rounded-t-lg rounded-b-sm">
+          <div
+            className={` border border-gray-700/60 rounded-lg p-4 
+              ${
+                isFullScreen
+                  ? "fixed inset-0 z-50 w-full h-full bg-[#0f0f14]"
+                  : "col-span-8 relative"
+              }
+            `}
+          >
+            <div
+              className={`flex items-center text-gray-500 border border-dashed border-green-600/40 rounded-t-lg rounded-b-sm 
+                ${isFullScreen ? "h-[92.5%]" : "h-[420px]"}
+              `}
+            >
               {children}
             </div>
+            {isFullScreen && (
+              <div className="absolute bottom-[12.5%] left-1/2 -translate-x-1/2 w-full">
+                <AnimatePresence mode="popLayout">
+                  <motion.p
+                    key={logs[logs.length - 1]}
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-center p-2 rounded text-xl"
+                  >
+                    {logs[logs.length - 1]}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+            )}
             {slider}
             {controls}
           </div>

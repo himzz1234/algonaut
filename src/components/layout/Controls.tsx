@@ -5,6 +5,7 @@ import { TbPlayerTrackNextFilled } from "react-icons/tb";
 import { IoSettingsSharp } from "react-icons/io5";
 import Select from "../ui/Select";
 import { MdFullscreen } from "react-icons/md";
+import { IoInformation } from "react-icons/io5";
 
 interface ControlsProps {
   stepIndex: number;
@@ -14,6 +15,7 @@ interface ControlsProps {
   setStepIndex: (i: number | ((prev: number) => number)) => void;
   setIsPlaying: (v: boolean | ((prev: boolean) => boolean)) => void;
   setSpeed: (s: string) => void;
+  toggleFullScreen: () => void;
 }
 
 export default function Controls({
@@ -24,6 +26,7 @@ export default function Controls({
   setStepIndex,
   setIsPlaying,
   setSpeed,
+  toggleFullScreen,
 }: ControlsProps) {
   const isLastStep = stepIndex === stepsLength - 1;
 
@@ -71,6 +74,12 @@ export default function Controls({
 
       <div className="space-x-2 flex items-center">
         <button className="active:scale-95 duration-150 px-3 py-2 border-[2px] border-gray-700/60 rounded hover:border-green-400 transition">
+          <IoInformation />
+        </button>
+        <button
+          onClick={toggleFullScreen}
+          className="active:scale-95 duration-150 px-3 py-2 border-[2px] border-gray-700/60 rounded hover:border-green-400 transition"
+        >
           <MdFullscreen />
         </button>
         <div className="w-auto">
