@@ -6,10 +6,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SortingPage from "./pages/sorting/index.tsx";
 import SearchingPage from "./pages/searching/index.tsx";
 import PathfindingPage from "./pages/pathfinding/index.tsx";
+import ScrollToTop from "./components/ScrollToTop.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/sorting" element={<SortingPage />} />
