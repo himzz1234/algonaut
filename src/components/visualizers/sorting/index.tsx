@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import type { Block, SortingStep } from "../../../algorithms/types";
+import { useOrientation } from "../../../hooks/useOrientation";
 
-const GAP = 10;
+const GAP = 5;
 const BAR_WIDTH = 60;
 const BAR_HEIGHT = 60;
 
@@ -12,6 +13,10 @@ type Props = {
 };
 
 export default function SortingVisualizer({ steps, stepIndex }: Props) {
+  const { isMobile } = useOrientation();
+  const barWidth = isMobile ? 50 : BAR_WIDTH;
+  const barHeight = isMobile ? 50 : BAR_HEIGHT;
+
   const [array, setArray] = useState<Block[]>([]);
   const [highlight, setHighlight] = useState<{
     ids: number[];
@@ -20,6 +25,7 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
 
   const [sorted, setSorted] = useState<number[]>([]);
   const [depths, setDepths] = useState<Record<number, number>>({});
+  const [pointers, setPointers] = useState<Record<string, number | null>>({});
 
   useEffect(() => {
     let newArray: Block[] = [];
@@ -31,6 +37,8 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
     let newSorted: number[] = [];
     let newDepths: Record<number, number> = {};
 
+    let newPointers: Record<string, number | null> = {};
+
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
       const step = steps[i];
 
@@ -40,6 +48,7 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
           newSorted = [];
           newHighlight = { ids: [], mode: null };
           newDepths = {};
+          newPointers = step.pointers ?? {};
           break;
 
         case "move": {
@@ -57,6 +66,8 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
           if (depth !== undefined) {
             ids.forEach((id) => (newDepths[id] = depth));
           }
+
+          newPointers = step.pointers ?? {};
           break;
         }
 
@@ -67,10 +78,13 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
               newDepths[id] = step.depth!;
             });
           }
+
+          newPointers = step.pointers ?? {};
           break;
 
         case "compare":
           newHighlight = { ids: step.ids ?? [], mode: "compare" };
+          newPointers = step.pointers ?? {};
           break;
 
         case "swap": {
@@ -83,16 +97,19 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
               newArray[indexA],
             ];
           }
+          newPointers = step.pointers ?? {};
           break;
         }
 
         case "mark_sorted":
           newSorted = [...new Set([...newSorted, ...(step.ids ?? [])])];
+          newPointers = step.pointers ?? {};
           break;
 
         case "done":
           newHighlight = { ids: [], mode: null };
           newDepths = {};
+          newPointers = step.pointers ?? {};
           break;
       }
     }
@@ -101,36 +118,54 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
     setHighlight(newHighlight);
     setSorted(newSorted);
     setDepths(newDepths);
+    setPointers(newPointers);
   }, [stepIndex, steps]);
 
+  const svgY =
+    steps[stepIndex].type === "init"
+      ? "50%"
+      : steps[stepIndex].type === "done"
+      ? "50%"
+      : "-100%";
+
+  const svgTranslateY =
+    steps[stepIndex].type === "init" || steps[stepIndex].type === "done"
+      ? "-50%"
+      : "-100%";
+
   return (
-    <div className="w-full h-full flex py-16 justify-center">
-      <svg
-        width={array.length * (BAR_WIDTH + GAP)}
-        height={BAR_HEIGHT}
-        style={{ overflow: "visible" }}
+    <motion.div className="w-full h-full flex py-16 justify-center items-center relative">
+      <motion.svg
+        animate={{ y: svgY, translateY: svgTranslateY }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
+        width={array.length * (barWidth + GAP)}
+        height={barHeight}
+        style={{ overflow: "visible", position: "absolute" }}
       >
         {array.map((block, i) => {
           const isHighlighted = highlight.ids.includes(block.id);
           const isKey = isHighlighted && highlight.mode === "key";
           const isCompare = isHighlighted && highlight.mode === "compare";
           const depth = depths[block.id] ?? 0;
+          const labelsAtIndex = Object.entries(pointers)
+            .filter(([, value]) => value === i)
+            .map(([label]) => label);
 
           return (
             <motion.g
               layout
               key={block.id}
-              initial={{ x: i * (BAR_WIDTH + GAP), y: 0 }}
+              initial={{ x: i * (barWidth + GAP), y: 0 }}
               animate={{
-                x: i * (BAR_WIDTH + GAP),
-                y: depth * (BAR_HEIGHT + 30),
+                x: i * (barWidth + GAP),
+                y: depth * (barHeight + 30),
               }}
               transition={{ duration: 0.5 }}
             >
               <motion.rect
                 rx={4}
-                width={BAR_WIDTH}
-                height={BAR_HEIGHT}
+                width={barWidth}
+                height={barHeight}
                 animate={{
                   fill: isKey
                     ? "#ef4444"
@@ -143,8 +178,8 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
                 transition={{ duration: 0.3 }}
               />
               <text
-                x={BAR_WIDTH / 2}
-                y={BAR_HEIGHT / 2}
+                x={barWidth / 2}
+                y={barHeight / 2}
                 fontFamily="Satoshi"
                 fontSize="16"
                 fill="white"
@@ -153,21 +188,23 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
               >
                 {block.value}
               </text>
-              <text
-                x={BAR_WIDTH / 2}
-                y={BAR_HEIGHT + 20}
-                fontFamily="Satoshi"
-                fontSize="14"
-                fill="white"
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                {block.id}
-              </text>
+              {labelsAtIndex.length > 0 && (
+                <text
+                  x={barWidth / 2}
+                  y={barHeight + 15}
+                  fontFamily="Satoshi"
+                  fontSize="14"
+                  fill="white"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                >
+                  {labelsAtIndex.join(" = ")}
+                </text>
+              )}
             </motion.g>
           );
         })}
-      </svg>
-    </div>
+      </motion.svg>
+    </motion.div>
   );
 }

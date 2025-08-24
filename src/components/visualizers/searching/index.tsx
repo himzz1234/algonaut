@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import type { Block, SearchingStep } from "../../../algorithms/types";
+import { useOrientation } from "../../../hooks/useOrientation";
 
-const GAP = 10;
+const GAP = 5;
 const BAR_WIDTH = 60;
 const BAR_HEIGHT = 60;
 
@@ -12,6 +13,10 @@ type Props = {
 };
 
 export default function SearchingVisualizer({ steps, stepIndex }: Props) {
+  const { isMobile } = useOrientation();
+  const barWidth = isMobile ? 50 : BAR_WIDTH;
+  const barHeight = isMobile ? 50 : BAR_HEIGHT;
+
   const [array, setArray] = useState<Block[]>([]);
   const [highlight, setHighlight] = useState<{
     ids: number[];
@@ -26,6 +31,8 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
     high: null,
   });
 
+  const [pointers, setPointers] = useState<Record<string, number | null>>({});
+
   useEffect(() => {
     let target = null;
     let newArray: Block[] = [];
@@ -39,6 +46,8 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
       high: null,
     };
 
+    let newPointers: Record<string, number | null> = {};
+
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
       const step = steps[i];
       switch (step.type) {
@@ -47,18 +56,22 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
           newArray = step.array ?? [];
           newHighlight = { ids: [], mode: null };
           newRange = { low: null, high: null };
+          newPointers = step.pointers ?? {};
           break;
 
         case "set-range":
           newRange = { low: step.low, high: step.high };
+          newPointers = step.pointers ?? {};
           break;
 
         case "check":
           newHighlight = { ids: [step.id], mode: "check" };
+          newPointers = step.pointers ?? {};
           break;
 
         case "found":
           newHighlight = { ids: [step.id], mode: "found" };
+          newPointers = step.pointers ?? {};
           break;
       }
     }
@@ -67,13 +80,14 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
     setArray(newArray);
     setHighlight(newHighlight);
     setRange(newRange);
+    setPointers(newPointers);
   }, [stepIndex, steps]);
 
   return (
     <div className="relative w-full h-full flex flex-col py-16 items-center justify-center">
       <svg
-        width={array.length * (BAR_WIDTH + GAP)}
-        height={BAR_HEIGHT}
+        width={array.length * (barWidth + GAP)}
+        height={barHeight}
         style={{ overflow: "visible" }}
       >
         {array.map((block, i) => {
@@ -84,21 +98,25 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
             i >= array.findIndex((b) => b.id === range.low) &&
             i <= array.findIndex((b) => b.id === range.high);
 
+          const labelsAtIndex = Object.entries(pointers)
+            .filter(([, value]) => value === i)
+            .map(([label]) => label);
+
           return (
             <motion.g
               layout
               key={block.id}
-              initial={{ x: i * (BAR_WIDTH + GAP), y: 0 }}
+              initial={{ x: i * (barWidth + GAP), y: 0 }}
               animate={{
-                x: i * (BAR_WIDTH + GAP),
+                x: i * (barWidth + GAP),
                 opacity: range.low === null ? 1 : inRange ? 1 : 0.2,
               }}
               transition={{ duration: 0.5 }}
             >
               <motion.rect
                 rx={4}
-                width={BAR_WIDTH}
-                height={BAR_HEIGHT}
+                width={barWidth}
+                height={barHeight}
                 animate={{
                   fill: isHighlighted
                     ? highlight.mode === "found"
@@ -109,8 +127,8 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
                 transition={{ duration: 0.3 }}
               />
               <text
-                x={BAR_WIDTH / 2}
-                y={BAR_HEIGHT / 2}
+                x={barWidth / 2}
+                y={barHeight / 2}
                 fontFamily="Satoshi"
                 fontSize="16"
                 fill="white"
@@ -119,18 +137,31 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
               >
                 {block.value}
               </text>
+              {labelsAtIndex.length > 0 && (
+                <text
+                  x={barWidth / 2}
+                  y={barHeight + 20}
+                  fontFamily="Satoshi"
+                  fontSize="14"
+                  fill="white"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                >
+                  {labelsAtIndex.join(" = ")}
+                </text>
+              )}
             </motion.g>
           );
         })}
       </svg>
 
       <div className="absolute top-5 right-5 flex flex-col items-center">
-        <svg height={BAR_HEIGHT} width={BAR_WIDTH}>
+        <svg height={barWidth} width={barHeight}>
           <g>
             <motion.rect
               rx={4}
-              width={BAR_WIDTH}
-              height={BAR_HEIGHT}
+              width={barWidth}
+              height={barHeight}
               animate={{
                 fill:
                   steps[stepIndex].type === "compare"
@@ -142,8 +173,8 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
               transition={{ duration: 0.3 }}
             />
             <text
-              x={BAR_WIDTH / 2}
-              y={BAR_HEIGHT / 2}
+              x={barWidth / 2}
+              y={barHeight / 2}
               fontFamily="Satoshi"
               fontSize="16"
               fill="white"

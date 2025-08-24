@@ -31,8 +31,9 @@ export default function Controls({
   const isLastStep = stepIndex === stepsLength - 1;
 
   return (
-    <div className="mt-4 flex items-center w-full">
-      <div className="flex items-center space-x-2 flex-1 w-full">
+    <div className="mt-4 flex flex-col sm:flex-row sm:items-center w-full gap-3">
+      {/* Playback controls */}
+      <div className="flex justify-center sm:justify-start flex-wrap gap-2 flex-1">
         <button
           onClick={() => setStepIndex(0)}
           className="active:scale-95 duration-150 px-3 py-2 border-[2px] rotate-180 border-gray-700/60 rounded hover:border-green-400 transition"
@@ -72,7 +73,8 @@ export default function Controls({
         </button>
       </div>
 
-      <div className="space-x-2 flex items-center">
+      {/* Info + fullscreen + speed */}
+      <div className="flex justify-center sm:justify-end gap-2">
         <button className="active:scale-95 duration-150 px-3 py-2 border-[2px] border-gray-700/60 rounded hover:border-green-400 transition">
           <IoInformation />
         </button>

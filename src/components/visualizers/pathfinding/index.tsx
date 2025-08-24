@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import type { Cell, PathfindingStep } from "../../../algorithms/types";
+import { useOrientation } from "../../../hooks/useOrientation";
 
 const GAP = 5;
 const BAR_WIDTH = 50;
@@ -12,6 +13,9 @@ type Props = {
 };
 
 export default function PathfindingVisualizer({ steps, stepIndex }: Props) {
+  const { isMobile } = useOrientation();
+  const barWidth = isMobile ? 40 : BAR_WIDTH;
+  const barHeight = isMobile ? 40 : BAR_HEIGHT;
   const [grid, setGrid] = useState<Cell[][]>([]);
   const [target, setTarget] = useState<{ row: number; col: number }>({
     row: 0,
@@ -67,10 +71,8 @@ export default function PathfindingVisualizer({ steps, stepIndex }: Props) {
     setVisitedAll(newVisitedAll);
   }, [stepIndex, steps]);
 
-  const gridWidth = grid.length > 0 ? grid[0].length * (BAR_WIDTH + GAP) : 0;
-  const gridHeight = grid.length * (BAR_HEIGHT + GAP);
-
-  console.log(path);
+  const gridWidth = grid.length > 0 ? grid[0].length * (barWidth + GAP) : 0;
+  const gridHeight = grid.length * (barHeight + GAP);
 
   return (
     <div className="relative w-full h-full flex flex-col py-16 items-center justify-center">
@@ -95,29 +97,20 @@ export default function PathfindingVisualizer({ steps, stepIndex }: Props) {
               <motion.g
                 key={id}
                 layout
-                transform={`translate(${colIndex * (BAR_WIDTH + GAP)}, ${
-                  rowIndex * (BAR_HEIGHT + GAP)
+                transform={`translate(${colIndex * (barWidth + GAP)}, ${
+                  rowIndex * (barHeight + GAP)
                 })`}
               >
                 <motion.rect
                   rx={6}
-                  width={BAR_WIDTH}
-                  height={BAR_HEIGHT}
+                  width={barWidth}
+                  height={barHeight}
                   fill={fill}
                   stroke="#111827"
                   strokeWidth={2}
                   animate={{ scale: active.has(id) ? 1.05 : 1 }}
                   transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 />
-                {/* <text
-                  x={4}
-                  y={12}
-                  fontFamily="Satoshi"
-                  fontSize="10"
-                  fill="white"
-                >
-                  ({rowIndex}, {colIndex})
-                </text> */}
               </motion.g>
             );
           })
@@ -142,13 +135,13 @@ export default function PathfindingVisualizer({ steps, stepIndex }: Props) {
                   key={id}
                   layout
                   transform={`translate(${
-                    colIndex * (BAR_WIDTH / 2 + GAP / 2)
-                  }, ${rowIndex * (BAR_HEIGHT / 2 + GAP / 2)})`}
+                    colIndex * (barWidth / 2 + GAP / 2)
+                  }, ${rowIndex * (barHeight / 2 + GAP / 2)})`}
                 >
                   <motion.rect
                     rx={4}
-                    width={BAR_WIDTH / 2}
-                    height={BAR_HEIGHT / 2}
+                    width={barWidth / 2}
+                    height={barHeight / 2}
                     fill={fill}
                     stroke="#111827"
                     strokeWidth={2}

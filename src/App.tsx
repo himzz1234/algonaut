@@ -18,20 +18,6 @@ function App() {
       </section>
 
       <section>
-        <main className="relative max-w-4xl mx-auto pb-16">
-          <img
-            src="/images/demo-screenshot.png"
-            className="w-full h-auto shadow-xl relative z-10"
-          />
-          <div
-            className="absolute bottom-0 left-0 w-full h-80 
-                 bg-gradient-to-t from-[#000000] from-20% to-transparent 
-                 z-20"
-          />
-        </main>
-      </section>
-
-      <section>
         <LearningPath />
       </section>
 

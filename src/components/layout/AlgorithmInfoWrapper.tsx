@@ -20,6 +20,9 @@ export default function AlgorithmInfoWrapper({
       description={algo.description}
       complexities={algo.complexities}
       pseudocode={algo.pseudocode}
+      category={algo.category}
+      difficulty={algo.difficulty}
+      tags={algo.tags}
     />
   );
 }
