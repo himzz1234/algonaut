@@ -11,6 +11,7 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
       drag: true,
       depth: 1,
       role: "key",
+      pointers: { key: i },
     };
 
     let j = i - 1;
@@ -22,24 +23,39 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
           ? ">"
           : "<";
 
-      yield { type: "compare", ids: [a[j].id, a[j + 1].id], relation };
+      yield {
+        type: "compare",
+        ids: [a[j].id, a[j + 1].id],
+        relation,
+        pointers: { key: j + 1, index: j },
+      };
 
       if (relation === ">") {
         [a[j], a[j + 1]] = [a[j + 1], a[j]];
-        yield { type: "swap", ids: [a[j].id, a[j + 1].id] };
+        yield {
+          type: "swap",
+          ids: [a[j].id, a[j + 1].id],
+          pointers: { key: j, index: j + 1 },
+        };
       } else break;
       j--;
     }
 
     const finalIndex = j + 1;
+
     yield {
       type: "highlight",
       ids: [a[finalIndex].id],
       drag: true,
       depth: 0,
       role: "key",
+      pointers: { key: finalIndex },
     };
-    yield { type: "mark_sorted", ids: a.slice(0, i + 1).map((b) => b.id) };
+
+    yield {
+      type: "mark_sorted",
+      ids: a.slice(0, i + 1).map((b) => b.id),
+    };
   }
 
   yield { type: "done" };

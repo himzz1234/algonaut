@@ -11,27 +11,54 @@ export type Cell = {
 };
 
 export type SortingStep =
-  | { type: "init"; array: Block[] }
-  | { type: "move"; ids: number[]; targetIndices: number[]; depth: number }
-  | { type: "compare"; ids: number[]; relation: "<" | ">" | "=" }
-  | { type: "swap"; ids: number[] }
+  | { type: "init"; array: Block[]; pointers?: Record<string, number | null> }
+  | {
+      type: "move";
+      ids: number[];
+      targetIndices: number[];
+      depth: number;
+      pointers?: Record<string, number>;
+    }
+  | {
+      type: "compare";
+      ids: number[];
+      relation: "<" | ">" | "=";
+      pointers?: Record<string, number>;
+    }
+  | { type: "swap"; ids: number[]; pointers?: Record<string, number> }
   | {
       type: "highlight";
       ids: number[];
       drag: true | false;
       depth?: number;
       role: "key" | "pivot" | "subarray" | "min";
+      pointers?: Record<string, number>;
     }
-  | { type: "mark_sorted"; ids: number[] }
-  | { type: "done" };
+  | { type: "mark_sorted"; ids: number[]; pointers?: Record<string, number> }
+  | { type: "done"; pointers?: Record<string, number> };
 
 export type SearchingStep =
-  | { type: "init"; array: Block[]; target: number }
-  | { type: "check"; id: number }
-  | { type: "compare"; id: number; relation: string }
-  | { type: "found"; id: number }
-  | { type: "not-found"; reason: string }
-  | { type: "set-range"; low: number; high: number };
+  | {
+      type: "init";
+      array: Block[];
+      target: number;
+      pointers?: Record<string, number | null>;
+    }
+  | { type: "check"; id: number; pointers?: Record<string, number> }
+  | {
+      type: "compare";
+      id: number;
+      relation: string;
+      pointers?: Record<string, number>;
+    }
+  | { type: "found"; id: number; pointers?: Record<string, number> }
+  | { type: "not-found"; reason: string; pointers?: Record<string, number> }
+  | {
+      type: "set-range";
+      low: number;
+      high: number;
+      pointers?: Record<string, number>;
+    };
 
 export type PathfindingStep =
   | {

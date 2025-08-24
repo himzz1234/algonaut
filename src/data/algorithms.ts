@@ -12,6 +12,8 @@ export interface AlgorithmMeta {
   pseudocode?: string[];
   featured?: boolean;
   href: string;
+  tags?: string[];
+  difficulty?: "beginner" | "intermediate" | "advanced";
 }
 
 export const algorithms: Record<string, AlgorithmMeta> = {
@@ -34,6 +36,8 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "         swap(arr[j], arr[j+1])",
     ],
     href: "/sorting?algorithm=bubble-sort",
+    difficulty: "beginner",
+    tags: ["Brute Force", "Stable"],
   },
   "quick-sort": {
     name: "Quick Sort",
@@ -57,6 +61,8 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     ],
     featured: true,
     href: "/sorting?algorithm=quick-sort",
+    difficulty: "intermediate",
+    tags: ["Divide & Conquer", "Recursion", "In-place"],
   },
   "insertion-sort": {
     name: "Insertion Sort",
@@ -82,6 +88,8 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     ],
     featured: true,
     href: "/sorting?algorithm=insertion-sort",
+    difficulty: "beginner",
+    tags: ["Stable", "Online"],
   },
   "selection-sort": {
     name: "Selection Sort",
@@ -105,6 +113,8 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "       swap arr[i] with arr[minIndex]",
     ],
     href: "/sorting?algorithm=selection-sort",
+    difficulty: "beginner",
+    tags: ["In-place", "Unstable"],
   },
   "merge-sort": {
     name: "Merge Sort",
@@ -125,20 +135,10 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "   left = mergeSort(arr[0...mid-1])",
       "   right = mergeSort(arr[mid...end])",
       "   return merge(left, right)",
-      "",
-      "function merge(left, right):",
-      "   result = []",
-      "   while left and right are not empty:",
-      "       if left[0] <= right[0]:",
-      "           append left[0] to result",
-      "           remove left[0] from left",
-      "       else:",
-      "           append right[0] to result",
-      "           remove right[0] from right",
-      "   append remaining elements of left and right to result",
-      "   return result",
     ],
     href: "/sorting?algorithm=merge-sort",
+    difficulty: "intermediate",
+    tags: ["Divide & Conquer", "Stable", "Recursion"],
   },
   "linear-search": {
     name: "Linear Search",
@@ -161,8 +161,9 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     ],
     href: "/searching?algorithm=linear-search",
     featured: true,
+    difficulty: "beginner",
+    tags: ["Brute Force", "Sequential"],
   },
-
   "binary-search": {
     name: "Binary Search",
     category: "searching",
@@ -190,6 +191,8 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     ],
     featured: true,
     href: "/searching?algorithm=binary-search",
+    difficulty: "beginner",
+    tags: ["Divide & Conquer", "Efficient"],
   },
   dfs: {
     name: "Depth-First Search (DFS)",
@@ -217,6 +220,8 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     ],
     href: "/pathfinding?algorithm=dfs",
     featured: true,
+    difficulty: "intermediate",
+    tags: ["Graph Traversal", "Stack", "Recursion"],
   },
   bfs: {
     name: "Breadth-First Search (BFS)",
@@ -244,5 +249,7 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     ],
     featured: true,
     href: "/pathfinding?algorithm=bfs",
+    difficulty: "beginner",
+    tags: ["Graph Traversal", "Queue", "Shortest Path"],
   },
 };

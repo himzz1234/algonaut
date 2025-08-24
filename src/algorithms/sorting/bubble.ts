@@ -14,14 +14,27 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
           ? ">"
           : "<";
 
-      yield { type: "compare", ids: [a[j].id, a[j + 1].id], relation };
+      yield {
+        type: "compare",
+        ids: [a[j].id, a[j + 1].id],
+        relation,
+        pointers: { current: j, next: j + 1 },
+      };
 
       if (relation === ">") {
         [a[j], a[j + 1]] = [a[j + 1], a[j]];
-        yield { type: "swap", ids: [a[j].id, a[j + 1].id] };
+        yield {
+          type: "swap",
+          ids: [a[j].id, a[j + 1].id],
+          pointers: { current: j, next: j + 1 },
+        };
       }
     }
-    yield { type: "mark_sorted", ids: [a[n - i - 1].id] };
+
+    yield {
+      type: "mark_sorted",
+      ids: [a[n - i - 1].id],
+    };
   }
 
   yield { type: "done" };
