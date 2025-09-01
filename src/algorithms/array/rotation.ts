@@ -24,7 +24,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       drag: false,
       role: "current",
       pointers: { current: element.id },
-      lines: [2, 3],
+      lines: [1, 2],
     };
 
     yield {
@@ -34,7 +34,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       value: element.value,
       depth: 1,
       pointers: { temp: element.id },
-      lines: [3],
+      lines: [1, 2],
     };
 
     for (let j = 1; j < n; j++) {
@@ -46,7 +46,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
         drag: false,
         role: "current",
         pointers: { temp: element.id, current: a[j].id },
-        lines: [4],
+        lines: [3],
       };
 
       yield {
@@ -56,7 +56,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
         indices: [j, j - 1],
         values: [a[j].value, a[j].value],
         pointers: { temp: element.id, current: a[j].id },
-        lines: [4],
+        lines: [3],
       };
     }
 
@@ -67,12 +67,12 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       indices: [n - 1],
       values: [element.value],
       depth: 0,
-      lines: [5],
+      lines: [4],
     };
 
     a.splice(0, 1);
     a.push(element);
   }
 
-  yield { type: "done", op: "rotate", lines: [6] };
+  yield { type: "done", op: "rotate", lines: [5] };
 }

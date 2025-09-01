@@ -195,7 +195,7 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "    put the taken element at the end",
       "done (array is rotated)",
     ],
-    href: "/algorithms/array?algorithm=rotate-array",
+    href: "/learn/array?algorithm=rotate-array",
     difficulty: "beginner",
     featured: true,
     tags: ["Array", "Rotation", "Two Pointers"],
