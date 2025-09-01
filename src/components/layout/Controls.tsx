@@ -46,7 +46,7 @@ export default function Controls({
         </button>
         <button
           onClick={() => setStepIndex((i) => Math.max(0, i - 1))}
-          className={`${btnClass}`}
+          className={`${btnClass} rotate-180`}
         >
           <IoPlaySkipForward />
         </button>
