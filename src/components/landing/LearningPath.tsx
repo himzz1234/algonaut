@@ -20,21 +20,26 @@ export default function LearningPath() {
       </header>
 
       <div className="max-w-5xl w-full mx-auto mt-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-4">
           <LearningPathCard
             title="Beginner"
             description="Basics & Fundamentals"
             progress={100}
+            href="/learn#path_beginner"
           />
+
           <LearningPathCard
             title="Intermediate"
             description="Data Structures & Algorithms"
             progress={50}
+            href="/learn#path_intermediate"
           />
+
           <LearningPathCard
             title="Interview Prep"
             description="Preparation & Practice"
             progress={0}
+            href="/learn#path_interview_prep"
           />
         </div>
       </div>

@@ -1,15 +1,18 @@
+import { Link } from "react-router-dom";
 import ProgressCircle from "../ui/ProgressCircle";
 
 type LearningPathCardProps = {
   title: string;
   description: string;
   progress: number;
+  href: string;
 };
 
 export default function LearningPathCard({
   title,
   description,
   progress,
+  href,
 }: LearningPathCardProps) {
   let statusMessage = "Keep going!";
   if (progress === 0)
@@ -22,26 +25,37 @@ export default function LearningPathCard({
     statusMessage = "Amazing! You’ve mastered this path 🏆";
 
   return (
-    <div
-      className="relative w-full h-auto sm:h-52 rounded-xl p-5 flex flex-col
-        bg-[#0f1014] backdrop-blur-sm border border-gray-700/60
-        shadow-md hover:shadow-xl hover:scale-[1.02]
-        transition-all duration-300 
-        hover:border-green-400/50"
-    >
-      <div className="flex-1">
-        <h3 className="text-lg sm:text-xl font-semibold text-white leading-snug">
-          {title}
-        </h3>
-        <p className="text-gray-400 text-sm sm:text-base mt-1">{description}</p>
-      </div>
+    <Link to={href} aria-label={`Go to ${title} learning path`}>
+      <div
+        className="relative w-full h-auto sm:h-48 rounded-xl p-5 flex flex-col justify-between
+        bg-[#0f1014] border border-gray-800 shadow-md
+        transition-all duration-500 overflow-hidden group
+        hover:scale-[1.02] hover:border-green-400/50 hover:shadow-green-500/20"
+      >
+        {/* Subtle glowing background on hover */}
+        <div
+          className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-green-400/10
+          opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        />
 
-      <div className="mt-4 bg-gradient-to-r from-slate-800/60 to-slate-900/40 p-3 rounded-lg flex items-center gap-3 sm:gap-4">
-        <ProgressCircle progress={progress} />
-        <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+        {/* Content */}
+        <div className="flex items-start justify-between relative z-10">
+          <div>
+            <h3 className="text-lg sm:text-xl font-semibold text-white">
+              {title}
+            </h3>
+            <p className="text-gray-400 text-sm sm:text-base mt-1">
+              {description}
+            </p>
+          </div>
+          <ProgressCircle progress={progress} />
+        </div>
+
+        {/* Status */}
+        <p className="text-xs sm:text-sm text-gray-300 mt-4 relative z-10">
           {statusMessage}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -1,20 +1,20 @@
 import { useState, useMemo } from "react";
 import AlgoCard from "./AlgoCard";
-import { FiSearch } from "react-icons/fi";
-import Select from "../ui/Select";
+// import { FiSearch } from "react-icons/fi";
+// import Select from "../ui/Select";
 import { algorithms } from "../../data/algorithms";
 
 export default function Feature() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOption, setSelectedOption] = useState("All Algorithms");
+  const [searchTerm] = useState("");
+  const [selectedOption] = useState("All Algorithms");
 
-  const dropdownOptions = [
-    "All Algorithms",
-    "Sorting",
-    "Pathfinding",
-    "Graph",
-    "Dynamic Programming",
-  ];
+  // const dropdownOptions = [
+  //   "All Algorithms",
+  //   "Sorting",
+  //   "Pathfinding",
+  //   "Graph",
+  //   "Dynamic Programming",
+  // ];
 
   const featuredAlgorithms = useMemo(() => {
     return Object.values(algorithms)
@@ -49,7 +49,7 @@ export default function Feature() {
       </header>
 
       <div className="max-w-5xl w-full mx-auto mt-10 flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row gap-3 p-3 rounded-xl bg-white/5 dark:bg-black/30 backdrop-blur-md border border-white/10 shadow-lg">
+        {/* <div className="flex flex-col sm:flex-row gap-3 p-3 rounded-xl bg-white/5 dark:bg-black/30 backdrop-blur-md border border-white/10 shadow-lg">
           <div className="relative flex-1">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
             <input
@@ -100,10 +100,10 @@ export default function Feature() {
               )}
             </Select>
           </div>
-        </div>
+        </div> */}
 
         {featuredAlgorithms.length > 0 ? (
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {featuredAlgorithms.map((algo, index) => (
               <AlgoCard algorithm={algo} key={index} />
             ))}

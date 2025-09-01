@@ -49,7 +49,7 @@ export default function Hero() {
 
         <motion.h1
           variants={item}
-          className="text-3xl sm:text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-400 via-gray-200 to-gray-500 bg-clip-text text-transparent leading-tight"
+          className="text-3xl sm:text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 bg-clip-text text-transparent leading-tight"
         >
           Learn <span>Faster</span>.
         </motion.h1>

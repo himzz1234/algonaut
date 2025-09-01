@@ -1,12 +1,18 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useModal } from "../context/ModalContext";
+import AuthPanel from "./AuthPanel";
+import { useAuth } from "../context/AuthContext";
+import { AvatarMenu } from "./AvatarMenu";
 
 export default function Navbar() {
+  const { openModal } = useModal();
+  const { user, loading } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="h-[80px] border-b border-green-500/20 bg-black/40 backdrop-blur-md sticky top-0 z-50">
+    <nav className="h-[80px] border-b border-gray-700/60 bg-black/40 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-6">
         <div className="flex items-center gap-2">
           <Link to="/">
@@ -18,27 +24,36 @@ export default function Navbar() {
 
         <ul className="hidden md:flex items-center gap-8 flex-1 justify-end mr-8">
           <li className="text-gray-400 hover:text-green-400 cursor-pointer transition-colors">
-            <Link to="/algorithms">Algorithms</Link>
+            <Link to="/learn">Learnings</Link>
           </li>
-          <li className="text-gray-400 hover:text-green-400 cursor-pointer transition-colors">
+          {/* <li className="text-gray-400 hover:text-green-400 cursor-pointer transition-colors">
             <Link to="/about">About</Link>
-          </li>
+          </li> */}
         </ul>
 
-        <div className="flex items-center gap-4">
-          <Link to="/login">
-            <button className="hidden md:block px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-500 rounded-md transition-colors">
-              Login
-            </button>
-          </Link>
+        {!loading && (
+          <div className="flex items-center gap-4">
+            {!user ? (
+              <button
+                onClick={() => openModal(<AuthPanel />)}
+                className="hidden md:block px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-500 rounded-md transition-colors"
+              >
+                Login
+              </button>
+            ) : (
+              <div className="flex items-center gap-3">
+                <AvatarMenu user={user} />
+              </div>
+            )}
+          </div>
+        )}
 
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden text-gray-400 hover:text-green-400 text-2xl focus:outline-none"
-          >
-            {menuOpen ? "✕" : "☰"}
-          </button>
-        </div>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden text-gray-400 hover:text-green-400 text-2xl focus:outline-none"
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
       </div>
 
       <AnimatePresence>
@@ -52,21 +67,22 @@ export default function Navbar() {
           >
             <ul className="flex flex-col gap-4 px-6 py-6 text-lg">
               <li className="text-gray-300 hover:text-green-400 transition-colors">
-                <Link to="/algorithms" onClick={() => setMenuOpen(false)}>
-                  Algorithms
+                <Link to="/learn" onClick={() => setMenuOpen(false)}>
+                  Learning
                 </Link>
               </li>
-              <li className="text-gray-300 hover:text-green-400 transition-colors">
+              {/* <li className="text-gray-300 hover:text-green-400 transition-colors">
                 <Link to="/about" onClick={() => setMenuOpen(false)}>
                   About
                 </Link>
-              </li>
+              </li> */}
               <li>
-                <Link to="/login" onClick={() => setMenuOpen(false)}>
-                  <button className="w-full px-5 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-500 rounded-md transition-colors">
-                    Login
-                  </button>
-                </Link>
+                <button
+                  onClick={() => openModal(<AuthPanel />)}
+                  className="w-full px-5 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-500 rounded-md transition-colors"
+                >
+                  Login
+                </button>
               </li>
             </ul>
           </motion.div>

@@ -4,8 +4,9 @@ import { IoPlaySkipForward } from "react-icons/io5";
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
 import { IoSettingsSharp } from "react-icons/io5";
 import Select from "../ui/Select";
-import { MdFullscreen } from "react-icons/md";
-import { IoInformation } from "react-icons/io5";
+// import { IoInformation } from "react-icons/io5";
+import { FaExpandAlt } from "react-icons/fa";
+import { FaCompressAlt } from "react-icons/fa";
 
 interface ControlsProps {
   stepIndex: number;
@@ -15,6 +16,7 @@ interface ControlsProps {
   setStepIndex: (i: number | ((prev: number) => number)) => void;
   setIsPlaying: (v: boolean | ((prev: boolean) => boolean)) => void;
   setSpeed: (s: string) => void;
+  isFullScreen: boolean;
   toggleFullScreen: () => void;
 }
 
@@ -26,23 +28,25 @@ export default function Controls({
   setStepIndex,
   setIsPlaying,
   setSpeed,
+  isFullScreen,
   toggleFullScreen,
 }: ControlsProps) {
   const isLastStep = stepIndex === stepsLength - 1;
 
+  const btnClass = `active:scale-95 transition-all duration-150 
+   px-2 py-1 sm:px-3 sm:py-2 lg:px-4 lg:py-3 
+   text-sm sm:text-base
+   border-[2px] border-gray-700/60 rounded-md hover:border-green-400`;
+
   return (
     <div className="mt-4 flex flex-col sm:flex-row sm:items-center w-full gap-3">
-      {/* Playback controls */}
       <div className="flex justify-center sm:justify-start flex-wrap gap-2 flex-1">
-        <button
-          onClick={() => setStepIndex(0)}
-          className="active:scale-95 duration-150 px-3 py-2 border-[2px] rotate-180 border-gray-700/60 rounded hover:border-green-400 transition"
-        >
+        <button onClick={() => setStepIndex(0)} className={`${btnClass}`}>
           <TbPlayerTrackNextFilled />
         </button>
         <button
           onClick={() => setStepIndex((i) => Math.max(0, i - 1))}
-          className="active:scale-95 duration-150 px-3 py-2 border-[2px] rotate-180 border-gray-700/60 rounded hover:border-green-400 transition"
+          className={`${btnClass}`}
         >
           <IoPlaySkipForward />
         </button>
@@ -55,7 +59,7 @@ export default function Controls({
                 }
               : () => setIsPlaying((p) => !p)
           }
-          className="active:scale-95 transition-all duration-150 px-3 py-2 cursor-pointer border-[2px] border-gray-700/60 rounded hover:border-green-400 font-medium"
+          className={`${btnClass}`}
         >
           {isLastStep ? <MdReplay /> : isPlaying ? <FaPause /> : <FaPlay />}
         </button>
@@ -67,22 +71,18 @@ export default function Controls({
         </button>
         <button
           onClick={() => setStepIndex(stepsLength - 1)}
-          className="active:scale-95 duration-150 px-3 py-2 border-[2px] border-gray-700/60 rounded hover:border-green-400 transition"
+          className={`${btnClass}`}
         >
           <TbPlayerTrackNextFilled />
         </button>
       </div>
 
-      {/* Info + fullscreen + speed */}
       <div className="flex justify-center sm:justify-end gap-2">
-        <button className="active:scale-95 duration-150 px-3 py-2 border-[2px] border-gray-700/60 rounded hover:border-green-400 transition">
+        {/* <button className={`${btnClass}`}>
           <IoInformation />
-        </button>
-        <button
-          onClick={toggleFullScreen}
-          className="active:scale-95 duration-150 px-3 py-2 border-[2px] border-gray-700/60 rounded hover:border-green-400 transition"
-        >
-          <MdFullscreen />
+        </button> */}
+        <button onClick={toggleFullScreen} className={`${btnClass}`}>
+          {!isFullScreen ? <FaExpandAlt /> : <FaCompressAlt />}
         </button>
         <div className="w-auto">
           <Select
@@ -92,10 +92,7 @@ export default function Controls({
             placement="top"
           >
             {({ toggle }) => (
-              <button
-                onClick={toggle}
-                className="active:scale-95 duration-150 px-3 py-2 border-[2px] border-gray-700/60 rounded hover:border-green-400 transition"
-              >
+              <button onClick={toggle} className={`${btnClass}`}>
                 <IoSettingsSharp />
               </button>
             )}

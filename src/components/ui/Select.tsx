@@ -22,7 +22,6 @@ export default function Dropdown({
   const triggerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLUListElement>(null);
 
-  // Ensure portal exists
   useEffect(() => {
     if (!document.getElementById("dropdown-portal")) {
       const el = document.createElement("div");
@@ -31,7 +30,6 @@ export default function Dropdown({
     }
   }, []);
 
-  // Close on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -47,10 +45,10 @@ export default function Dropdown({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Handle positioning
   useEffect(() => {
-    if (isOpen && triggerRef.current) {
+    if (isOpen && triggerRef.current && dropdownRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
 
       let finalPlacement: "top" | "bottom" = placement ?? "bottom";
       if (!placement) {
@@ -59,12 +57,16 @@ export default function Dropdown({
         if (spaceAbove > spaceBelow) finalPlacement = "top";
       }
 
+      const top =
+        finalPlacement === "bottom"
+          ? rect.bottom + window.scrollY + 8
+          : rect.top - dropdownRect.height + window.scrollY - 8;
+
+      const left = rect.right + window.scrollX - dropdownRect.width;
+
       setCoords({
-        top:
-          finalPlacement === "bottom"
-            ? rect.bottom + window.scrollY + 8
-            : rect.top + window.scrollY - 8,
-        left: rect.left + window.scrollX,
+        top,
+        left,
         width: rect.width,
       });
     }
@@ -76,20 +78,20 @@ export default function Dropdown({
         <motion.ul
           ref={dropdownRef}
           role="menu"
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="absolute bg-white/5 dark:bg-black/30 backdrop-blur-md 
+          className="absolute bg-white/5 dark:bg-black/50 backdrop-blur-md 
             border border-white/10 rounded-md shadow-lg 
-            max-h-60 overflow-y-auto z-[9999]"
+            max-h-64 overflow-y-auto z-[9999] min-w-48"
           style={{
             top: coords.top,
             left: coords.left,
             width: coords.width,
           }}
         >
-          {options.map((option, index) => (
+          {options.map((option) => (
             <li
               key={option}
               role="menuitem"

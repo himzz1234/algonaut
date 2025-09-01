@@ -2,73 +2,145 @@ import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-gray-800 bg-[#0a0a0a]">
-      <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-        <div className="text-center md:text-left">
+    <footer className="relative border-t border-gray-800 bg-gradient-to-b from-black to-[#0a0a0a]">
+      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
+        <div className="col-span-2">
           <h2 className="text-2xl sm:text-3xl font-bold text-white">
             AlgoVisua<span className="text-green-400">li</span>zer
           </h2>
-        </div>
-
-        <div className="flex justify-center">
-          <nav className="flex flex-wrap gap-4 sm:gap-6 text-gray-400 text-sm sm:text-base">
-            <a href="#about" className="hover:text-green-400 transition-colors">
-              About
-            </a>
-            <a
-              href="#features"
-              className="hover:text-green-400 transition-colors"
-            >
-              Features
-            </a>
-            <a href="#faqs" className="hover:text-green-400 transition-colors">
-              FAQs
-            </a>
-            <a
-              href="#contact"
-              className="hover:text-green-400 transition-colors"
-            >
-              Contact
-            </a>
-          </nav>
-        </div>
-
-        <div className="flex justify-center md:justify-end gap-6 text-gray-400 text-xl">
-          <a
-            href="https://twitter.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-green-400 transition-colors"
-            aria-label="Twitter"
-          >
-            <FaTwitter />
-          </a>
-          <a
-            href="https://linkedin.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-green-400 transition-colors"
-            aria-label="LinkedIn"
-          >
-            <FaLinkedin />
-          </a>
-          <a
-            href="https://github.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-green-400 transition-colors"
-            aria-label="GitHub"
-          >
-            <FaGithub />
-          </a>
-        </div>
-      </div>
-
-      <div className="border-t border-gray-800 mt-4">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-center text-gray-500 text-xs sm:text-sm">
-          <p>
-            © {new Date().getFullYear()} AlgoVisualizer. All rights reserved.
+          <p className="mt-3 text-gray-400 text-base sm:text-lg max-w-xs">
+            Visualize and understand algorithms with clean animations.
           </p>
+        </div>
+
+        <div>
+          <h3 className="text-white uppercase mb-3 text-sm sm:text-base">
+            Quick Links
+          </h3>
+          <ul className="space-y-2 text-gray-400 text-base">
+            <li>
+              <a
+                href="#about"
+                className="hover:text-green-400 transition-colors"
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                href="#features"
+                className="hover:text-green-400 transition-colors"
+              >
+                Features
+              </a>
+            </li>
+            <li>
+              <a
+                href="#faqs"
+                className="hover:text-green-400 transition-colors"
+              >
+                FAQs
+              </a>
+            </li>
+            <li>
+              <a
+                href="#contact"
+                className="hover:text-green-400 transition-colors"
+              >
+                Contact
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="sm:justify-self-start lg:justify-self-end">
+          <h3 className="text-white uppercase mb-3 text-sm sm:text-base">
+            Resources
+          </h3>
+          <ul className="space-y-2 text-gray-400 text-base">
+            <li>
+              <a
+                href="#docs"
+                className="hover:text-green-400 transition-colors"
+              >
+                Documentation
+              </a>
+            </li>
+            <li>
+              <a
+                href="#tutorials"
+                className="hover:text-green-400 transition-colors"
+              >
+                Tutorials
+              </a>
+            </li>
+            <li>
+              <a
+                href="#blog"
+                className="hover:text-green-400 transition-colors"
+              >
+                Blog
+              </a>
+            </li>
+            <li>
+              <a
+                href="#community"
+                className="hover:text-green-400 transition-colors"
+              >
+                Community
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="col-span-2 sm:col-span-2 flex flex-col justify-between sm:justify-start lg:justify-between lg:justify-self-end">
+          <div>
+            <h3 className="text-white mb-3 uppercase text-sm sm:text-base">
+              Stay Updated
+            </h3>
+            <form>
+              <button
+                type="submit"
+                className="whitespace-nowrap underline uppercase font-medium text-green-400 transition-colors"
+              >
+                Sign up for our newsletter →
+              </button>
+            </form>
+          </div>
+          <div className="flex flex-col text-gray-400 mt-6 sm:mt-4">
+            <h5 className="uppercase text-white text-sm sm:text-base">
+              Follow Us
+            </h5>
+            <div className="flex gap-4 mt-4 text-xl">
+              <a
+                href="https://twitter.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-green-400 transition-colors"
+                aria-label="Twitter"
+              >
+                <FaTwitter />
+              </a>
+              <a
+                href="https://linkedin.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-green-400 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin />
+              </a>
+              <a
+                href="https://github.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-green-400 transition-colors"
+                aria-label="GitHub"
+              >
+                <FaGithub />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
