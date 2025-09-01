@@ -41,7 +41,10 @@ export default function Controls({
   return (
     <div className="mt-4 flex flex-col sm:flex-row sm:items-center w-full gap-3">
       <div className="flex justify-center sm:justify-start flex-wrap gap-2 flex-1">
-        <button onClick={() => setStepIndex(0)} className={`${btnClass}`}>
+        <button
+          onClick={() => setStepIndex(0)}
+          className={`${btnClass} rotate-180`}
+        >
           <TbPlayerTrackNextFilled />
         </button>
         <button
