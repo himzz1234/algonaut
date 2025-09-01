@@ -2,7 +2,7 @@ import type { Block, SortingStep } from "../types";
 
 export function* selectionSort(arr: Block[]): Generator<SortingStep> {
   const a = [...arr];
-  yield { type: "init", array: [...a] };
+  yield { type: "init", array: [...a], lines: [0] };
 
   const n = a.length;
   for (let i = 0; i < n; i++) {
@@ -14,6 +14,9 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
       role: "min",
       drag: false,
       pointers: { min: minIdx },
+      indices: [minIdx],
+      values: [a[minIdx].value],
+      lines: [2],
     };
 
     for (let j = i + 1; j < n; j++) {
@@ -28,7 +31,10 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
         type: "compare",
         ids: [a[minIdx].id, a[j].id],
         relation,
-        pointers: { min: minIdx, current: j },
+        pointers: { min: minIdx, j },
+        indices: [minIdx, j],
+        values: [a[minIdx].value, a[j].value],
+        lines: [3],
       };
 
       if (relation === ">") {
@@ -38,33 +44,35 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
           ids: [a[minIdx].id],
           role: "min",
           drag: false,
-          pointers: { min: minIdx, current: j },
+          pointers: { min: minIdx, j },
+          indices: [minIdx],
+          values: [a[minIdx].value],
+          lines: [4],
         };
       }
     }
 
     if (minIdx !== i) {
-      yield {
-        type: "compare",
-        ids: [a[minIdx].id, a[i].id],
-        relation: ">",
-        pointers: { min: minIdx, destination: i },
-      };
-
       [a[i], a[minIdx]] = [a[minIdx], a[i]];
 
       yield {
         type: "swap",
         ids: [a[i].id, a[minIdx].id],
-        pointers: { min: i, destination: minIdx },
+        pointers: { min: i, i: minIdx },
+        indices: [minIdx, i],
+        values: [a[i].value, a[minIdx].value],
+        lines: [5],
       };
     }
 
     yield {
       type: "mark_sorted",
       ids: [a[i].id],
+      indices: [i],
+      values: [a[i].value],
+      lines: [6],
     };
   }
 
-  yield { type: "done" };
+  yield { type: "done", lines: [7] };
 }

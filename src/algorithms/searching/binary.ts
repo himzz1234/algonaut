@@ -12,6 +12,7 @@ export function* binarySearch(
     type: "init",
     array: [...a],
     target,
+    lines: [0],
   };
 
   yield {
@@ -19,6 +20,9 @@ export function* binarySearch(
     low: a[left].id,
     high: a[right].id,
     pointers: { low: left, high: right },
+    indices: [left, right],
+    values: [a[left].value, a[right].value],
+    lines: [1],
   };
 
   while (left <= right) {
@@ -28,6 +32,9 @@ export function* binarySearch(
       type: "check",
       id: a[mid].id,
       pointers: { low: left, mid, high: right },
+      indices: [mid],
+      values: [a[mid].value],
+      lines: [3],
     };
 
     if (a[mid].value === target) {
@@ -36,11 +43,18 @@ export function* binarySearch(
         id: a[mid].id,
         relation: "=",
         pointers: { low: left, mid, high: right },
+        indices: [mid],
+        values: [a[mid].value],
+        target,
+        lines: [4],
       };
       yield {
         type: "found",
         id: a[mid].id,
         pointers: { low: left, mid, high: right },
+        indices: [mid],
+        values: [a[mid].value],
+        lines: [4],
       };
       return;
     } else if (a[mid].value > target) {
@@ -49,6 +63,10 @@ export function* binarySearch(
         id: a[mid].id,
         relation: ">",
         pointers: { low: left, mid, high: right },
+        indices: [mid],
+        values: [a[mid].value],
+        target,
+        lines: [5],
       };
 
       right = mid - 1;
@@ -58,6 +76,9 @@ export function* binarySearch(
           low: a[left].id,
           high: a[right].id,
           pointers: { low: left, high: right },
+          indices: [left, right],
+          values: [a[left].value, a[right].value],
+          lines: [6],
         };
       }
     } else {
@@ -66,6 +87,10 @@ export function* binarySearch(
         id: a[mid].id,
         relation: "<",
         pointers: { low: left, mid, high: right },
+        indices: [mid],
+        values: [a[mid].value],
+        target,
+        lines: [7],
       };
 
       left = mid + 1;
@@ -75,6 +100,9 @@ export function* binarySearch(
           low: a[left].id,
           high: a[right].id,
           pointers: { low: left, high: right },
+          indices: [left, right],
+          values: [a[left].value, a[right].value],
+          lines: [8],
         };
       }
     }
@@ -84,5 +112,7 @@ export function* binarySearch(
     type: "not-found",
     reason: "left > right",
     pointers: { low: left, high: right },
+    target,
+    lines: [9],
   };
 }

@@ -10,32 +10,141 @@ export type Cell = {
   weight: number;
 };
 
-export type SortingStep =
-  | { type: "init"; array: Block[]; pointers?: Record<string, number | null> }
+export type ArrayStep =
+  | {
+      type: "init";
+      op?: "reverse" | "rotate" | "shuffle" | "custom";
+      array: Block[];
+      meta?: Record<string, any>;
+      pointers?: Record<string, number | null>;
+      lines?: number[];
+    }
+  | {
+      type: "highlight";
+      ids: number[];
+      indices?: number[];
+      values?: number[];
+      drag: true | false;
+      depth?: number;
+      role: "pair" | "current" | "subarray";
+      pointers?: Record<string, number>;
+      lines?: number[];
+    }
+  | {
+      type: "swap";
+      ids: [number, number];
+      indices?: [number, number];
+      values?: [number, number];
+      depth?: number;
+      pointers?: Record<string, number>;
+      lines?: number[];
+    }
   | {
       type: "move";
-      ids: number[];
-      targetIndices: number[];
+      id: number;
+      targetIndex: number;
+      values?: number[];
+      indices?: number[];
+      pointers?: Record<string, number>;
+      lines?: number[];
+    }
+  | {
+      type: "remove";
+      id: number;
+      fromIndex: number;
+      value?: number;
       depth: number;
       pointers?: Record<string, number>;
+      lines?: number[];
+    }
+  | {
+      type: "insert";
+      id: number;
+      targetIndex: number;
+      values?: number[];
+      indices?: number[];
+      depth?: number;
+      pointers?: Record<string, number>;
+      lines?: number[];
+    }
+  | {
+      type: "done";
+      op?: "reverse" | "rotate" | "shuffle" | "custom";
+      meta?: Record<string, any>;
+      pointers?: Record<string, number>;
+      lines?: number[];
+    };
+
+export type SortingStep =
+  | {
+      type: "init";
+      array: Block[];
+      pointers?: Record<string, number | null>;
+      lines?: number[];
     }
   | {
       type: "compare";
       ids: number[];
       relation: "<" | ">" | "=";
       pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
     }
-  | { type: "swap"; ids: number[]; pointers?: Record<string, number> }
+  | {
+      type: "swap";
+      ids: number[];
+      depth?: number;
+      pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
+    }
   | {
       type: "highlight";
       ids: number[];
       drag: true | false;
       depth?: number;
-      role: "key" | "pivot" | "subarray" | "min";
+      action?: "enter" | "exit";
+      role: "key" | "pivot" | "subarray" | "min" | "target";
       pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
     }
-  | { type: "mark_sorted"; ids: number[]; pointers?: Record<string, number> }
-  | { type: "done"; pointers?: Record<string, number> };
+  | {
+      type: "stage_move";
+      ids: number[];
+      fromIndex: number;
+      toIndex: number;
+      depth?: number;
+      pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
+    }
+  | {
+      type: "stage_commit";
+      ids: number[];
+      depth?: number;
+      pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
+    }
+  | {
+      type: "mark_sorted";
+      ids: number[];
+      pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
+    }
+  | {
+      type: "done";
+      pointers?: Record<string, number>;
+      lines?: number[];
+    };
 
 export type SearchingStep =
   | {
@@ -43,21 +152,49 @@ export type SearchingStep =
       array: Block[];
       target: number;
       pointers?: Record<string, number | null>;
+      lines?: number[];
     }
-  | { type: "check"; id: number; pointers?: Record<string, number> }
+  | {
+      type: "check";
+      id: number;
+      pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
+    }
   | {
       type: "compare";
       id: number;
       relation: string;
       pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      target: number;
+      lines?: number[];
     }
-  | { type: "found"; id: number; pointers?: Record<string, number> }
-  | { type: "not-found"; reason: string; pointers?: Record<string, number> }
+  | {
+      type: "found";
+      id: number;
+      pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
+    }
+  | {
+      type: "not-found";
+      reason: string;
+      pointers?: Record<string, number>;
+      target: number;
+      lines?: number[];
+    }
   | {
       type: "set-range";
       low: number;
       high: number;
       pointers?: Record<string, number>;
+      indices?: number[];
+      values?: number[];
+      lines?: number[];
     };
 
 export type PathfindingStep =

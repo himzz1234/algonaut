@@ -2,7 +2,7 @@ import type { Block, SortingStep } from "../types";
 
 export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
   const a = [...arr];
-  yield { type: "init", array: [...a] };
+  yield { type: "init", array: [...a], lines: [0] };
 
   const n = a.length;
   for (let i = 0; i < n; i++) {
@@ -17,8 +17,11 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
       yield {
         type: "compare",
         ids: [a[j].id, a[j + 1].id],
+        indices: [j, j + 1],
+        values: [a[j].value, a[j + 1].value],
         relation,
-        pointers: { current: j, next: j + 1 },
+        pointers: { i: j, j: j + 1 },
+        lines: [2],
       };
 
       if (relation === ">") {
@@ -26,7 +29,10 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
         yield {
           type: "swap",
           ids: [a[j].id, a[j + 1].id],
-          pointers: { current: j, next: j + 1 },
+          indices: [j, j + 1],
+          values: [a[j].value, a[j + 1].value],
+          pointers: { i: j, j: j + 1 },
+          lines: [3],
         };
       }
     }
@@ -34,8 +40,11 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
     yield {
       type: "mark_sorted",
       ids: [a[n - i - 1].id],
+      indices: [n - i - 1],
+      values: [a[n - i - 1].value],
+      lines: [4],
     };
   }
 
-  yield { type: "done" };
+  yield { type: "done", lines: [5] };
 }
