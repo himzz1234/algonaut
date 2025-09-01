@@ -35,22 +35,24 @@ const AlgoRowWrapper = ({
     overflow-hidden
   `;
 
-  const Wrapper = algo.href ? Link : "li";
+  if (algo.href) {
+    return (
+      <Link to={algo.href} className={baseCls} target="_blank">
+        <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-400/10 opacity-0 hover:opacity-100 transition-opacity duration-500" />
+        <div className="relative z-10 w-full flex items-center justify-between">
+          {children}
+        </div>
+      </Link>
+    );
+  }
 
   return (
-    <Wrapper
-      to={algo.href || ""}
-      className={baseCls}
-      target={algo.href ? "_blank" : undefined}
-    >
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-400/10 
-        opacity-0 hover:opacity-100 transition-opacity duration-500"
-      />
+    <li className={baseCls}>
+      <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-400/10 opacity-0 hover:opacity-100 transition-opacity duration-500" />
       <div className="relative z-10 w-full flex items-center justify-between">
         {children}
       </div>
-    </Wrapper>
+    </li>
   );
 };
 
