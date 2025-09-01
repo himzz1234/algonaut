@@ -46,12 +46,12 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               onClick={closeModal}
-              className="fixed inset-0 z-[9999] backdrop-blur-sm bg-gradient-to-b from-[#d5ecff]/50 to-[#e9f4ff]/50 dark:from-[#051428]/70 dark:to-[#10223a]/70"
+              className="fixed inset-0 z-[9999] backdrop-blur-sm bg-black/60"
             />
 
             <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
               <motion.div
-                className="relative w-[90%] max-w-2xl h-fit"
+                className="relative w-[90%] max-w-lg h-fit"
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "100%", opacity: 0 }}
@@ -59,7 +59,7 @@ export default function ModalProvider({ children }: { children: ReactNode }) {
               >
                 <motion.div
                   onClick={(e) => e.stopPropagation()}
-                  className="bg-white/60 dark:bg-[#141d2c]/80 backdrop-blur-xl text-[#264D73] px-4 sm:px-8 py-6 sm:py-10 rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] border border-white/40 pointer-events-auto"
+                  className="bg-[#111]/90 dark:bg-[#111]/95 backdrop-blur-xl text-gray-100 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.75)] border border-white/10 pointer-events-auto"
                 >
                   {modalContent}
                 </motion.div>
