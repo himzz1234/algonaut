@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useMemo } from "react";
 import type { Block, SearchingStep } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 
@@ -16,87 +16,89 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
   const { isMobile } = useOrientation();
   const barWidth = isMobile ? 50 : BAR_WIDTH;
   const barHeight = isMobile ? 50 : BAR_HEIGHT;
+  const spacing = barWidth + GAP;
 
-  const [array, setArray] = useState<Block[]>([]);
-  const [highlight, setHighlight] = useState<{
-    ids: number[];
-    mode: "check" | "found" | null;
-  }>({ ids: [], mode: null });
-  const [target, setTarget] = useState<number | null>(null);
-  const [range, setRange] = useState<{
-    low: number | null;
-    high: number | null;
-  }>({
-    low: null,
-    high: null,
-  });
-
-  const [pointers, setPointers] = useState<Record<string, number | null>>({});
-
-  useEffect(() => {
-    let target = null;
-    let newArray: Block[] = [];
-    let newHighlight: { ids: number[]; mode: "check" | "found" | null } = {
-      ids: [],
-      mode: null,
+  function applyStep(
+    prev: {
+      blocks: Record<number, Block>;
+      highlight: { ids: number[]; mode: "check" | "found" | null };
+      target: number | null;
+      range: { low: number | null; high: number | null };
+      pointers: Record<string, number | null>;
+    },
+    step: SearchingStep
+  ) {
+    let { blocks, highlight, target, range, pointers } = {
+      blocks: { ...prev.blocks },
+      highlight: { ...prev.highlight },
+      target: prev.target,
+      range: { ...prev.range },
+      pointers: { ...prev.pointers },
     };
 
-    let newRange: { low: number | null; high: number | null } = {
-      low: null,
-      high: null,
-    };
+    switch (step.type) {
+      case "init":
+        blocks = {};
+        (step.array ?? []).forEach((b) => {
+          blocks[b.id] = b;
+        });
+        highlight = { ids: [], mode: null };
+        target = step.target;
+        range = { low: null, high: null };
+        pointers = step.pointers ?? {};
+        break;
 
-    let newPointers: Record<string, number | null> = {};
+      case "set-range":
+        range = { low: step.low, high: step.high };
+        pointers = step.pointers ?? {};
+        break;
 
-    for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      const step = steps[i];
-      switch (step.type) {
-        case "init":
-          target = step.target;
-          newArray = step.array ?? [];
-          newHighlight = { ids: [], mode: null };
-          newRange = { low: null, high: null };
-          newPointers = step.pointers ?? {};
-          break;
+      case "check":
+        highlight = { ids: [step.id], mode: "check" };
+        pointers = step.pointers ?? {};
+        break;
 
-        case "set-range":
-          newRange = { low: step.low, high: step.high };
-          newPointers = step.pointers ?? {};
-          break;
-
-        case "check":
-          newHighlight = { ids: [step.id], mode: "check" };
-          newPointers = step.pointers ?? {};
-          break;
-
-        case "found":
-          newHighlight = { ids: [step.id], mode: "found" };
-          newPointers = step.pointers ?? {};
-          break;
-      }
+      case "found":
+        highlight = { ids: [step.id], mode: "found" };
+        pointers = step.pointers ?? {};
+        break;
     }
 
-    setTarget(target);
-    setArray(newArray);
-    setHighlight(newHighlight);
-    setRange(newRange);
-    setPointers(newPointers);
-  }, [stepIndex, steps]);
+    return { blocks, highlight, target, range, pointers };
+  }
+
+  const { blocks, highlight, target, range, pointers } = useMemo(() => {
+    let state = {
+      blocks: {} as Record<number, Block>,
+      highlight: {
+        ids: [] as number[],
+        mode: null as "check" | "found" | null,
+      },
+      target: null as number | null,
+      range: { low: null as number | null, high: null as number | null },
+      pointers: {} as Record<string, number | null>,
+    };
+
+    for (let i = 0; i <= stepIndex && i < steps.length; i++) {
+      state = applyStep(state, steps[i]);
+    }
+    return state;
+  }, [steps, stepIndex]);
 
   return (
-    <div className="relative w-full h-full flex flex-col py-16 items-center justify-center">
-      <svg
-        width={array.length * (barWidth + GAP)}
+    <motion.div className="relative w-full h-full flex flex-col py-16 items-center justify-center">
+      <motion.svg
+        width={Object.keys(blocks).length * spacing}
         height={barHeight}
         style={{ overflow: "visible" }}
       >
-        {array.map((block, i) => {
+        {Object.values(blocks).map((block, i) => {
           const isHighlighted = highlight.ids.includes(block.id);
           const inRange =
             range.low !== null &&
             range.high !== null &&
-            i >= array.findIndex((b) => b.id === range.low) &&
-            i <= array.findIndex((b) => b.id === range.high);
+            i >= Object.values(blocks).findIndex((b) => b.id === range.low) &&
+            i <= Object.values(blocks).findIndex((b) => b.id === range.high);
 
           const labelsAtIndex = Object.entries(pointers)
             .filter(([, value]) => value === i)
@@ -104,11 +106,10 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
 
           return (
             <motion.g
-              layout
               key={block.id}
-              initial={{ x: i * (barWidth + GAP), y: 0 }}
+              initial={{ x: i * spacing, y: 0 }}
               animate={{
-                x: i * (barWidth + GAP),
+                x: i * spacing,
                 opacity: range.low === null ? 1 : inRange ? 1 : 0.2,
               }}
               transition={{ duration: 0.5 }}
@@ -153,7 +154,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
             </motion.g>
           );
         })}
-      </svg>
+      </motion.svg>
 
       <div className="absolute top-5 right-5 flex flex-col items-center">
         <svg height={barWidth} width={barHeight}>
@@ -164,9 +165,9 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
               height={barHeight}
               animate={{
                 fill:
-                  steps[stepIndex].type === "compare"
+                  steps[stepIndex]?.type === "check"
                     ? "#eab308"
-                    : steps[stepIndex].type === "found"
+                    : steps[stepIndex]?.type === "found"
                     ? "#22c55e"
                     : "#374151",
               }}
@@ -187,6 +188,6 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
         </svg>
         <span className="mt-2 text-sm text-gray-200">Target</span>
       </div>
-    </div>
+    </motion.div>
   );
 }
