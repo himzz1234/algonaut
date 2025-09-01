@@ -8,6 +8,7 @@ import AlgorithmInfoWrapper from "../../components/layout/AlgorithmInfoWrapper";
 import { binarySearch, linearSearch } from "../../algorithms/searching";
 import SearchingVisualizer from "../../components/visualizers/searching";
 import { describeSearchingStep } from "../../steps/searching";
+import { PseudoCodeBlock } from "../../components/layout/PseudoCodeBlock";
 
 export default function SearchingPage() {
   const [searchParams] = useSearchParams();
@@ -82,12 +83,19 @@ export default function SearchingPage() {
           setStepIndex={setStepIndex}
           setIsPlaying={setIsPlaying}
           setSpeed={setSpeed}
+          isFullScreen={isFullscreen}
           toggleFullScreen={() => setIsFullscreen((f) => !f)}
         />
       }
       isFullScreen={isFullscreen}
       info={<AlgorithmInfoWrapper algorithmKey={algorithm ?? ""} />}
       logs={logs}
+      pseudocode={
+        <PseudoCodeBlock
+          activeLines={steps[stepIndex].lines ?? []}
+          algorithmKey={algorithm ?? ""}
+        />
+      }
     >
       <SearchingVisualizer steps={steps} stepIndex={stepIndex} />
     </VisualizerLayout>

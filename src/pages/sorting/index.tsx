@@ -14,6 +14,7 @@ import {
 import SortingVisualizer from "../../components/visualizers/sorting";
 import AlgorithmInfoWrapper from "../../components/layout/AlgorithmInfoWrapper";
 import { describeSortingStep } from "../../steps/sorting";
+import { PseudoCodeBlock } from "../../components/layout/PseudoCodeBlock";
 
 export default function SortingPage() {
   const [searchParams] = useSearchParams();
@@ -96,12 +97,19 @@ export default function SortingPage() {
           setStepIndex={setStepIndex}
           setIsPlaying={setIsPlaying}
           setSpeed={setSpeed}
+          isFullScreen={isFullscreen}
           toggleFullScreen={() => setIsFullscreen((f) => !f)}
         />
       }
       isFullScreen={isFullscreen}
       info={<AlgorithmInfoWrapper algorithmKey={algorithm ?? ""} />}
       logs={logs}
+      pseudocode={
+        <PseudoCodeBlock
+          algorithmKey={algorithm ?? ""}
+          activeLines={steps[stepIndex].lines ?? []}
+        />
+      }
     >
       <SortingVisualizer steps={steps} stepIndex={stepIndex} />
     </VisualizerLayout>
