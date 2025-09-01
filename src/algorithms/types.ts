@@ -203,53 +203,65 @@ export type PathfindingStep =
       grid: Cell[][];
       start: { row: number; col: number };
       target: { row: number; col: number };
+      lines?: [];
     }
   | {
       type: "visit";
       id: number;
       current: { row: number; col: number };
+      lines?: [];
     }
   | {
       type: "expand";
       from: number;
       neighbors: number[];
+      lines?: [];
     }
   | {
       type: "enqueue";
       id: number;
       priority?: number;
+      lines?: [];
     }
   | {
       type: "relax";
       from: number;
       to: number;
       newDistance: number;
+      lines?: [];
     }
   | {
       type: "compare";
       a: number;
       b: number;
       relation: "<" | ">" | "=";
+      lines?: [];
     }
   | {
       type: "mark_visited";
       id: number;
+      lines?: [];
     }
   | {
       type: "dead_end";
       id: number;
+      lines?: [];
     }
   | {
       type: "backtrack";
       id: number;
+      lines?: [];
     }
   | {
       type: "path_found";
       path: number[];
+      lines?: [];
     }
   | {
       type: "no_path";
+      lines?: [];
     }
   | {
       type: "done";
+      lines?: [];
     };

@@ -37,7 +37,6 @@ export default function PathfindingVisualizer({ steps, stepIndex }: Props) {
     const newPath = new Set<number>();
     const newVisitedAll = new Set<number>();
 
-    console.log(steps);
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
       const step = steps[i];
       switch (step.type) {

@@ -8,6 +8,7 @@ import AlgorithmInfoWrapper from "../../components/layout/AlgorithmInfoWrapper";
 import PathfindingVisualizer from "../../components/visualizers/pathfinding";
 import { bfs, dfs } from "../../algorithms/pathfinding";
 import { describePathfindingStep } from "../../steps/pathfinding";
+import { PseudoCodeBlock } from "../../components/layout/PseudoCodeBlock";
 
 export default function PathfindingPage() {
   const [searchParams] = useSearchParams();
@@ -107,12 +108,19 @@ export default function PathfindingPage() {
           setStepIndex={setStepIndex}
           setIsPlaying={setIsPlaying}
           setSpeed={setSpeed}
+          isFullScreen={isFullscreen}
           toggleFullScreen={() => setIsFullscreen((f) => !f)}
         />
       }
       isFullScreen={isFullscreen}
       info={<AlgorithmInfoWrapper algorithmKey={algorithm ?? ""} />}
       logs={logs}
+      pseudocode={
+        <PseudoCodeBlock
+          algorithmKey={algorithm ?? ""}
+          activeLines={steps[stepIndex]?.lines ?? []}
+        />
+      }
     >
       <PathfindingVisualizer steps={steps} stepIndex={stepIndex} />
     </VisualizerLayout>
