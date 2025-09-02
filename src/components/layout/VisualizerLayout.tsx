@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import RotateBanner from "../RotateBanner";
 import { useOrientation } from "../../hooks/useOrientation";
+// import useUpNext from "../../hooks/useUpNext";
 
 interface VisualizerLayoutProps {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ export default function VisualizerLayout({
   isFullScreen,
   pseudocode,
 }: VisualizerLayoutProps) {
+  // const nextPlaying = useUpNext({ current: "insertion" });
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const { isPortrait, isMobile } = useOrientation();
 
@@ -83,6 +85,10 @@ export default function VisualizerLayout({
                 flex-1 
               `}
             >
+              {/* <div className="absolute right-0 bg-[#1e1e1e] bottom-14 w-40 h-10">
+                <h6>Up next</h6>
+                <h4>{nextPlaying?.label}</h4>
+              </div> */}
               {children}
               {latestLog && (
                 <div

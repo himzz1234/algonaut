@@ -82,7 +82,7 @@ export default function Dropdown({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="absolute bg-white/5 dark:bg-black/50 backdrop-blur-md 
+          className="absolute bg-[#1e1e1e]/30 backdrop-blur-md 
             border border-white/10 rounded-md shadow-lg 
             max-h-64 overflow-y-auto z-[9999] min-w-48"
           style={{

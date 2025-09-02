@@ -31,7 +31,7 @@ const AlgoRowWrapper = ({
     rounded-lg border border-gray-700/50
     px-4 py-3 transition-all duration-300
     hover:scale-[1.01] hover:border-green-400/50 
-    hover:shadow-md hover:shadow-green-500/10
+    hover:shadow-md
     overflow-hidden
   `;
 
@@ -40,13 +40,9 @@ const AlgoRowWrapper = ({
   return (
     <Wrapper
       to={algo.href || ""}
-      className={baseCls}
+      className={`${baseCls} group`}
       target={algo.href ? "_blank" : undefined}
     >
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-400/10 
-        opacity-0 hover:opacity-100 transition-opacity duration-500"
-      />
       <div className="relative z-10 w-full flex items-center justify-between">
         {children}
       </div>

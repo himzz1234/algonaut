@@ -24,7 +24,7 @@ export default function AlgoCard({ algorithm }: AlgoCardProps) {
   return (
     <Link to={algorithm.href}>
       <div
-        className="relative w-full h-64 rounded-2xl p-5 flex flex-col
+        className="relative w-full h-64 rounded-xl p-5 flex flex-col
         bg-[#0f1014] backdrop-blur-sm border border-gray-700/60
         shadow-md transition-all duration-500 overflow-hidden
         hover:shadow-green-500/20 hover:border-green-400/50

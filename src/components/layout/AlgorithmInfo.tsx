@@ -10,7 +10,7 @@ export default function AlgorithmInfo({
 }: Partial<AlgorithmMeta>) {
   return (
     <>
-      <div className="col-span-12 lg:col-span-8 border border-gray-700/60 rounded-lg p-4 backdrop-blur-sm shadow-lg bg-gradient-to-b from-[#15151c] to-[#0f0f14]">
+      <div className="col-span-12 lg:col-span-8 backdrop-blur-sm shadow-lg px-2">
         <h2 className="text-xl sm:text-2xl font-semibold text-white">{name}</h2>
 
         <div className="flex gap-2 mb-3 mt-4">
@@ -50,7 +50,7 @@ export default function AlgorithmInfo({
         )}
       </div>
 
-      <div className="h-fit col-span-12 lg:col-span-4 border border-gray-700/60 rounded-lg p-4 backdrop-blur-sm shadow-lg">
+      <div className="h-fit col-span-12 lg:col-span-4 bg-[#0f1014] border border-gray-700/60 rounded-lg p-4 backdrop-blur-sm shadow-lg">
         <h3 className="font-medium text-gray-200 text-sm sm:text-lg mb-2">
           Time & Space Complexity
         </h3>

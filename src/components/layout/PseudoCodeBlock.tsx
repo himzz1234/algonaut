@@ -48,9 +48,7 @@ export function PseudoCodeBlock({
   return (
     <div className="flex-1 h-full rounded-lg text-sm leading-relaxed">
       <div className="p-4 relative">
-        <h3 className="font-medium text-sm sm:text-lg">
-          Pseudocode for analysis
-        </h3>
+        <h3 className="font-medium text-sm sm:text-lg">Pseudocode</h3>
 
         <div className="relative mt-4">
           <AnimatePresence>

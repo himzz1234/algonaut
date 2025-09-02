@@ -99,10 +99,7 @@ export default function Footer() {
               Stay Updated
             </h3>
             <form>
-              <button
-                type="submit"
-                className="whitespace-nowrap underline uppercase font-medium text-green-400 transition-colors"
-              >
+              <button className="whitespace-nowrap underline uppercase font-medium text-green-400 transition-colors">
                 Sign up for our newsletter →
               </button>
             </form>
