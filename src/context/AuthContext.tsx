@@ -1,9 +1,17 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../lib/firebase";
+import { auth, db } from "../lib/firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+
+type AuthUser = User & {
+  college?: string;
+  location?: string;
+  github?: string;
+  linkedin?: string;
+};
 
 type AuthContextType = {
-  user: User | null;
+  user: AuthUser | null;
   loading: boolean;
 };
 
@@ -14,9 +22,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+
+      if (currentUser) {
+        const userRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(userRef);
+
+        if (!docSnap.exists()) {
+          await setDoc(userRef, {
+            uid: currentUser.uid,
+            email: currentUser.email,
+            displayName: currentUser.displayName || "",
+            photoUrl: currentUser.photoURL || "",
+            provider: currentUser.providerId,
+            createdAt: serverTimestamp(),
+            lastActive: serverTimestamp(),
+          });
+        } else {
+          await setDoc(
+            userRef,
+            {
+              displayName: currentUser.displayName || "",
+              lastActive: serverTimestamp(),
+            },
+            { merge: true }
+          );
+        }
+      }
     });
 
     return () => unsubscribe();
