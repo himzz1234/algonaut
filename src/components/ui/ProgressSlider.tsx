@@ -1,18 +1,16 @@
 import { motion } from "framer-motion";
+import { usePlayback } from "../../context/PlaybackContext";
 
 interface ProgressSliderProps {
-  stepIndex: number;
   stepsLength: number;
-  onChange: (index: number) => void;
   className?: string;
 }
 
 export default function ProgressSlider({
-  stepIndex,
   stepsLength,
-  onChange,
   className,
 }: ProgressSliderProps) {
+  const { stepIndex, setStepIndex } = usePlayback();
   const progress = stepsLength > 1 ? stepIndex / (stepsLength - 1) : 0;
 
   return (
@@ -24,7 +22,7 @@ export default function ProgressSlider({
         ).getBoundingClientRect();
         const x = e.clientX - rect.left;
         const newIndex = Math.round((x / rect.width) * (stepsLength - 1));
-        onChange(newIndex);
+        setStepIndex(newIndex);
       }}
     >
       <motion.div
