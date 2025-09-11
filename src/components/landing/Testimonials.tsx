@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import TestimonialCard from "./TestimonialCard";
 import { motion } from "motion/react";
 
@@ -6,7 +7,7 @@ export default function Testimonials() {
     {
       id: 1,
       name: "Pravalika V.K.",
-      role: "Expert Coder",
+      role: "Expert Coder @ Google",
       quote:
         "AlgoVisualizer made algorithms finally click for me. The visuals kept me engaged and motivated.",
     },
@@ -75,9 +76,11 @@ export default function Testimonials() {
           Join <span className="text-green-400 font-semibold">100+</span>{" "}
           learners mastering algorithms with AlgoVisualizer.
         </p>
-        <button className="px-6 py-3 text-base sm:text-lg font-medium text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg hover:shadow-[0_0_12px_rgba(16,185,129,0.6)] transition">
-          Start Visualizing
-        </button>
+        <Link to="/learn/sorting?algorithm=bubble-sort">
+          <button className="px-6 py-3 text-base sm:text-lg font-medium text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg hover:shadow-[0_0_12px_rgba(16,185,129,0.6)] transition">
+            Start Visualizing
+          </button>
+        </Link>
       </div>
     </section>
   );
