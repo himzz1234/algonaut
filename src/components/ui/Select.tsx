@@ -1,26 +1,34 @@
-import { useState, useRef, useEffect, type ReactNode } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  type ReactNode,
+  useLayoutEffect,
+} from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
-interface DropdownProps {
+interface SelectProps {
   options: string[];
   selected?: string;
   onSelect: (value: string) => void;
   children: (props: { toggle: () => void; isOpen: boolean }) => ReactNode;
   placeholder?: string;
   placement?: "top" | "bottom";
+  align?: "left" | "right";
 }
 
-export default function Dropdown({
+export default function Select({
   options,
   onSelect,
   children,
   placement,
-}: DropdownProps) {
+  align = "left",
+}: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLUListElement>(null);
+  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
 
   useEffect(() => {
     if (!document.getElementById("dropdown-portal")) {
@@ -41,11 +49,12 @@ export default function Dropdown({
         setIsOpen(false);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isOpen && triggerRef.current && dropdownRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
@@ -62,7 +71,11 @@ export default function Dropdown({
           ? rect.bottom + window.scrollY + 8
           : rect.top - dropdownRect.height + window.scrollY - 8;
 
-      const left = rect.right + window.scrollX - dropdownRect.width;
+      let left = rect.left + window.scrollX;
+
+      if (align === "right") {
+        left = rect.right + window.scrollX - dropdownRect.width;
+      }
 
       setCoords({
         top,
@@ -70,7 +83,7 @@ export default function Dropdown({
         width: rect.width,
       });
     }
-  }, [isOpen, placement]);
+  }, [isOpen, placement, align]);
 
   const dropdownMenu = (
     <AnimatePresence>
@@ -82,9 +95,9 @@ export default function Dropdown({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="absolute bg-[#1e1e1e]/30 backdrop-blur-md 
-            border border-white/10 rounded-md shadow-lg 
-            max-h-64 overflow-y-auto z-[9999] min-w-48"
+          className="absolute bg-[#100f14]
+            border border-gray-700/60 rounded-md shadow-lg 
+            max-h-64 overflow-y-auto z-[9999] min-w-48 no-scrollbar"
           style={{
             top: coords.top,
             left: coords.left,
