@@ -1,35 +1,41 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import type { Block, SearchingStep } from "../../../algorithms/types";
+import type {
+  Block,
+  PointerValue,
+  SearchingStep,
+} from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
+import { usePlayback } from "../../../context/PlaybackContext";
 
 const GAP = 5;
-const BAR_WIDTH = 60;
-const BAR_HEIGHT = 60;
+const BAR_WIDTH = 65;
+const BAR_HEIGHT = 65;
 
 type Props = {
   steps: SearchingStep[];
-  stepIndex: number;
 };
 
-export default function SearchingVisualizer({ steps, stepIndex }: Props) {
+export default function SearchingVisualizer({ steps }: Props) {
   const { isMobile } = useOrientation();
+  const { stepIndex } = usePlayback();
+
   const barWidth = isMobile ? 50 : BAR_WIDTH;
   const barHeight = isMobile ? 50 : BAR_HEIGHT;
   const spacing = barWidth + GAP;
 
   function applyStep(
     prev: {
-      blocks: Record<number, Block>;
+      blocks: Block[];
       highlight: { ids: number[]; mode: "check" | "found" | null };
       target: number | null;
       range: { low: number | null; high: number | null };
-      pointers: Record<string, number | null>;
+      pointers: Record<string, PointerValue>;
     },
     step: SearchingStep
   ) {
     let { blocks, highlight, target, range, pointers } = {
-      blocks: { ...prev.blocks },
+      blocks: [...prev.blocks],
       highlight: { ...prev.highlight },
       target: prev.target,
       range: { ...prev.range },
@@ -38,9 +44,9 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
 
     switch (step.type) {
       case "init":
-        blocks = {};
-        (step.array ?? []).forEach((b) => {
-          blocks[b.id] = b;
+        blocks = [];
+        (step.array ?? []).forEach((b, i) => {
+          blocks[i] = b;
         });
         highlight = { ids: [], mode: null };
         target = step.target;
@@ -69,14 +75,14 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
 
   const { blocks, highlight, target, range, pointers } = useMemo(() => {
     let state = {
-      blocks: {} as Record<number, Block>,
+      blocks: [] as Block[],
       highlight: {
         ids: [] as number[],
         mode: null as "check" | "found" | null,
       },
       target: null as number | null,
       range: { low: null as number | null, high: null as number | null },
-      pointers: {} as Record<string, number | null>,
+      pointers: {} as Record<string, PointerValue>,
     };
 
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
@@ -85,6 +91,17 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
     return state;
   }, [steps, stepIndex]);
 
+  let groupedPointers: Record<number, string[]> = {};
+  Object.entries(pointers).forEach(([label, value]) => {
+    if (typeof value === "number") {
+      if (value in groupedPointers) {
+        groupedPointers[value].push(label);
+      } else {
+        groupedPointers[value] = [label];
+      }
+    }
+  });
+
   return (
     <motion.div className="relative w-full h-full flex flex-col py-16 items-center justify-center">
       <motion.svg
@@ -92,7 +109,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
         height={barHeight}
         style={{ overflow: "visible" }}
       >
-        {Object.values(blocks).map((block, i) => {
+        {blocks.map((block, i) => {
           const isHighlighted = highlight.ids.includes(block.id);
           const inRange =
             range.low !== null &&
@@ -100,9 +117,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
             i >= Object.values(blocks).findIndex((b) => b.id === range.low) &&
             i <= Object.values(blocks).findIndex((b) => b.id === range.high);
 
-          const labelsAtIndex = Object.entries(pointers)
-            .filter(([, value]) => value === i)
-            .map(([label]) => label);
+          const labelsAtIndex = groupedPointers[block.id];
 
           return (
             <motion.g
@@ -115,7 +130,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
               transition={{ duration: 0.5 }}
             >
               <motion.rect
-                rx={4}
+                rx={6}
                 width={barWidth}
                 height={barHeight}
                 animate={{
@@ -123,7 +138,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
                     ? highlight.mode === "found"
                       ? "#22c55e"
                       : "#eab308"
-                    : "#374151",
+                    : "#475569",
                 }}
                 transition={{ duration: 0.3 }}
               />
@@ -138,7 +153,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
               >
                 {block.value}
               </text>
-              {labelsAtIndex.length > 0 && (
+              {labelsAtIndex && (
                 <text
                   x={barWidth / 2}
                   y={barHeight + 20}
@@ -160,7 +175,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
         <svg height={barWidth} width={barHeight}>
           <g>
             <motion.rect
-              rx={4}
+              rx={6}
               width={barWidth}
               height={barHeight}
               animate={{
@@ -169,7 +184,7 @@ export default function SearchingVisualizer({ steps, stepIndex }: Props) {
                     ? "#eab308"
                     : steps[stepIndex]?.type === "found"
                     ? "#22c55e"
-                    : "#374151",
+                    : "#475569",
               }}
               transition={{ duration: 0.3 }}
             />
