@@ -27,6 +27,7 @@ export default function VisualizerLayoutWrapper<TStep extends Step<any>>({
 }: VisualizerLayoutWrapperProps<TStep>) {
   return (
     <PlaybackProvider
+      key={algorithmKey}
       repeat={repeat}
       autoplay={autoplay}
       stepsLength={steps.length}

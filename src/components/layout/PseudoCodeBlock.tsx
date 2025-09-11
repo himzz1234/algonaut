@@ -16,7 +16,7 @@ export function PseudoCodeBlock<TStep extends Step>({
   const { stepIndex } = usePlayback();
 
   const algo = algorithms[algorithmKey as keyof typeof algorithms];
-  const code = algo.pseudocode ?? [];
+  const code = algo?.pseudocode ?? [];
 
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);

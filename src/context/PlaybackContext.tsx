@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import KeyboardShortcuts from "../components/KeyboardShortcuts";
 import { useModal } from "./ModalContext";
+import { useSearchParams } from "react-router-dom";
 
 export type PlaybackContextType = {
   stepIndex: number;
@@ -36,6 +37,15 @@ export function PlaybackProvider({
   const [speed, setSpeed] = useState("1x");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { openModal } = useModal();
+
+  const [searchParams] = useSearchParams();
+  const algorithmKey = searchParams.get("algorithm") ?? "";
+
+  useEffect(() => {
+    setStepIndex(0);
+    setSpeed("1x");
+    setIsFullscreen(false);
+  }, [algorithmKey]);
 
   const parseMultiplier = (label: string) =>
     parseFloat(label.replace("x", "")) || 1;

@@ -4,6 +4,9 @@ import RotateBanner from "../RotateBanner";
 import { useOrientation } from "../../hooks/useOrientation";
 import { usePlayback } from "../../context/PlaybackContext";
 import type { Step } from "../../algorithms/types";
+import { Link } from "react-router-dom";
+import { FiChevronRight } from "react-icons/fi";
+import useUpNext from "../../hooks/useUpNext";
 interface VisualizerLayoutProps<TStep> {
   children: React.ReactNode;
   steps: TStep[];
@@ -14,17 +17,47 @@ interface VisualizerLayoutProps<TStep> {
   pseudocode: React.ReactNode;
 }
 
+function UpNextCard() {
+  const nextAlgo = useUpNext();
+  if (!nextAlgo) return null;
+  if (!nextAlgo.href) return null;
+
+  return (
+    <Link
+      to={nextAlgo.href}
+      className="absolute bottom-7.5 right-0 cursor-pointer
+        flex items-center justify-between gap-2
+        backdrop-blur-md bg-[#0f1014] border border-gray-700/60 shadow-md 
+        rounded-l-lg px-3 py-2 w-48
+        hover:bg-green-500/40 transition-all z-20"
+    >
+      <div className="flex flex-col leading-tight">
+        <span className="text-xs text-green-400 uppercase">Up Next</span>
+        <span className="text-sm sm:text-base mt-2 text-white truncate max-w-32">
+          {nextAlgo.name}
+        </span>
+      </div>
+      <motion.div
+        animate={{ x: [0, 3, 0] }}
+        transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }}
+      >
+        <FiChevronRight className="text-gray-300" size={18} />
+      </motion.div>{" "}
+    </Link>
+  );
+}
+
 export default function VisualizerLayout<TStep extends Step>({
-  children,
+  info,
   steps,
+  children,
   controls,
   slider,
-  info,
   pseudocode,
 }: VisualizerLayoutProps<TStep>) {
   const { isFullscreen, stepIndex } = usePlayback();
   const { isPortrait, isMobile } = useOrientation();
-  const explanation = steps[stepIndex].explanation ?? "";
+  const explanation = steps[stepIndex]?.explanation ?? "";
 
   const shouldShowRotateBanner = !isFullscreen && isMobile && isPortrait;
   useEffect(() => {
@@ -74,6 +107,7 @@ export default function VisualizerLayout<TStep extends Step>({
                 flex-1 
               `}
             >
+              {stepIndex === steps.length - 1 && <UpNextCard />}
               {children}
               <div
                 className={`absolute left-1/2 -translate-x-1/2 w-full px-2 pointer-events-none ${captionBottomClass}`}

@@ -11,7 +11,9 @@ export default function AlgorithmInfo({
   return (
     <>
       <div className="col-span-12 lg:col-span-8 backdrop-blur-sm shadow-lg">
-        <h2 className="text-xl sm:text-2xl font-semibold text-white">{name}</h2>
+        <h2 className="text-lg xs:text-xl sm:text-2xl font-semibold text-white">
+          {name}
+        </h2>
 
         <div className="flex gap-2 mb-3 mt-5">
           <span className="px-2 py-1 rounded-sm text-sm bg-blue-500/20 text-blue-400">
