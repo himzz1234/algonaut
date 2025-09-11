@@ -44,7 +44,7 @@ export default function Faqs() {
           </span>
         </h2>
         <p className="mt-3 text-base sm:text-lg md:text-xl text-gray-400 text-balance">
-          Everything you need to know about AlgoVisualizer.
+          Everything you need to know about Algonaut.
         </p>
       </div>
 
