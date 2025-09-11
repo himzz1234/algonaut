@@ -24,6 +24,7 @@ export default function LearningPath() {
           <LearningPathCard
             title="Beginner"
             description="Basics & Fundamentals"
+            duration="1h 30m"
             progress={100}
             href="/learn#path_beginner"
           />
@@ -31,6 +32,7 @@ export default function LearningPath() {
           <LearningPathCard
             title="Intermediate"
             description="Data Structures & Algorithms"
+            duration="3h"
             progress={50}
             href="/learn#path_intermediate"
           />
@@ -38,6 +40,7 @@ export default function LearningPath() {
           <LearningPathCard
             title="Interview Prep"
             description="Preparation & Practice"
+            duration="4h"
             progress={0}
             href="/learn#path_interview_prep"
           />

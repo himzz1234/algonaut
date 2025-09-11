@@ -1,20 +1,10 @@
 import { useState, useMemo } from "react";
 import AlgoCard from "./AlgoCard";
-// import { FiSearch } from "react-icons/fi";
-// import Select from "../ui/Select";
 import { algorithms } from "../../data/algorithms";
 
 export default function Feature() {
   const [searchTerm] = useState("");
   const [selectedOption] = useState("All Algorithms");
-
-  // const dropdownOptions = [
-  //   "All Algorithms",
-  //   "Sorting",
-  //   "Pathfinding",
-  //   "Graph",
-  //   "Dynamic Programming",
-  // ];
 
   const featuredAlgorithms = useMemo(() => {
     return Object.values(algorithms)
@@ -49,59 +39,6 @@ export default function Feature() {
       </header>
 
       <div className="max-w-5xl w-full mx-auto mt-10 flex flex-col gap-4">
-        {/* <div className="flex flex-col sm:flex-row gap-3 p-3 rounded-xl bg-white/5 dark:bg-black/30 backdrop-blur-md border border-white/10 shadow-lg">
-          <div className="relative flex-1">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
-            <input
-              type="text"
-              placeholder="Search algorithms..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 py-2.5 rounded-md border border-white/10 bg-transparent text-white placeholder-gray-500 
-              focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 
-              transition-all duration-200 text-sm sm:text-base"
-            />
-          </div>
-
-          <div className="w-full sm:w-56">
-            <Select
-              options={dropdownOptions}
-              selected={selectedOption}
-              onSelect={setSelectedOption}
-              placement="bottom"
-            >
-              {({ toggle, isOpen }) => (
-                <button
-                  onClick={toggle}
-                  className="w-full h-full px-4 py-2 rounded-md flex justify-between items-center
-                  bg-[#0f1014] backdrop-blur-sm
-                  text-gray-400 border border-gray-700/60
-                  hover:border-green-400/50 hover:bg-white/10
-                  focus:outline-none focus:ring-2 focus:ring-green-400
-                  transition-all duration-200 text-sm sm:text-base"
-                >
-                  {selectedOption || "Filter by category"}
-                  <svg
-                    className={`w-4 h-4 ml-2 transition-transform ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-              )}
-            </Select>
-          </div>
-        </div> */}
-
         {featuredAlgorithms.length > 0 ? (
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {featuredAlgorithms.map((algo, index) => (

@@ -1,28 +1,66 @@
 import { LearningPathSection } from "../../components/landing/LearningPathSection";
 import { modules } from "../../data/modules";
+import type { Variants } from "motion";
+import { motion } from "motion/react";
+import StatsGrid from "../StatsGrid";
 
-export default function LearningPage() {
+export default function LearningOverview() {
   const beginner = modules.filter((m) => m.level === "beginner");
   const intermediate = modules.filter((m) => m.level === "intermediate");
   const interview = modules.filter((m) => m.level === "interview");
 
+  const container = (delay = 0): Variants => ({
+    hidden: { opacity: 0, y: 24 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.55,
+        ease: [0.42, 0, 0.58, 1],
+        delay,
+        staggerChildren: 0.08,
+      },
+    },
+  });
+
+  const item: Variants = {
+    hidden: { opacity: 0, y: 24 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.55, ease: [0.42, 0, 0.58, 1] },
+    },
+  };
+
   return (
     <>
-      <section>
-        <main className="flex flex-col items-center justify-center lg:max-w-6xl lg:mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 bg-clip-text text-transparent leading-tight">
+      <header>
+        <div className="flex flex-col items-center justify-center lg:max-w-6xl lg:mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <motion.div
+            initial="hidden"
+            animate="show"
+            variants={container()}
+            className="text-center"
+          >
+            <motion.h1
+              variants={item}
+              className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 bg-clip-text text-transparent leading-tight"
+            >
               <span className="text-green-500">Learning</span> Paths
-            </h1>
-            <p className="mt-2 md:mt-4 text-base sm:text-lg md:text-xl text-gray-400 max-w-lg sm:max-w-2xl mx-auto px-2">
-              Follow guided paths to master algorithmic concepts, <br></br>from
-              the basics to advanced topics.
-            </p>
-          </div>
-        </main>
-      </section>
+            </motion.h1>
+            <motion.p
+              variants={item}
+              className="mt-2 md:mt-4 text-base sm:text-lg md:text-xl text-gray-400 max-w-lg sm:max-w-2xl mx-auto px-2 leading-relaxed"
+            >
+              Follow guided paths to master algorithmic concepts, <br />
+              from the basics to advanced topics.
+            </motion.p>
+          </motion.div>
+        </div>
+      </header>
 
       <section className="lg:max-w-6xl lg:mx-auto px-4 sm:px-6 lg:px-8 md:pt-16 pb-16 space-y-12">
+        <StatsGrid />
         <LearningPathSection
           id="path_beginner"
           title="Beginner"

@@ -1,12 +1,13 @@
 import { useCallback, useState } from "react";
-import AlgoRow, { type Algo } from "./AlgoRow";
+import AlgoRow from "./AlgoRow";
+import { algorithms } from "../../data/algorithms";
 
 type Module = {
   id: string;
   title: string;
   description: string;
   level: "beginner" | "intermediate" | "interview";
-  algos: Algo[];
+  algos: string[]; // <-- now just IDs
 };
 
 type LearningPathSectionProps = {
@@ -45,11 +46,13 @@ export function LearningPathSection({
 
   return (
     <section id={id}>
-      <h2
-        className={`mb-4 font-semibold ${accentClass} text-xl sm:text-2xl lg:text-3xl`}
-      >
-        {title}
-      </h2>
+      <div className="flex items-center justify-between px-2.5">
+        <h2
+          className={`mb-4 font-semibold ${accentClass} text-xl sm:text-2xl lg:text-3xl`}
+        >
+          {title}
+        </h2>
+      </div>
 
       <div className="space-y-3">
         {modules.map((m) => (
@@ -89,16 +92,21 @@ export function LearningPathSection({
             </summary>
 
             <ul className="px-3 sm:px-4 pb-3 sm:pb-4 space-y-2 sm:space-y-2">
-              {m.algos.map((a) => (
-                <AlgoRow
-                  key={a.id}
-                  algo={a}
-                  note={notes[a.id]}
-                  starred={!!starred[a.id]}
-                  onToggleStar={toggleStar}
-                  onEditNote={addOrEditNote}
-                />
-              ))}
+              {m.algos.map((algoId) => {
+                const algo = algorithms[algoId];
+                if (!algo) return null;
+
+                return (
+                  <AlgoRow
+                    key={algoId}
+                    algo={algo}
+                    note={notes[algoId]}
+                    starred={!!starred[algoId]}
+                    onToggleStar={toggleStar}
+                    onEditNote={addOrEditNote}
+                  />
+                );
+              })}
             </ul>
           </details>
         ))}

@@ -27,7 +27,7 @@ export default function ReadySection() {
           </motion.p>
 
           <motion.div className="mt-8 sm:mt-10">
-            <Link to="/visualize">
+            <Link to="/learn/sorting?algorithm=bubble-sort">
               <button
                 className="px-6 sm:px-8 py-3 text-base sm:text-lg rounded-lg font-medium text-white 
                   bg-gradient-to-r from-green-500 to-emerald-600 hover:shadow-[0_0_12px_rgba(16,185,129,0.6)] 
