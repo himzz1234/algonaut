@@ -10,10 +10,10 @@ export default function AlgorithmInfo({
 }: Partial<AlgorithmMeta>) {
   return (
     <>
-      <div className="col-span-12 lg:col-span-8 backdrop-blur-sm shadow-lg px-2">
+      <div className="col-span-12 lg:col-span-8 backdrop-blur-sm shadow-lg">
         <h2 className="text-xl sm:text-2xl font-semibold text-white">{name}</h2>
 
-        <div className="flex gap-2 mb-3 mt-4">
+        <div className="flex gap-2 mb-3 mt-5">
           <span className="px-2 py-1 rounded-sm text-sm bg-blue-500/20 text-blue-400">
             {category}
           </span>
@@ -37,7 +37,7 @@ export default function AlgorithmInfo({
         </p>
 
         {tags && (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             {tags.map((tag) => (
               <span
                 key={tag}

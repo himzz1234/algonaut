@@ -1,25 +1,31 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useRef, useLayoutEffect, useState } from "react";
 import { algorithms } from "../../data/algorithms";
+import { usePlayback } from "../../context/PlaybackContext";
+import type { Step } from "../../algorithms/types";
 
-interface PseudoCodeBlockProps {
+interface PseudoCodeBlockProps<TStep> {
   algorithmKey: string;
-  activeLines: number[];
+  steps: TStep[];
 }
 
-export function PseudoCodeBlock({
+export function PseudoCodeBlock<TStep extends Step>({
   algorithmKey,
-  activeLines,
-}: PseudoCodeBlockProps) {
+  steps,
+}: PseudoCodeBlockProps<TStep>) {
+  const { stepIndex } = usePlayback();
+
   const algo = algorithms[algorithmKey as keyof typeof algorithms];
   const code = algo.pseudocode ?? [];
 
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [highlightBox, setHighlightBox] = useState<{
     top: number;
     height: number;
   } | null>(null);
 
+  const activeLines = steps[stepIndex].lines ?? [];
   useLayoutEffect(() => {
     if (activeLines.length === 0) {
       setHighlightBox(null);
@@ -37,6 +43,10 @@ export function PseudoCodeBlock({
       const height = lastEl.offsetTop + lastEl.offsetHeight - firstEl.offsetTop;
 
       setHighlightBox({ top, height });
+      firstEl.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
     }
   }, [activeLines]);
 
@@ -47,10 +57,15 @@ export function PseudoCodeBlock({
 
   return (
     <div className="flex-1 h-full rounded-lg text-sm leading-relaxed">
-      <div className="p-4 relative">
-        <h3 className="font-medium text-sm sm:text-lg">Pseudocode</h3>
+      <div className="relative">
+        <h3 className="font-medium text-sm sm:text-lg p-4">
+          Pseudocode for analysis
+        </h3>
 
-        <div className="relative mt-4">
+        <div
+          className="relative px-2 overflow-y-auto h-[450px] sm:h-[420px] lg:h-[490px] no-scrollbar"
+          ref={containerRef}
+        >
           <AnimatePresence>
             {highlightBox && (
               <motion.div
@@ -60,7 +75,7 @@ export function PseudoCodeBlock({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
                 style={{ top: highlightBox.top, height: highlightBox.height }}
-                className="absolute left-0 right-0 bg-green-500/20 border-green-400 rounded-sm pointer-events-none"
+                className="absolute left-0 right-0 bg-green-500/20 border-green-400 pointer-events-none"
               />
             )}
           </AnimatePresence>
@@ -81,7 +96,7 @@ export function PseudoCodeBlock({
                   }}
                 >
                   <p
-                    className={`font-mono text-base whitespace-pre-wrap ${
+                    className={`font-mono text-[15px] whitespace-pre-wrap ${
                       activeLines.includes(i)
                         ? "text-green-300"
                         : "text-gray-300"

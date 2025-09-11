@@ -4,39 +4,28 @@ import { IoPlaySkipForward } from "react-icons/io5";
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
 import { IoSettingsSharp } from "react-icons/io5";
 import Select from "../ui/Select";
-// import { IoInformation } from "react-icons/io5";
-import { FaExpandAlt } from "react-icons/fa";
-import { FaCompressAlt } from "react-icons/fa";
+import { FaExpandAlt, FaCompressAlt } from "react-icons/fa";
+import { usePlayback } from "../../context/PlaybackContext";
 
-interface ControlsProps {
-  stepIndex: number;
-  stepsLength: number;
-  isPlaying: boolean;
-  speed: string;
-  setStepIndex: (i: number | ((prev: number) => number)) => void;
-  setIsPlaying: (v: boolean | ((prev: boolean) => boolean)) => void;
-  setSpeed: (s: string) => void;
-  isFullScreen: boolean;
-  toggleFullScreen: () => void;
-}
+export default function Controls() {
+  const {
+    stepIndex,
+    stepsLength,
+    isPlaying,
+    speed,
+    setStepIndex,
+    setIsPlaying,
+    setSpeed,
+    isFullscreen,
+    setIsFullscreen,
+  } = usePlayback();
 
-export default function Controls({
-  stepIndex,
-  stepsLength,
-  isPlaying,
-  speed,
-  setStepIndex,
-  setIsPlaying,
-  setSpeed,
-  isFullScreen,
-  toggleFullScreen,
-}: ControlsProps) {
   const isLastStep = stepIndex === stepsLength - 1;
 
   const btnClass = `active:scale-95 transition-all duration-150 
    px-2 py-1 sm:px-3 sm:py-2 lg:px-4 lg:py-3 
    text-sm sm:text-base
-   border-[2px] border-gray-700/60 rounded-md hover:border-green-400`;
+   rounded-md hover:bg-gray-700/30 transition-colors`;
 
   return (
     <div className="mt-4 flex flex-col sm:flex-row sm:items-center w-full gap-3">
@@ -68,7 +57,7 @@ export default function Controls({
         </button>
         <button
           onClick={() => setStepIndex((i) => Math.min(stepsLength - 1, i + 1))}
-          className="active:scale-95 duration-150 px-3 py-2 border-[2px] border-gray-700/60 rounded hover:border-green-400 transition"
+          className={`${btnClass}`}
         >
           <IoPlaySkipForward />
         </button>
@@ -81,11 +70,11 @@ export default function Controls({
       </div>
 
       <div className="flex justify-center sm:justify-end gap-2">
-        {/* <button className={`${btnClass}`}>
-          <IoInformation />
-        </button> */}
-        <button onClick={toggleFullScreen} className={`${btnClass}`}>
-          {!isFullScreen ? <FaExpandAlt /> : <FaCompressAlt />}
+        <button
+          onClick={() => setIsFullscreen((f) => !f)}
+          className={`${btnClass}`}
+        >
+          {!isFullscreen ? <FaExpandAlt /> : <FaCompressAlt />}
         </button>
         <div className="w-auto">
           <Select
@@ -93,6 +82,7 @@ export default function Controls({
             selected={speed}
             onSelect={setSpeed}
             placement="top"
+            align="right"
           >
             {({ toggle }) => (
               <button onClick={toggle} className={`${btnClass}`}>
