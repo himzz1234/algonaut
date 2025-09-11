@@ -276,23 +276,21 @@ export default function LinkedListVisualizer({ steps }: Props) {
             <AnimatePresence>
               <motion.g key={`arrow-${node.id}-${node.next.id}`}>
                 <>
-                  {!isHighlighted && (
-                    <motion.path
-                      key={`arrow-${node.id}-${node.next.id}`}
-                      d={d}
-                      stroke="#4b5563"
-                      strokeWidth={2}
-                      fill="none"
-                      markerEnd="url(#arrow)"
-                      initial={{ pathLength: 0 }}
-                      animate={{ opacity: 1, pathLength: 1 }}
-                      transition={{
-                        duration: 0.8,
-                        ease: "easeInOut",
-                        opacity: { duration: 0.2 },
-                      }}
-                    />
-                  )}
+                  <motion.path
+                    key={`arrow-${node.id}-${node.next.id}`}
+                    d={d}
+                    stroke="#4b5563"
+                    strokeWidth={2}
+                    fill="none"
+                    markerEnd="url(#arrow)"
+                    initial={{ pathLength: 0 }}
+                    animate={{ opacity: 1, pathLength: 1 }}
+                    transition={{
+                      duration: 0.8,
+                      ease: "easeInOut",
+                      opacity: { duration: 0.2 },
+                    }}
+                  />
 
                   {isHighlighted && (
                     <motion.path
