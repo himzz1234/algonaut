@@ -284,11 +284,15 @@ export default function LinkedListVisualizer({ steps }: Props) {
                     fill="none"
                     markerEnd="url(#arrow)"
                     initial={{ pathLength: 0 }}
-                    animate={{ opacity: 1, pathLength: 1 }}
+                    animate={
+                      isHighlighted
+                        ? { opacity: 0, pathLength: 1 }
+                        : { opacity: 1, pathLength: 1 }
+                    }
                     transition={{
                       duration: 0.8,
                       ease: "easeInOut",
-                      opacity: { duration: 0.2 },
+                      opacity: { duration: 0 },
                     }}
                   />
 
