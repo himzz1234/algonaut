@@ -6,7 +6,7 @@ import type { Step } from "../../algorithms/types";
 import AlgorithmInfoWrapper from "./AlgorithmInfoWrapper";
 import { PlaybackProvider } from "../../context/PlaybackContext";
 
-type VisualizerLayoutWrapperProps<TStep extends Step> = {
+type VisualizerLayoutWrapperProps<TStep extends Step<any>> = {
   steps: TStep[];
   algorithmKey: string;
   renderVisualizer: (steps: TStep[]) => React.ReactNode;
@@ -16,7 +16,7 @@ type VisualizerLayoutWrapperProps<TStep extends Step> = {
   pseudocode?: boolean;
 };
 
-export default function VisualizerLayoutWrapper<TStep extends Step>({
+export default function VisualizerLayoutWrapper<TStep extends Step<any>>({
   steps,
   renderVisualizer,
   algorithmKey,

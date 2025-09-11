@@ -90,7 +90,7 @@ export default function ListPage() {
   }
 
   return (
-    <VisualizerLayoutWrapper
+    <VisualizerLayoutWrapper<ListStep>
       steps={steps}
       renderVisualizer={(steps) => <LinkedListVisualizer steps={steps} />}
       algorithmKey={algorithm}

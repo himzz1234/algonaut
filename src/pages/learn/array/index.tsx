@@ -45,7 +45,7 @@ export default function SortingPage() {
   }
 
   return (
-    <VisualizerLayoutWrapper
+    <VisualizerLayoutWrapper<ArrayStep>
       steps={steps}
       renderVisualizer={(steps) => <ArrayVisualizer steps={steps} />}
       algorithmKey={algorithm ?? ""}

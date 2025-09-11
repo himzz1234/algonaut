@@ -30,7 +30,7 @@ export default function SearchingPage() {
   }
 
   return (
-    <VisualizerLayoutWrapper
+    <VisualizerLayoutWrapper<SearchingStep>
       steps={steps}
       renderVisualizer={(steps) => <SearchingVisualizer steps={steps} />}
       algorithmKey={algorithm ?? ""}
