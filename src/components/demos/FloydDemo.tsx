@@ -35,11 +35,9 @@ export default function FloydDemo() {
   let steps: ListStep[] = Array.from(cycleDetect(initialList));
 
   return (
-    <VisualizerLayoutWrapper
+    <VisualizerLayoutWrapper<ListStep>
       steps={steps}
-      renderVisualizer={(s, i) => (
-        <LinkedListVisualizer steps={s} stepIndex={i} />
-      )}
+      renderVisualizer={(step) => <LinkedListVisualizer steps={step} />}
       algorithmKey="ll-cycle-detect-floyd"
       autoplay
       repeat
