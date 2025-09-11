@@ -94,7 +94,7 @@ export default function Hero() {
 
             <div className="ml-5 flex items-center flex-1 max-w-lg bg-black px-3 py-1.5 rounded-md font-mono text-gray-400">
               <FaLock className="text-green-500 mr-2" />
-              <span className="text-green-500">https://</span>algovisualizer.io
+              <span className="text-green-500">https://</span>algonaut.io
             </div>
 
             <div className="ml-auto text-gray-400">

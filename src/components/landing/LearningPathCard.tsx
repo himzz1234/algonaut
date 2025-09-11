@@ -42,7 +42,7 @@ export default function LearningPathCard({
 
         <div className="flex items-start justify-between relative z-10 h-full">
           <div className="pr-3 flex flex-col h-full">
-            <h3 className="text-lg sm:text-xl font-semibold text-white">
+            <h3 className="text-lg sm:text-lg font-semibold text-white">
               {title}
             </h3>
 

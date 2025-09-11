@@ -22,8 +22,7 @@ export default function ReadySection() {
           </motion.h2>
 
           <motion.p className="mt-1 text-base sm:text-lg md:text-xl text-gray-400 text-balance">
-            Join thousands of others and learn smarter, faster with
-            AlgoVisualizer.
+            Join thousands of others and learn smarter, faster with Algonaut.
           </motion.p>
 
           <motion.div className="mt-8 sm:mt-10">

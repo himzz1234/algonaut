@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Faqs() {
   const faqs = [
     {
-      question: "Is AlgoVisualizer free to use?",
+      question: "Is Algonaut free to use?",
       answer:
         "Yes! You can start exploring algorithms and using basic visualizations completely free. We’re working on a Pro plan with advanced features for power learners.",
     },

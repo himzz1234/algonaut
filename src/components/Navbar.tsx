@@ -18,9 +18,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-6">
         <div className="flex items-center gap-2">
           <Link to="/">
-            <h1 className="text-2xl md:text-3xl font-bold">
-              AlgoVisua<span className="text-green-400">li</span>zer
-            </h1>
+            <img src="/logo.png" width={180} height={180} alt="logo" />
           </Link>
         </div>
 

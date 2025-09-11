@@ -7,7 +7,7 @@ type Module = {
   title: string;
   description: string;
   level: "beginner" | "intermediate" | "interview";
-  algos: string[]; // <-- now just IDs
+  algos: string[];
 };
 
 type LearningPathSectionProps = {

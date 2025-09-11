@@ -1,20 +1,21 @@
 import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
     <footer className="relative border-t border-gray-800 bg-gradient-to-b from-black to-[#0a0a0a]">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
         <div className="col-span-2">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">
-            AlgoVisua<span className="text-green-400">li</span>zer
-          </h2>
-          <p className="mt-3 text-gray-400 text-base sm:text-lg max-w-xs">
+          <Link to="/">
+            <img src="/logo.png" width={180} height={180} alt="logo" />
+          </Link>
+          <p className="mt-3 text-gray-400 text-base sm:text-base max-w-xs">
             Visualize and understand algorithms with clean animations.
           </p>
         </div>
 
         <div>
-          <h3 className="text-white uppercase mb-3 text-sm sm:text-base">
+          <h3 className="text-white uppercase mb-3 text-xs sm:text-sm">
             Quick Links
           </h3>
           <ul className="space-y-2 text-gray-400 text-base">
@@ -54,7 +55,7 @@ export default function Footer() {
         </div>
 
         <div className="sm:justify-self-start lg:justify-self-end">
-          <h3 className="text-white uppercase mb-3 text-sm sm:text-base">
+          <h3 className="text-white uppercase mb-3 text-xs sm:text-sm">
             Resources
           </h3>
           <ul className="space-y-2 text-gray-400 text-base">
@@ -95,7 +96,7 @@ export default function Footer() {
 
         <div className="col-span-2 sm:col-span-2 flex flex-col justify-between sm:justify-start lg:justify-between lg:justify-self-end">
           <div>
-            <h3 className="text-white mb-3 uppercase text-sm sm:text-base">
+            <h3 className="text-white mb-3 uppercase text-xs sm:text-sm">
               Stay Updated
             </h3>
             <form>
@@ -105,7 +106,7 @@ export default function Footer() {
             </form>
           </div>
           <div className="flex flex-col text-gray-400 mt-6 sm:mt-4">
-            <h5 className="uppercase text-white text-sm sm:text-base">
+            <h5 className="uppercase text-white text-xs sm:text-sm">
               Follow Us
             </h5>
             <div className="flex gap-4 mt-4 text-xl">
