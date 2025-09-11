@@ -39,34 +39,7 @@ body {
   @apply text-[#FAFAFA] min-h-screen;
   font-family: "Satoshi", sans-serif;
   font-optical-sizing: auto;
-  background: radial-gradient(
-      ellipse 90% 70% at 50% 0%,
-      rgba(226, 232, 240, 0.15),
-      transparent 70%
-    ),
-    #000;
-}
-
-@media (min-width: 640px) {
-  body {
-    background: radial-gradient(
-        ellipse 110% 75% at 50% 0%,
-        rgba(226, 232, 240, 0.15),
-        transparent 75%
-      ),
-      #000;
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    background: radial-gradient(
-        ellipse 80% 55% at 50% 0%,
-        rgba(226, 232, 240, 0.18),
-        transparent 65%
-      ),
-      #000;
-  }
+  background-color: #000;
 }
 
 .no-scrollbar::-webkit-scrollbar {
