@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useModal } from "../context/ModalContext";
@@ -8,9 +8,11 @@ import { AvatarMenu } from "./AvatarMenu";
 
 export default function Navbar() {
   const { openModal } = useModal();
+  const { pathname } = useLocation();
   const { user, loading } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const isCurrent = (path: string) => pathname.split("/")[1].startsWith(path);
   return (
     <nav className="h-[80px] border-b border-gray-700/60 bg-black/40 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-6">
@@ -23,12 +25,24 @@ export default function Navbar() {
         </div>
 
         <ul className="hidden md:flex items-center gap-8 flex-1 justify-end mr-8">
-          <li className="text-gray-400 hover:text-green-400 cursor-pointer transition-colors">
+          <li
+            className={`cursor-pointer transition-colors ${
+              isCurrent("learn")
+                ? "text-green-400"
+                : "text-gray-400 hover:text-green-400"
+            }`}
+          >
             <Link to="/learn">Learnings</Link>
           </li>
-          {/* <li className="text-gray-400 hover:text-green-400 cursor-pointer transition-colors">
-            <Link to="/about">About</Link>
-          </li> */}
+          <li
+            className={`cursor-pointer transition-colors ${
+              isCurrent("explore")
+                ? "text-green-400"
+                : "text-gray-400 hover:text-green-400"
+            }`}
+          >
+            <Link to="/explore">Explore</Link>
+          </li>
         </ul>
 
         {!loading && (
@@ -66,16 +80,28 @@ export default function Navbar() {
             className="md:hidden absolute top-[80px] left-0 w-full bg-black/95 border-b border-green-500/20 backdrop-blur-lg z-40"
           >
             <ul className="flex flex-col gap-4 px-6 py-6 text-lg">
-              <li className="text-gray-300 hover:text-green-400 transition-colors">
+              <li
+                className={`transition-colors ${
+                  isCurrent("learn")
+                    ? "text-green-400"
+                    : "text-gray-300 hover:text-green-400"
+                }`}
+              >
                 <Link to="/learn" onClick={() => setMenuOpen(false)}>
                   Learning
                 </Link>
               </li>
-              {/* <li className="text-gray-300 hover:text-green-400 transition-colors">
-                <Link to="/about" onClick={() => setMenuOpen(false)}>
-                  About
+              <li
+                className={`transition-colors ${
+                  isCurrent("explore")
+                    ? "text-green-400"
+                    : "text-gray-300 hover:text-green-400"
+                }`}
+              >
+                <Link to="/explore" onClick={() => setMenuOpen(false)}>
+                  Explore
                 </Link>
-              </li> */}
+              </li>
               <li>
                 <button
                   onClick={() => openModal(<AuthPanel />)}
