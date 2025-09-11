@@ -3,6 +3,15 @@ export type Block = {
   value: number;
 };
 
+export type VariableBlock = Block & {
+  label: string;
+};
+
+export type Node = Block & {
+  next: Node | null;
+  prev?: Node | null;
+};
+
 export type Cell = {
   id: number;
   row: number;
@@ -10,16 +19,24 @@ export type Cell = {
   weight: number;
 };
 
+export type PointerValue<AllowNull extends boolean = false> =
+  | (AllowNull extends true ? number | null : number)
+  | (AllowNull extends true ? (number | null)[] : number[])
+  | { ids: number[]; value: number };
+
+export type Step<AllowNull extends boolean = false> = {
+  pointers?: Record<string, PointerValue<AllowNull>>;
+  lines?: number[];
+  explanation?: string;
+};
+
 export type ArrayStep =
-  | {
+  | (Step<false> & {
       type: "init";
-      op?: "reverse" | "rotate" | "shuffle" | "custom";
+      variables?: Record<number, VariableBlock>;
       array: Block[];
-      meta?: Record<string, any>;
-      pointers?: Record<string, number | null>;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "highlight";
       ids: number[];
       indices?: number[];
@@ -27,175 +44,161 @@ export type ArrayStep =
       drag: true | false;
       depth?: number;
       role: "pair" | "current" | "subarray";
-      pointers?: Record<string, number>;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "swap";
       ids: [number, number];
       indices?: [number, number];
       values?: [number, number];
       depth?: number;
-      pointers?: Record<string, number>;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "move";
       id: number;
       targetIndex: number;
       values?: number[];
       indices?: number[];
-      pointers?: Record<string, number>;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "remove";
       id: number;
       fromIndex: number;
       value?: number;
       depth: number;
-      pointers?: Record<string, number>;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "insert";
       id: number;
       targetIndex: number;
       values?: number[];
       indices?: number[];
       depth?: number;
-      pointers?: Record<string, number>;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
+      type: "overwrite";
+      id: number;
+      value: number;
+    })
+  | (Step & {
       type: "done";
       op?: "reverse" | "rotate" | "shuffle" | "custom";
       meta?: Record<string, any>;
-      pointers?: Record<string, number>;
-      lines?: number[];
-    };
+    });
 
 export type SortingStep =
-  | {
+  | (Step & {
       type: "init";
       array: Block[];
-      pointers?: Record<string, number | null>;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "compare";
       ids: number[];
       relation: "<" | ">" | "=";
-      pointers?: Record<string, number>;
-      indices?: number[];
-      values?: number[];
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "swap";
       ids: number[];
       depth?: number;
-      pointers?: Record<string, number>;
-      indices?: number[];
-      values?: number[];
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "highlight";
       ids: number[];
       drag: true | false;
       depth?: number;
-      action?: "enter" | "exit";
-      role: "key" | "pivot" | "subarray" | "min" | "target";
-      pointers?: Record<string, number>;
-      indices?: number[];
-      values?: number[];
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "stage_move";
       ids: number[];
       fromIndex: number;
       toIndex: number;
       depth?: number;
-      pointers?: Record<string, number>;
-      indices?: number[];
-      values?: number[];
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "stage_commit";
       ids: number[];
       depth?: number;
-      pointers?: Record<string, number>;
-      indices?: number[];
-      values?: number[];
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "mark_sorted";
       ids: number[];
-      pointers?: Record<string, number>;
-      indices?: number[];
-      values?: number[];
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "done";
-      pointers?: Record<string, number>;
-      lines?: number[];
-    };
+    });
 
 export type SearchingStep =
-  | {
+  | (Step & {
       type: "init";
       array: Block[];
       target: number;
-      pointers?: Record<string, number | null>;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "check";
       id: number;
-      pointers?: Record<string, number>;
       indices?: number[];
       values?: number[];
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "compare";
       id: number;
       relation: string;
-      pointers?: Record<string, number>;
       indices?: number[];
       values?: number[];
       target: number;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "found";
       id: number;
-      pointers?: Record<string, number>;
       indices?: number[];
       values?: number[];
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "not-found";
       reason: string;
-      pointers?: Record<string, number>;
       target: number;
-      lines?: number[];
-    }
-  | {
+    })
+  | (Step & {
       type: "set-range";
       low: number;
       high: number;
-      pointers?: Record<string, number>;
       indices?: number[];
       values?: number[];
-      lines?: number[];
-    };
+    });
+
+export type ListStep =
+  | (Step<true> & {
+      type: "init";
+      array: Node[];
+    })
+  | (Step<true> & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step<true> & {
+      type: "compare_next";
+      ids: number[];
+    })
+  | (Step<true> & {
+      type: "create_node";
+      id: number;
+      value: number;
+    })
+  | (Step<true> & {
+      type: "link_next";
+      ids: number[];
+    })
+  | (Step<true> & {
+      type: "unlink_next";
+      ids: number[];
+    })
+  | (Step<true> & {
+      type: "move";
+      from: number;
+      id: number;
+    })
+  | (Step<true> & {
+      type: "done";
+    });
 
 export type PathfindingStep =
   | {
