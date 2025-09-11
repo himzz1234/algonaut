@@ -7,19 +7,26 @@ export function* quickSort(
   depth = 0,
   isRoot = true
 ): Generator<SortingStep> {
-  if (isRoot) yield { type: "init", array: [...arr], lines: [0] };
+  if (isRoot)
+    yield {
+      type: "init",
+      array: [...arr],
+      lines: [0],
+      explanation: `Start Quick Sort on [${arr
+        .map((b) => b.value)
+        .join(", ")}].`,
+    };
+
   if (left >= right) return;
 
   const pivot = arr[right];
   yield {
     type: "highlight",
     ids: [pivot.id],
-    role: "pivot",
     drag: true,
-    pointers: { pivot: right },
-    indices: [right],
-    values: [pivot.value],
+    pointers: { pivot: pivot.id },
     lines: [1],
+    explanation: `Choose ${pivot.value} as pivot.`,
   };
 
   let i = left;
@@ -31,10 +38,9 @@ export function* quickSort(
       type: "compare",
       ids: [arr[j].id, pivot.id],
       relation,
-      pointers: { i, j, pivot: right },
-      indices: [j, right],
-      values: [arr[j].value, pivot.value],
+      pointers: { i: arr[i].id, j: arr[j].id, pivot: arr[right].id },
       lines: [2, 3],
+      explanation: `Compare ${arr[j].value} with pivot ${pivot.value}.`,
     };
 
     if (arr[j].value < pivot.value) {
@@ -42,10 +48,9 @@ export function* quickSort(
         yield {
           type: "swap",
           ids: [arr[i].id, arr[j].id],
-          pointers: { i, j, pivot: right },
-          indices: [i, j],
-          values: [arr[i].value, arr[j].value],
+          pointers: { i: arr[i].id, j: arr[j].id, pivot: arr[right].id },
           lines: [2, 3],
+          explanation: `Swap ${arr[i].value} and ${arr[j].value} (smaller than pivot).`,
         };
 
         [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -66,19 +71,17 @@ export function* quickSort(
       type: "compare",
       ids: [arr[i].id, arr[right].id],
       relation,
-      pointers: { i, pivot: right },
-      indices: [i, right],
-      values: [arr[i].value, arr[right].value],
+      pointers: { i: arr[i].id, pivot: arr[right].id },
       lines: [2, 3],
+      explanation: `Place pivot ${pivot.value} into correct position.`,
     };
 
     yield {
       type: "swap",
       ids: [arr[i].id, arr[right].id],
-      pointers: { i, pivot: right },
-      indices: [i, right],
-      values: [arr[i].value, arr[right].value],
+      pointers: { i: arr[i].id, pivot: arr[right].id },
       lines: [2, 3],
+      explanation: `Swap pivot ${pivot.value} with ${arr[i].value}.`,
     };
 
     [arr[i], arr[right]] = [arr[right], arr[i]];
@@ -87,9 +90,8 @@ export function* quickSort(
   yield {
     type: "mark_sorted",
     ids: [arr[i].id],
-    indices: [i],
-    values: [arr[i].value],
     lines: [4],
+    explanation: `${arr[i].value} is now in sorted position.`,
   };
 
   if (left < i) {
@@ -99,13 +101,12 @@ export function* quickSort(
       type: "highlight",
       ids: leftSlice.map((x) => x.id),
       drag: true,
-      role: "subarray",
       depth: depth + 1,
-      action: "enter",
-      pointers: { left, right: i - 1 },
-      indices: leftSlice.map((_, idx) => left + idx),
-      values: leftSlice.map((b) => b.value),
+      pointers: { left: arr[left].id, right: arr[i - 1].id },
       lines: [5],
+      explanation: `Recurse on left subarray [${leftSlice
+        .map((b) => b.value)
+        .join(", ")}].`,
     };
 
     yield* quickSort(arr, left, i - 1, depth + 1, false);
@@ -113,20 +114,16 @@ export function* quickSort(
     yield {
       type: "mark_sorted",
       ids: leftSlice.map((b) => b.id),
-      indices: leftSlice.map((_, idx) => left + idx),
-      values: leftSlice.map((b) => b.value),
+      explanation: `Left subarray sorted.`,
     };
 
     yield {
       type: "highlight",
       ids: leftSlice.map((x) => x.id),
       drag: true,
-      role: "subarray",
       depth,
-      action: "exit",
-      pointers: { left, right: i - 1 },
-      indices: leftSlice.map((_, idx) => left + idx),
-      values: leftSlice.map((b) => b.value),
+      pointers: { left: arr[left].id, right: arr[i - 1].id },
+      explanation: `Exit left recursion.`,
     };
   }
 
@@ -137,13 +134,12 @@ export function* quickSort(
       type: "highlight",
       ids: rightSlice.map((x) => x.id),
       drag: true,
-      role: "subarray",
       depth: depth + 1,
-      action: "enter",
-      pointers: { left: i + 1, right },
-      indices: rightSlice.map((_, idx) => i + 1 + idx),
-      values: rightSlice.map((b) => b.value),
+      pointers: { left: arr[i + 1].id, right: arr[right].id },
       lines: [6],
+      explanation: `Recurse on right subarray [${rightSlice
+        .map((b) => b.value)
+        .join(", ")}].`,
     };
 
     yield* quickSort(arr, i + 1, right, depth + 1, false);
@@ -151,20 +147,16 @@ export function* quickSort(
     yield {
       type: "mark_sorted",
       ids: rightSlice.map((b) => b.id),
-      indices: rightSlice.map((_, idx) => i + 1 + idx),
-      values: rightSlice.map((b) => b.value),
+      explanation: `Right subarray sorted.`,
     };
 
     yield {
       type: "highlight",
       ids: rightSlice.map((x) => x.id),
       drag: true,
-      role: "subarray",
       depth,
-      action: "exit",
-      pointers: { left: i + 1, right },
-      indices: rightSlice.map((_, idx) => i + 1 + idx),
-      values: rightSlice.map((b) => b.value),
+      pointers: { left: arr[i + 1].id, right: arr[right].id },
+      explanation: `Exit right recursion.`,
     };
   }
 
@@ -172,9 +164,8 @@ export function* quickSort(
     yield {
       type: "mark_sorted",
       ids: arr.map((x) => x.id),
-      indices: arr.map((_, idx) => idx),
-      values: arr.map((b) => b.value),
+      explanation: `All elements sorted.`,
     };
-    yield { type: "done", lines: [7] };
+    yield { type: "done", lines: [7], explanation: `Quick Sort finished.` };
   }
 }

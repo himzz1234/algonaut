@@ -2,7 +2,12 @@ import type { Block, SortingStep } from "../types";
 
 export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
   const a = [...arr];
-  yield { type: "init", array: [...a], lines: [0] };
+  yield {
+    type: "init",
+    array: [...a],
+    lines: [0],
+    explanation: `Start Bubble Sort on [${a.map((b) => b.value).join(", ")}].`,
+  };
 
   const n = a.length;
   for (let i = 0; i < n; i++) {
@@ -17,11 +22,12 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
       yield {
         type: "compare",
         ids: [a[j].id, a[j + 1].id],
-        indices: [j, j + 1],
-        values: [a[j].value, a[j + 1].value],
         relation,
-        pointers: { i: j, j: j + 1 },
+        pointers: { i: a[j].id, j: a[j + 1].id },
         lines: [2],
+        explanation: `Compare ${a[j].value} and ${a[j + 1].value} → ${
+          a[j].value
+        } ${relation} ${a[j + 1].value}.`,
       };
 
       if (relation === ">") {
@@ -29,10 +35,9 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
         yield {
           type: "swap",
           ids: [a[j].id, a[j + 1].id],
-          indices: [j, j + 1],
-          values: [a[j].value, a[j + 1].value],
-          pointers: { i: j, j: j + 1 },
+          pointers: { i: a[j + 1].id, j: a[j].id },
           lines: [3],
+          explanation: `Swap to place ${a[j].value} before ${a[j + 1].value}.`,
         };
       }
     }
@@ -40,11 +45,14 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
     yield {
       type: "mark_sorted",
       ids: [a[n - i - 1].id],
-      indices: [n - i - 1],
-      values: [a[n - i - 1].value],
       lines: [4],
+      explanation: `${a[n - i - 1].value} is now in its correct position.`,
     };
   }
 
-  yield { type: "done", lines: [5] };
+  yield {
+    type: "done",
+    lines: [5],
+    explanation: `Array is sorted with Bubble Sort.`,
+  };
 }

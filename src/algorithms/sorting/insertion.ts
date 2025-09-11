@@ -2,7 +2,14 @@ import type { Block, SortingStep } from "../types";
 
 export function* insertionSort(arr: Block[]): Generator<SortingStep> {
   const a = [...arr];
-  yield { type: "init", array: [...a], lines: [0] };
+  yield {
+    type: "init",
+    array: [...a],
+    lines: [0],
+    explanation: `Start Insertion Sort on [${a
+      .map((b) => b.value)
+      .join(", ")}].`,
+  };
 
   for (let i = 1; i < a.length; i++) {
     yield {
@@ -10,11 +17,9 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
       ids: [a[i].id],
       drag: true,
       depth: 1,
-      role: "key",
-      pointers: { key: i },
-      indices: [i],
-      values: [a[i].value],
+      pointers: { key: a[i].id },
       lines: [2],
+      explanation: `Take ${a[i].value} as the key element to insert.`,
     };
 
     let j = i - 1;
@@ -30,10 +35,9 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
         type: "compare",
         ids: [a[j].id, a[j + 1].id],
         relation,
-        pointers: { key: j + 1, j: j },
-        indices: [j, j + 1],
-        values: [a[j].value, a[j + 1].value],
+        pointers: { key: a[j + 1].id, j: a[j].id },
         lines: [3],
+        explanation: `Compare ${a[j].value} and key ${a[j + 1].value}.`,
       };
 
       if (relation === ">") {
@@ -41,10 +45,9 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
         yield {
           type: "swap",
           ids: [a[j].id, a[j + 1].id],
-          pointers: { key: j, j: j + 1 },
-          indices: [j + 1, j],
-          values: [a[j].value, a[j + 1].value],
+          pointers: { key: a[j].id, j: a[j + 1].id },
           lines: [3, 4],
+          explanation: `Shift ${a[j + 1].value} right to make space for key.`,
         };
       } else break;
       j--;
@@ -57,21 +60,22 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
       ids: [a[finalIndex].id],
       drag: true,
       depth: 0,
-      role: "key",
-      pointers: { key: finalIndex },
-      indices: [finalIndex],
-      values: [a[finalIndex].value],
+      pointers: { key: a[finalIndex].id },
       lines: [5],
+      explanation: `Place key at position ${finalIndex}.`,
     };
 
     yield {
       type: "mark_sorted",
       ids: a.slice(0, i + 1).map((b) => b.id),
-      indices: a.slice(0, i + 1).map((_, idx) => idx),
-      values: a.slice(0, i + 1).map((b) => b.value),
       lines: [6],
+      explanation: `First ${i + 1} elements are sorted.`,
     };
   }
 
-  yield { type: "done", lines: [7] };
+  yield {
+    type: "done",
+    lines: [7],
+    explanation: `Array is sorted with Insertion Sort.`,
+  };
 }

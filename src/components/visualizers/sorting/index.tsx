@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import type { Block, SortingStep } from "../../../algorithms/types";
+import type {
+  Block,
+  PointerValue,
+  SortingStep,
+} from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
+import { usePlayback } from "../../../context/PlaybackContext";
 
 const GAP = 5;
 const BAR_WIDTH = 65;
@@ -9,10 +14,10 @@ const BAR_HEIGHT = 65;
 
 type Props = {
   steps: SortingStep[];
-  stepIndex: number;
 };
 
-export default function SortingVisualizer({ steps, stepIndex }: Props) {
+export default function SortingVisualizer({ steps }: Props) {
+  const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
   const barWidth = isMobile ? 50 : BAR_WIDTH;
   const barHeight = isMobile ? 50 : BAR_HEIGHT;
@@ -21,17 +26,17 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
 
   function applyStep(
     prev: {
-      blocks: Record<number, Block>;
+      blocks: Block[];
       positions: Record<number, number>;
       depths: Record<number, number>;
       sorted: number[];
       highlight: { ids: number[]; mode: "key" | "compare" | null };
-      pointers: Record<string, number | null>;
+      pointers: Record<string, PointerValue>;
     },
     step: SortingStep
   ) {
     let { blocks, positions, depths, sorted, highlight, pointers } = {
-      blocks: { ...prev.blocks },
+      blocks: [...prev.blocks],
       positions: { ...prev.positions },
       depths: { ...prev.depths },
       sorted: [...prev.sorted],
@@ -41,11 +46,11 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
 
     switch (step.type) {
       case "init":
-        blocks = {};
+        blocks = [];
         positions = {};
         depths = {};
         (step.array ?? []).forEach((b, i) => {
-          blocks[b.id] = b;
+          blocks[i] = b;
           positions[b.id] = i;
           depths[b.id] = 0;
         });
@@ -115,7 +120,7 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
   const { blocks, positions, depths, sorted, highlight, pointers } =
     useMemo(() => {
       let state = {
-        blocks: {} as Record<number, Block>,
+        blocks: [] as Block[],
         positions: {} as Record<number, number>,
         depths: {} as Record<number, number>,
         sorted: [] as number[],
@@ -123,7 +128,7 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
           ids: [] as number[],
           mode: null as "key" | "compare" | null,
         },
-        pointers: {} as Record<string, number | null>,
+        pointers: {} as Record<string, PointerValue>,
       };
 
       for (let i = 0; i <= stepIndex && i < steps.length; i++) {
@@ -144,6 +149,17 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
       ? "-50%"
       : "-100%";
 
+  let groupedPointers: Record<number, string[]> = {};
+  Object.entries(pointers).forEach(([label, value]) => {
+    if (typeof value === "number") {
+      if (value in groupedPointers) {
+        groupedPointers[value].push(label);
+      } else {
+        groupedPointers[value] = [label];
+      }
+    }
+  });
+
   return (
     <motion.div className="w-full h-full flex py-16 justify-center items-center relative">
       <motion.svg
@@ -153,7 +169,7 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
         height={barHeight}
         style={{ overflow: "visible", position: "absolute" }}
       >
-        {Object.values(blocks).map((block) => {
+        {blocks.map((block) => {
           const depth = depths[block.id] ?? 0;
           const pos = positions[block.id] ?? 0;
           const isHighlighted = highlight.ids.includes(block.id);
@@ -164,11 +180,9 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
               : "#f59e0b"
             : sorted.includes(block.id)
             ? "#00a73e"
-            : "#4b5563";
+            : "#475569";
 
-          const labelsAtIndex = Object.entries(pointers)
-            .filter(([, value]) => value === pos)
-            .map(([label]) => label);
+          const labelsAtIndex = groupedPointers[block.id];
 
           return (
             <motion.g
@@ -180,7 +194,7 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >
               <motion.rect
-                rx={4}
+                rx={6}
                 width={barWidth}
                 height={barHeight}
                 animate={{
@@ -199,7 +213,7 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
               >
                 {block.value}
               </text>
-              {labelsAtIndex.length > 0 && (
+              {labelsAtIndex && (
                 <text
                   x={barWidth / 2}
                   y={barHeight + 15}
@@ -215,6 +229,31 @@ export default function SortingVisualizer({ steps, stepIndex }: Props) {
             </motion.g>
           );
         })}
+
+        {/* {Object.entries(groupedPointers).map(([value, labels]) => {
+          if (!value) return null;
+
+          const valueNum = Number(value);
+          const xPos = positions[valueNum] * spacing + barWidth / 2;
+          const depth = depths[valueNum] ?? 0;
+          const yPos = depth * (barHeight + 30) + barHeight + 15;
+
+          return (
+            <motion.text
+              key={labels.join(" = ")}
+              initial={false}
+              animate={{ x: xPos, y: yPos }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              fontFamily="Satoshi"
+              fontSize="14"
+              fill="white"
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              {labels.join(" = ")}
+            </motion.text>
+          );
+        })} */}
       </motion.svg>
     </motion.div>
   );

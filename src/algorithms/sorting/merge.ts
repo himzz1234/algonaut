@@ -12,8 +12,11 @@ export function* mergeSort(
       type: "init",
       array: [...arr],
       lines: [0],
-      pointers: { left: l, right: r },
+      explanation: `Start Merge Sort on [${arr
+        .map((b) => b.value)
+        .join(", ")}].`,
     };
+
   if (l >= r) return;
 
   const mid = Math.floor((l + r) / 2);
@@ -26,12 +29,12 @@ export function* mergeSort(
       type: "highlight",
       ids: leftSlice.map((b) => b.id),
       drag: true,
-      role: "subarray",
       depth: depth + 1,
-      indices: leftSlice.map((_, idx) => l + idx),
-      values: leftSlice.map((b) => b.value),
       lines: [1, 2],
-      pointers: { left: l, mid, right: r },
+      pointers: { left: arr[l].id, right: arr[mid].id },
+      explanation: `Split left half: [${leftSlice
+        .map((b) => b.value)
+        .join(", ")}].`,
     };
   }
 
@@ -42,12 +45,12 @@ export function* mergeSort(
       type: "highlight",
       ids: rightSlice.map((b) => b.id),
       drag: true,
-      role: "subarray",
       depth: depth + 1,
-      indices: rightSlice.map((_, idx) => mid + 1 + idx),
-      values: rightSlice.map((b) => b.value),
       lines: [1, 3],
-      pointers: { left: l, mid, right: r },
+      pointers: { left: arr[l].id, right: arr[mid].id },
+      explanation: `Split right half: [${rightSlice
+        .map((b) => b.value)
+        .join(", ")}].`,
     };
   }
 
@@ -73,10 +76,12 @@ export function* mergeSort(
       type: "compare",
       ids: [leftBlock.id, rightBlock.id],
       relation,
-      indices: [i, j],
-      values: [leftBlock.value, rightBlock.value],
       lines: [4, 5],
-      pointers: { i, j, k, left: l, right: r },
+      pointers: {
+        i: arr[i]?.id,
+        j: arr[j]?.id,
+      },
+      explanation: `Compare ${leftBlock.value} and ${rightBlock.value}.`,
     };
 
     if (leftBlock.value <= rightBlock.value) {
@@ -87,10 +92,12 @@ export function* mergeSort(
         fromIndex: i,
         toIndex: k,
         depth: depth + 1,
-        indices: [i, k],
-        values: [leftBlock.value, leftBlock.value],
         lines: [6, 7],
-        pointers: { i, j, k, left: l, right: r },
+        pointers: {
+          i: arr[i]?.id,
+          j: arr[j]?.id,
+        },
+        explanation: `Place ${leftBlock.value} into merged subarray.`,
       } as any;
 
       i++;
@@ -102,10 +109,14 @@ export function* mergeSort(
         fromIndex: j,
         toIndex: k,
         depth: depth + 1,
-        indices: [j, k],
-        values: [rightBlock.value, rightBlock.value],
         lines: [6, 7],
-        pointers: { i, j, k, left: l, right: r },
+        pointers: {
+          i: arr[i]?.id,
+          j: arr[j]?.id,
+          left: arr[l].id,
+          right: arr[r].id,
+        },
+        explanation: `Place ${rightBlock.value} into merged subarray.`,
       } as any;
 
       j++;
@@ -121,10 +132,14 @@ export function* mergeSort(
       fromIndex: i,
       toIndex: k,
       depth: depth + 1,
-      indices: [i, k],
-      values: [arr[i].value, arr[i].value],
       lines: [8],
-      pointers: { i, j, k, left: l, right: r },
+      pointers: {
+        i: arr[i]?.id,
+        j: arr[j]?.id,
+        left: arr[l].id,
+        right: arr[r].id,
+      },
+      explanation: `Add leftover ${arr[i].value} from left half.`,
     } as any;
 
     i++;
@@ -139,10 +154,14 @@ export function* mergeSort(
       fromIndex: j,
       toIndex: k,
       depth: depth + 1,
-      indices: [j, k],
-      values: [arr[j].value, arr[j].value],
       lines: [8],
-      pointers: { i, j, k, left: l, right: r },
+      pointers: {
+        i: arr[i]?.id,
+        j: arr[j]?.id,
+        left: arr[l].id,
+        right: arr[r].id,
+      },
+      explanation: `Add leftover ${arr[j].value} from right half.`,
     } as any;
 
     j++;
@@ -152,10 +171,9 @@ export function* mergeSort(
     type: "stage_commit",
     ids: merged.map((b) => b.id),
     depth: depth,
-    indices: merged.map((_, idx) => l + idx),
-    values: merged.map((b) => b.value),
     lines: [9],
-    pointers: { left: l, right: r },
+    pointers: { left: arr[l].id, right: arr[r].id },
+    explanation: `Commit merged: [${merged.map((b) => b.value).join(", ")}].`,
   } as any;
 
   if (!isRoot) {
@@ -163,10 +181,9 @@ export function* mergeSort(
       type: "stage_commit",
       ids: merged.map((b) => b.id),
       depth: depth - 1,
-      indices: merged.map((_, idx) => l + idx),
-      values: merged.map((b) => b.value),
       lines: [9],
-      pointers: { left: l, right: r },
+      pointers: { left: arr[l].id, right: arr[r].id },
+      explanation: `Propagate merged subarray up one level.`,
     } as any;
   }
 
@@ -178,12 +195,16 @@ export function* mergeSort(
     yield {
       type: "mark_sorted",
       ids: arr.map((b) => b.id),
-      indices: arr.map((_, idx) => idx),
-      values: arr.map((b) => b.value),
       lines: [10],
       pointers: {},
+      explanation: `Final merge complete. Entire array is sorted.`,
     };
 
-    yield { type: "done", lines: [10], pointers: {} };
+    yield {
+      type: "done",
+      lines: [10],
+      pointers: {},
+      explanation: `Merge Sort finished.`,
+    };
   }
 }

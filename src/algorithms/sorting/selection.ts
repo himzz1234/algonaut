@@ -2,7 +2,14 @@ import type { Block, SortingStep } from "../types";
 
 export function* selectionSort(arr: Block[]): Generator<SortingStep> {
   const a = [...arr];
-  yield { type: "init", array: [...a], lines: [0] };
+  yield {
+    type: "init",
+    array: [...a],
+    lines: [0],
+    explanation: `Start Selection Sort on [${a
+      .map((b) => b.value)
+      .join(", ")}].`,
+  };
 
   const n = a.length;
   for (let i = 0; i < n; i++) {
@@ -11,12 +18,10 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
     yield {
       type: "highlight",
       ids: [a[minIdx].id],
-      role: "min",
       drag: false,
-      pointers: { min: minIdx },
-      indices: [minIdx],
-      values: [a[minIdx].value],
+      pointers: { min: a[minIdx].id },
       lines: [2],
+      explanation: `Assume ${a[minIdx].value} (index ${minIdx}) is the minimum.`,
     };
 
     for (let j = i + 1; j < n; j++) {
@@ -31,10 +36,9 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
         type: "compare",
         ids: [a[minIdx].id, a[j].id],
         relation,
-        pointers: { min: minIdx, j },
-        indices: [minIdx, j],
-        values: [a[minIdx].value, a[j].value],
+        pointers: { min: a[minIdx].id, j: a[j].id },
         lines: [3],
+        explanation: `Compare current min ${a[minIdx].value} with ${a[j].value}.`,
       };
 
       if (relation === ">") {
@@ -42,12 +46,10 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
         yield {
           type: "highlight",
           ids: [a[minIdx].id],
-          role: "min",
           drag: false,
-          pointers: { min: minIdx, j },
-          indices: [minIdx],
-          values: [a[minIdx].value],
+          pointers: { min: a[minIdx].id, j: a[j].id },
           lines: [4],
+          explanation: `New minimum found: ${a[minIdx].value} at index ${minIdx}.`,
         };
       }
     }
@@ -58,21 +60,23 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
       yield {
         type: "swap",
         ids: [a[i].id, a[minIdx].id],
-        pointers: { min: i, i: minIdx },
-        indices: [minIdx, i],
-        values: [a[i].value, a[minIdx].value],
+        pointers: { min: a[i].id, i: a[minIdx].id },
         lines: [5],
+        explanation: `Swap ${a[minIdx].value} into position ${i}.`,
       };
     }
 
     yield {
       type: "mark_sorted",
       ids: [a[i].id],
-      indices: [i],
-      values: [a[i].value],
       lines: [6],
+      explanation: `${a[i].value} is now fixed in sorted order.`,
     };
   }
 
-  yield { type: "done", lines: [7] };
+  yield {
+    type: "done",
+    lines: [7],
+    explanation: `Selection Sort complete.`,
+  };
 }
