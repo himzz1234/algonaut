@@ -7,10 +7,11 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
 
   yield {
     type: "init",
-    op: "rotate",
     array: [...a],
-    meta: { k },
     lines: [0],
+    explanation: `We will rotate [${a
+      .map((b) => b.value)
+      .join(", ")}] by ${k} step${k !== 1 ? "s" : ""}.`,
   };
 
   for (let r = 0; r < k; r++) {
@@ -25,6 +26,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       role: "current",
       pointers: { current: element.id },
       lines: [1, 2],
+      explanation: `Take out ${element.value} from the front.`,
     };
 
     yield {
@@ -35,6 +37,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       depth: 1,
       pointers: { temp: element.id },
       lines: [1, 2],
+      explanation: `${element.value} is temporarily removed.`,
     };
 
     for (let j = 1; j < n; j++) {
@@ -47,6 +50,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
         role: "current",
         pointers: { temp: element.id, current: a[j].id },
         lines: [3],
+        explanation: `Shift ${a[j].value} left by one position.`,
       };
 
       yield {
@@ -57,6 +61,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
         values: [a[j].value, a[j].value],
         pointers: { temp: element.id, current: a[j].id },
         lines: [3],
+        explanation: `${a[j].value} moved to index ${j - 1}.`,
       };
     }
 
@@ -68,11 +73,17 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       values: [element.value],
       depth: 0,
       lines: [4],
+      explanation: `Place ${element.value} at the end.`,
     };
 
     a.splice(0, 1);
     a.push(element);
   }
 
-  yield { type: "done", op: "rotate", lines: [5] };
+  yield {
+    type: "done",
+    op: "rotate",
+    lines: [5],
+    explanation: `Rotation complete → [${a.map((b) => b.value).join(", ")}].`,
+  };
 }

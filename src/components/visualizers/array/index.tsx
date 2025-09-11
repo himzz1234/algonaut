@@ -1,18 +1,24 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import type { ArrayStep, Block } from "../../../algorithms/types";
+import type {
+  ArrayStep,
+  Block,
+  VariableBlock,
+} from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
+import { makeCurlyBrace } from "../../../utils/paths";
+import { usePlayback } from "../../../context/PlaybackContext";
 
 const GAP = 5;
-const BAR_WIDTH = 60;
-const BAR_HEIGHT = 60;
+const BAR_WIDTH = 65;
+const BAR_HEIGHT = 65;
 
 type Props = {
   steps: ArrayStep[];
-  stepIndex: number;
 };
 
-export default function ArrayVisualizer({ steps, stepIndex }: Props) {
+export default function ArrayVisualizer({ steps }: Props) {
+  const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
   const barWidth = isMobile ? 50 : BAR_WIDTH;
   const barHeight = isMobile ? 50 : BAR_HEIGHT;
@@ -20,16 +26,21 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
 
   function applyStep(
     prev: {
-      blocks: Record<number, Block>;
+      blocks: Block[];
+      variables: Record<number, VariableBlock>;
       positions: Record<number, number>;
       depths: Record<number, number>;
       highlight: { ids: number[]; mode: "key" | "compare" | null };
-      pointers: Record<string, number | null>;
+      pointers: Record<
+        string,
+        number | number[] | { ids: number[]; value: number } | null
+      >;
     },
     step: ArrayStep
   ) {
-    let { blocks, positions, depths, highlight, pointers } = {
-      blocks: { ...prev.blocks },
+    let { blocks, variables, positions, depths, highlight, pointers } = {
+      blocks: [...prev.blocks],
+      variables: { ...prev.variables },
       positions: { ...prev.positions },
       depths: { ...prev.depths },
       highlight: { ...prev.highlight },
@@ -38,14 +49,15 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
 
     switch (step.type) {
       case "init":
-        blocks = {};
+        blocks = [];
         positions = {};
         depths = {};
         (step.array ?? []).forEach((b, i) => {
-          blocks[b.id] = b;
+          blocks[i] = b;
           positions[b.id] = i;
           depths[b.id] = 0;
         });
+        variables = step.variables ?? {};
         highlight = { ids: [], mode: null };
         pointers = step.pointers ?? {};
         break;
@@ -91,6 +103,19 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
           positions[idA] = posB;
           positions[idB] = posA;
         }
+
+        break;
+      }
+      case "overwrite": {
+        if (step.id !== undefined && step.value !== undefined) {
+          if (blocks[step.id]) {
+            blocks[step.id] = { ...blocks[step.id], value: step.value };
+          } else if (variables[step.id]) {
+            variables[step.id] = { ...variables[step.id], value: step.value };
+          } else {
+            console.warn(`Overwrite step with unknown id: ${step.id}`);
+          }
+        }
         break;
       }
 
@@ -100,26 +125,32 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
         break;
     }
 
-    return { blocks, positions, depths, highlight, pointers };
+    return { blocks, variables, positions, depths, highlight, pointers };
   }
 
-  const { blocks, positions, depths, highlight, pointers } = useMemo(() => {
-    let state = {
-      blocks: {} as Record<number, Block>,
-      positions: {} as Record<number, number>,
-      depths: {} as Record<number, number>,
-      highlight: {
-        ids: [] as number[],
-        mode: null as "key" | "compare" | null,
-      },
-      pointers: {} as Record<string, number | null>,
-    };
+  const { blocks, variables, positions, depths, highlight, pointers } =
+    useMemo(() => {
+      let state = {
+        blocks: [] as Block[],
+        variables: {} as Record<number, VariableBlock>,
+        positions: {} as Record<number, number>,
+        depths: {} as Record<number, number>,
+        highlight: {
+          ids: [] as number[],
+          mode: null as "key" | "compare" | null,
+        },
+        pointers: {} as Record<
+          string,
+          number | number[] | { ids: number[]; value: number } | null
+        >,
+      };
 
-    for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      state = applyStep(state, steps[i]);
-    }
-    return state;
-  }, [steps, stepIndex]);
+      for (let i = 0; i <= stepIndex && i < steps.length; i++) {
+        state = applyStep(state, steps[i]);
+      }
+
+      return state;
+    }, [steps, stepIndex]);
 
   const svgY =
     steps[stepIndex]?.type === "init"
@@ -133,8 +164,53 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
       ? "-50%"
       : "-100%";
 
+  let groupedPointers: Record<number, string[]> = {};
+  Object.entries(pointers).forEach(([label, value]) => {
+    if (typeof value === "number") {
+      if (value in groupedPointers) groupedPointers[value].push(label);
+      else groupedPointers[value] = [label];
+    }
+  });
+
   return (
     <motion.div className="w-full h-full flex py-16 justify-center items-center relative">
+      <div className="absolute top-5 right-5 flex flex-col gap-5">
+        {Object.entries(variables).map(([_, block]) => {
+          const isOverwritten =
+            steps[stepIndex].type === "overwrite" &&
+            steps[stepIndex].id === block.id;
+
+          return (
+            <div className="flex flex-col items-center">
+              <svg height={barWidth} width={barHeight}>
+                <g key={block.id}>
+                  <motion.rect
+                    rx={6}
+                    width={barWidth}
+                    height={barHeight}
+                    animate={{
+                      fill: isOverwritten ? "#00a73e" : "#475569",
+                    }}
+                    transition={{ duration: 0.4 }}
+                  />
+                  <text
+                    x={barWidth / 2}
+                    y={barHeight / 2}
+                    fontFamily="Satoshi"
+                    fontSize="16"
+                    fill="white"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {block.value}
+                  </text>
+                </g>
+              </svg>
+              <span className="mt-2 text-sm text-gray-200">{block.label}</span>
+            </div>
+          );
+        })}
+      </div>
       <motion.svg
         animate={{ y: svgY, translateY: svgTranslateY }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
@@ -142,14 +218,12 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
         height={barHeight}
         style={{ overflow: "visible", position: "absolute" }}
       >
-        {Object.values(blocks).map((block) => {
+        {blocks.map((block) => {
           const depth = depths[block.id] ?? 0;
           const pos = positions[block.id] ?? 0;
           const isHighlighted = highlight.ids.includes(block.id);
 
-          const labelsAtIndex = Object.entries(pointers)
-            .filter(([, value]) => value === block.id)
-            .map(([label]) => label);
+          const labelsAtIndex = groupedPointers[block.id];
 
           return (
             <motion.g
@@ -161,7 +235,7 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >
               <motion.rect
-                rx={4}
+                rx={6}
                 width={barWidth}
                 height={barHeight}
                 animate={{
@@ -171,7 +245,7 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
                       : "#f59e0b"
                     : depths[block.id] > 0
                     ? "#6366f1"
-                    : "#4b5563",
+                    : "#475569",
                   scale: isHighlighted ? 1.05 : 1,
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -187,7 +261,8 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
               >
                 {block.value}
               </text>
-              {labelsAtIndex.length > 0 && (
+
+              {labelsAtIndex && (
                 <text
                   x={barWidth / 2}
                   y={barHeight + 15}
@@ -200,6 +275,59 @@ export default function ArrayVisualizer({ steps, stepIndex }: Props) {
                   {labelsAtIndex.join(" = ")}
                 </text>
               )}
+            </motion.g>
+          );
+        })}
+
+        {Object.entries(pointers).map(([label, value]) => {
+          if (!value) return null;
+          if (typeof value === "number") return null;
+
+          const ids = Array.isArray(value) ? value : value.ids;
+          const pointerValue = Array.isArray(value) ? null : value.value;
+
+          const xs = ids.map((id) => positions[id] * spacing + barWidth / 2);
+          const depthsForBlocks = ids.map((id) => depths[id] ?? 0);
+          const depth = Math.max(...depthsForBlocks);
+
+          const minX = Math.min(...xs) - barWidth / 2;
+          const maxX = Math.max(...xs) + barWidth / 2;
+          const midX = (minX + maxX) / 2;
+          const yBase = depth * (barHeight + 30) + barHeight + 10;
+
+          const braceHeight = 10;
+          const bracePath = makeCurlyBrace(minX, yBase, maxX, yBase);
+
+          return (
+            <motion.g key={label}>
+              <motion.path
+                d={bracePath}
+                stroke="white"
+                strokeWidth={2}
+                fill="none"
+                animate={{ d: bracePath }}
+                transition={{
+                  type: "spring",
+                  stiffness: 120,
+                  damping: 20,
+                }}
+              />
+              <motion.text
+                initial={{ x: midX, y: yBase + braceHeight + 20 }}
+                animate={{ x: midX, y: yBase + braceHeight + 20 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 120,
+                  damping: 18,
+                }}
+                fontFamily="Satoshi"
+                fontSize="14"
+                fill="white"
+                textAnchor="middle"
+                dominantBaseline="middle"
+              >
+                {pointerValue != null ? `${label} = ${pointerValue}` : label}
+              </motion.text>
             </motion.g>
           );
         })}
