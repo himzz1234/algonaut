@@ -1,9 +1,9 @@
 import "./App.css";
 import Footer from "./components/Footer";
 import Faqs from "./components/landing/Faqs";
-import Feature from "./components/landing/Feature";
 import Hero from "./components/landing/Hero";
 import LearningPath from "./components/landing/LearningPath";
+import Pricing from "./components/landing/Pricing";
 import ReadySection from "./components/landing/ReadySection";
 import Testimonials from "./components/landing/Testimonials";
 import Navbar from "./components/Navbar";
@@ -22,11 +22,11 @@ function App() {
       </section>
 
       <section>
-        <Feature />
+        <Testimonials />
       </section>
 
       <section>
-        <Testimonials />
+        <Pricing />
       </section>
 
       <section>
