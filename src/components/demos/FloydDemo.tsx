@@ -36,13 +36,12 @@ export default function FloydDemo() {
 
   return (
     <VisualizerLayoutWrapper<ListStep>
+      type="demo"
       steps={steps}
       renderVisualizer={(step) => <LinkedListVisualizer steps={step} />}
       algorithmKey="ll-cycle-detect-floyd"
       autoplay
       repeat
-      hideControls
-      pseudocode={false}
     />
   );
 }

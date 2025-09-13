@@ -13,6 +13,8 @@ export type PlaybackContextType = {
   setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   setSpeed: React.Dispatch<React.SetStateAction<string>>;
   setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
+  locked: boolean;
+  setLocked: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const PlaybackContext = createContext<PlaybackContextType | null>(null);
@@ -36,6 +38,7 @@ export function PlaybackProvider({
   const [isPlaying, setIsPlaying] = useState(autoplay);
   const [speed, setSpeed] = useState("1x");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [locked, setLocked] = useState(false);
   const { openModal } = useModal();
 
   const [searchParams] = useSearchParams();
@@ -62,7 +65,6 @@ export function PlaybackProvider({
     }
 
     const id = setTimeout(() => {
-      console.log("hi");
       setStepIndex((i) => Math.min(i + 1, stepsLength - 1));
     }, baseSpeed / parseMultiplier(speed));
 
@@ -71,6 +73,7 @@ export function PlaybackProvider({
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
+      if (locked) return;
       const target = e.target as HTMLElement;
 
       if (
@@ -143,6 +146,7 @@ export function PlaybackProvider({
     setStepIndex,
     setIsFullscreen,
     openModal,
+    locked,
   ]);
 
   const ctx: PlaybackContextType = {
@@ -155,6 +159,8 @@ export function PlaybackProvider({
     setIsPlaying,
     setSpeed,
     setIsFullscreen,
+    locked,
+    setLocked,
   };
 
   return (

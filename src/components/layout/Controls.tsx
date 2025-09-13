@@ -18,27 +18,34 @@ export default function Controls() {
     setSpeed,
     isFullscreen,
     setIsFullscreen,
+    locked,
   } = usePlayback();
 
   const isLastStep = stepIndex === stepsLength - 1;
 
-  const btnClass = `active:scale-95 transition-all duration-150 
-   px-2 py-1 sm:px-3 sm:py-2 lg:px-4 lg:py-3 
-   text-sm sm:text-base
-   rounded-md hover:bg-gray-700/30 transition-colors`;
+  const btnClass = (disabled: boolean) => `
+    active:scale-95 transition-all duration-150
+    px-2 py-1 sm:px-3 sm:py-2 lg:px-4 lg:py-3
+    text-sm sm:text-base rounded-md
+    ${
+      disabled
+        ? "opacity-50 cursor-not-allowed hover:bg-transparent"
+        : "hover:bg-gray-700/30"
+    }
+  `;
 
   return (
     <div className="mt-4 flex flex-col sm:flex-row sm:items-center w-full gap-3">
       <div className="flex justify-center sm:justify-start flex-wrap gap-2 flex-1">
         <button
           onClick={() => setStepIndex(0)}
-          className={`${btnClass} rotate-180`}
+          className={`${btnClass(locked)} rotate-180`}
         >
           <TbPlayerTrackNextFilled />
         </button>
         <button
           onClick={() => setStepIndex((i) => Math.max(0, i - 1))}
-          className={`${btnClass} rotate-180`}
+          className={`${btnClass(locked)} rotate-180`}
         >
           <IoPlaySkipForward />
         </button>
@@ -51,19 +58,19 @@ export default function Controls() {
                 }
               : () => setIsPlaying((p) => !p)
           }
-          className={`${btnClass}`}
+          className={`${btnClass(locked)}`}
         >
           {isLastStep ? <MdReplay /> : isPlaying ? <FaPause /> : <FaPlay />}
         </button>
         <button
           onClick={() => setStepIndex((i) => Math.min(stepsLength - 1, i + 1))}
-          className={`${btnClass}`}
+          className={`${btnClass(locked)}`}
         >
           <IoPlaySkipForward />
         </button>
         <button
           onClick={() => setStepIndex(stepsLength - 1)}
-          className={`${btnClass}`}
+          className={`${btnClass(locked)}`}
         >
           <TbPlayerTrackNextFilled />
         </button>
@@ -72,7 +79,7 @@ export default function Controls() {
       <div className="flex justify-center sm:justify-end gap-2">
         <button
           onClick={() => setIsFullscreen((f) => !f)}
-          className={`${btnClass}`}
+          className={`${btnClass(locked)}`}
         >
           {!isFullscreen ? <FaExpandAlt /> : <FaCompressAlt />}
         </button>
@@ -85,7 +92,7 @@ export default function Controls() {
             align="right"
           >
             {({ toggle }) => (
-              <button onClick={toggle} className={`${btnClass}`}>
+              <button onClick={toggle} className={`${btnClass(locked)}`}>
                 <IoSettingsSharp />
               </button>
             )}

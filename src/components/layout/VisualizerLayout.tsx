@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import RotateBanner from "../RotateBanner";
 import { useOrientation } from "../../hooks/useOrientation";
@@ -7,14 +7,17 @@ import type { Step } from "../../algorithms/types";
 import { Link } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import useUpNext from "../../hooks/useUpNext";
+import QuizWindow from "../QuizWindow";
+import { PseudoCodeBlock } from "./PseudoCodeBlock";
+import ProgressSlider from "../ui/ProgressSlider";
+import Controls from "./Controls";
+import AlgorithmInfoWrapper from "./AlgorithmInfoWrapper";
+
 interface VisualizerLayoutProps<TStep> {
+  type: "demo" | "learn";
+  algorithmKey: string;
   children: React.ReactNode;
   steps: TStep[];
-  controls: React.ReactNode;
-  slider: React.ReactNode;
-  sidebar?: React.ReactNode;
-  info?: React.ReactNode;
-  pseudocode: React.ReactNode;
 }
 
 function UpNextCard() {
@@ -48,18 +51,19 @@ function UpNextCard() {
 }
 
 export default function VisualizerLayout<TStep extends Step>({
-  info,
   steps,
   children,
-  controls,
-  slider,
-  pseudocode,
+  type = "learn",
+  algorithmKey,
 }: VisualizerLayoutProps<TStep>) {
-  const { isFullscreen, stepIndex } = usePlayback();
+  const [showQuiz, setShowQuiz] = useState(false);
   const { isPortrait, isMobile } = useOrientation();
+  const { isFullscreen, stepIndex, isPlaying, setLocked } = usePlayback();
+
   const explanation = steps[stepIndex]?.explanation ?? "";
 
   const shouldShowRotateBanner = !isFullscreen && isMobile && isPortrait;
+
   useEffect(() => {
     if (!shouldShowRotateBanner) return;
     const prev = document.body.style.overflow;
@@ -77,11 +81,32 @@ export default function VisualizerLayout<TStep extends Step>({
     );
   }
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (!isPlaying && stepIndex === steps.length - 1) {
+      timer = setTimeout(() => {
+        setShowQuiz(true);
+        setLocked(true);
+        clearTimeout(timer);
+      }, 500);
+    }
+
+    return () => clearTimeout(timer);
+  }, [isPlaying, stepIndex, steps.length]);
+
+  const closeQuizWindow = () => {
+    setShowQuiz(false);
+    setLocked(false);
+  };
+
   const captionBottomClass = isFullscreen
     ? "bottom-3"
     : isMobile
     ? "bottom-2"
     : "bottom-6";
+
+  const isDemo = type === "demo";
 
   return (
     <main className="bg-[#0f0f14] min-h-screen text-white">
@@ -92,7 +117,7 @@ export default function VisualizerLayout<TStep extends Step>({
               isFullscreen
                 ? "fixed inset-0 z-50 w-full h-full bg-[#0f0f14] flex flex-col min-h-0"
                 : `col-span-12 ${
-                    pseudocode ? "lg:col-span-8" : "lg:col-span-12"
+                    type === "learn" ? "lg:col-span-8" : "lg:col-span-12"
                   } relative flex flex-col min-h-0`
             }`}
           >
@@ -109,6 +134,12 @@ export default function VisualizerLayout<TStep extends Step>({
             >
               {stepIndex === steps.length - 1 && <UpNextCard />}
               {children}
+              {showQuiz && (
+                <QuizWindow
+                  algorithmKey={algorithmKey}
+                  onClose={closeQuizWindow}
+                />
+              )}
               <div
                 className={`absolute left-1/2 -translate-x-1/2 w-full px-2 pointer-events-none ${captionBottomClass}`}
               >
@@ -127,21 +158,30 @@ export default function VisualizerLayout<TStep extends Step>({
               </div>
             </div>
 
-            <div>{slider}</div>
-            <div>{controls}</div>
+            <div>
+              <ProgressSlider
+                stepsLength={steps.length}
+                className="-mt-[5px] w-[99.75%] mx-auto"
+              />
+            </div>
+
+            {!isDemo && <Controls />}
           </div>
 
-          {pseudocode && (
+          {type === "learn" && (
             <div className="col-span-12 lg:col-span-4 flex flex-col">
               <div className="flex-1 border border-gray-700/60 rounded-lg backdrop-blur-sm">
-                {pseudocode}
+                <PseudoCodeBlock
+                  algorithmKey={algorithmKey ?? ""}
+                  steps={steps}
+                />
               </div>
             </div>
           )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-5 px-4 sm:px-0 backdrop-blur-sm">
-          {info ?? <div className="text-gray-400">No info available</div>}
+          <AlgorithmInfoWrapper algorithmKey={algorithmKey ?? ""} />
         </div>
       </section>
     </main>

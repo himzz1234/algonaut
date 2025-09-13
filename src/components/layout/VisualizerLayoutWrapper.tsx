@@ -1,29 +1,23 @@
 import VisualizerLayout from "./VisualizerLayout";
-import Controls from "./Controls";
-import ProgressSlider from "../ui/ProgressSlider";
-import { PseudoCodeBlock } from "./PseudoCodeBlock";
 import type { Step } from "../../algorithms/types";
-import AlgorithmInfoWrapper from "./AlgorithmInfoWrapper";
 import { PlaybackProvider } from "../../context/PlaybackContext";
 
 type VisualizerLayoutWrapperProps<TStep extends Step<any>> = {
+  type?: "demo" | "learn";
   steps: TStep[];
   algorithmKey: string;
   renderVisualizer: (steps: TStep[]) => React.ReactNode;
-  hideControls?: boolean;
   autoplay?: boolean;
   repeat?: boolean;
-  pseudocode?: boolean;
 };
 
 export default function VisualizerLayoutWrapper<TStep extends Step<any>>({
   steps,
+  type = "learn",
   renderVisualizer,
   algorithmKey,
-  hideControls = false,
   autoplay = false,
   repeat = false,
-  pseudocode = true,
 }: VisualizerLayoutWrapperProps<TStep>) {
   return (
     <PlaybackProvider
@@ -32,19 +26,7 @@ export default function VisualizerLayoutWrapper<TStep extends Step<any>>({
       autoplay={autoplay}
       stepsLength={steps.length}
     >
-      <VisualizerLayout
-        steps={steps}
-        slider={
-          <ProgressSlider stepsLength={steps.length} className="-mt-[5px]" />
-        }
-        controls={!hideControls ? <Controls /> : null}
-        info={<AlgorithmInfoWrapper algorithmKey={algorithmKey ?? ""} />}
-        pseudocode={
-          pseudocode ? (
-            <PseudoCodeBlock algorithmKey={algorithmKey} steps={steps} />
-          ) : null
-        }
-      >
+      <VisualizerLayout type={type} steps={steps} algorithmKey={algorithmKey}>
         {renderVisualizer(steps)}
       </VisualizerLayout>
     </PlaybackProvider>
