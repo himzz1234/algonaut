@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import AlgoCard from "./AlgoCard";
+import AlgoCard from "../AlgoCard";
 import { algorithms } from "../../data/algorithms";
 
 export default function Feature() {

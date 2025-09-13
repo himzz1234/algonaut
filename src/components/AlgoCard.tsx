@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { AlgorithmMeta } from "../../data/algorithms";
+import type { AlgorithmMeta } from "../data/algorithms";
 
 type AlgoCardProps = {
   algorithm: AlgorithmMeta;
