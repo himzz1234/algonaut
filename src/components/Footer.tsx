@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
         <div className="col-span-2">
           <Link to="/">
-            <img src="/logo.png" width={180} height={180} alt="logo" />
+            <img src="/logo.png" width={160} height={160} alt="logo" />
           </Link>
           <p className="mt-3 text-gray-400 text-base sm:text-base max-w-xs">
             Visualize and understand algorithms with clean animations.

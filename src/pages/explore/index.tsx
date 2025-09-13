@@ -58,11 +58,11 @@ function AlgoCard({ algorithm }: { algorithm: AlgorithmMeta }) {
         />
 
         <div className="flex flex-col items-start flex-1 relative z-10">
-          <h3 className="text-sm md:text-xl font-medium text-white">
+          <h3 className="text-base md:text-xl font-medium text-white line-clamp-1">
             {algorithm.name}
           </h3>
 
-          <p className="mt-2 flex-1 text-gray-400 text-sm md:text-base leading-relaxed line-clamp-4">
+          <p className="mt-1 flex-1 text-gray-400 text-sm md:text-[15px] leading-normal line-clamp-4">
             {algorithm.shortDescription}
           </p>
 
@@ -72,7 +72,7 @@ function AlgoCard({ algorithm }: { algorithm: AlgorithmMeta }) {
                 {algorithm?.tags.slice(0, 2).map((tag) => (
                   <span
                     key={tag}
-                    className="px-2 py-1 text-xs rounded-sm bg-gray-700/40 text-gray-300"
+                    className="px-2 py-1 text-xs rounded-sm font-light bg-gray-700/40 text-gray-300"
                   >
                     #{tag}
                   </span>

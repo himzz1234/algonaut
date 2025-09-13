@@ -1,2 +1,2 @@
-import LearningOverview from "../../components/landing/LearningOverview";
+import LearningOverview from "../../components/LearningOverview";
 export default LearningOverview;

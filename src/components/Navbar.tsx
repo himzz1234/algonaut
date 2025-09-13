@@ -15,10 +15,10 @@ export default function Navbar() {
   const isCurrent = (path: string) => pathname.split("/")[1].startsWith(path);
   return (
     <nav className="h-[80px] border-b border-gray-700/60 bg-black/40 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-6">
-        <div className="flex items-center gap-2">
+      <div className="max-w-7xl mx-auto h-full flex items-center px-6">
+        <div className="flex items-center flex-1 gap-2">
           <Link to="/">
-            <img src="/logo.png" width={180} height={180} alt="logo" />
+            <img src="/logo.png" width={160} height={160} alt="logo" />
           </Link>
         </div>
 
@@ -62,7 +62,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-gray-400 hover:text-green-400 text-2xl focus:outline-none"
+          className="md:hidden ml-7.5 text-gray-400 hover:text-green-400 text-2xl focus:outline-none"
         >
           {menuOpen ? "✕" : "☰"}
         </button>
