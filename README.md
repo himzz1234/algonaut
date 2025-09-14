@@ -1,4 +1,6 @@
-<img src="public/logo.png" alt="AlgoVisualizer Logo" width="200" />
+<p align="center">
+  <img src="public/logo.png" alt="AlgoVisualizer Logo" width="240" />
+</p>
 
 An interactive platform to **visualize algorithms step-by-step**, explore their pseudocode, and test your understanding with quizzes.  
 Built with **React + Firebase** for smooth UI, authentication, progress tracking, notes, and bookmarks.
