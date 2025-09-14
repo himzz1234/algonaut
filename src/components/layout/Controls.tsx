@@ -29,7 +29,7 @@ export default function Controls() {
     text-sm sm:text-base rounded-md
     ${
       disabled
-        ? "opacity-50 cursor-not-allowed hover:bg-transparent"
+        ? "opacity-40 pointer-events-none cursor-not-allowed hover:bg-transparent"
         : "hover:bg-gray-700/30"
     }
   `;
@@ -38,18 +38,21 @@ export default function Controls() {
     <div className="mt-4 flex flex-col sm:flex-row sm:items-center w-full gap-3">
       <div className="flex justify-center sm:justify-start flex-wrap gap-2 flex-1">
         <button
+          disabled={locked}
           onClick={() => setStepIndex(0)}
           className={`${btnClass(locked)} rotate-180`}
         >
           <TbPlayerTrackNextFilled />
         </button>
         <button
+          disabled={locked}
           onClick={() => setStepIndex((i) => Math.max(0, i - 1))}
           className={`${btnClass(locked)} rotate-180`}
         >
           <IoPlaySkipForward />
         </button>
         <button
+          disabled={locked}
           onClick={
             isLastStep
               ? () => {
@@ -63,12 +66,14 @@ export default function Controls() {
           {isLastStep ? <MdReplay /> : isPlaying ? <FaPause /> : <FaPlay />}
         </button>
         <button
+          disabled={locked}
           onClick={() => setStepIndex((i) => Math.min(stepsLength - 1, i + 1))}
           className={`${btnClass(locked)}`}
         >
           <IoPlaySkipForward />
         </button>
         <button
+          disabled={locked}
           onClick={() => setStepIndex(stepsLength - 1)}
           className={`${btnClass(locked)}`}
         >
@@ -79,7 +84,7 @@ export default function Controls() {
       <div className="flex justify-center sm:justify-end gap-2">
         <button
           onClick={() => setIsFullscreen((f) => !f)}
-          className={`${btnClass(locked)}`}
+          className={`${btnClass(false)}`}
         >
           {!isFullscreen ? <FaExpandAlt /> : <FaCompressAlt />}
         </button>

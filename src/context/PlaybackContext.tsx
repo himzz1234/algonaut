@@ -73,7 +73,7 @@ export function PlaybackProvider({
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (locked) return;
+      if (locked && e.key !== "f" && e.key !== "F") return;
       const target = e.target as HTMLElement;
 
       if (
