@@ -5,10 +5,12 @@ import { quizzes, type Question } from "../data/quizzes";
 
 export default function QuizWindow({
   onClose,
+  onFinish,
   algorithmKey,
 }: {
-  onClose?: () => void;
   algorithmKey: string;
+  onClose?: () => void;
+  onFinish?: (score: number, total: number) => void;
 }) {
   const sampleQuestions: Question[] = quizzes[algorithmKey] ?? [];
   const [score, setScore] = useState(0);
@@ -40,12 +42,16 @@ export default function QuizWindow({
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
     if (phase === "finished") {
+      onFinish?.(score, sampleQuestions.length);
+
       timer = setTimeout(() => {
         onClose?.();
         clearTimeout(timer);
       }, 2000);
     }
+
     return () => clearTimeout(timer);
   }, [phase]);
 

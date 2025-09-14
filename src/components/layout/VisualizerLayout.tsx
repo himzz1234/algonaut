@@ -12,6 +12,8 @@ import { PseudoCodeBlock } from "./PseudoCodeBlock";
 import ProgressSlider from "../ui/ProgressSlider";
 import Controls from "./Controls";
 import AlgorithmInfoWrapper from "./AlgorithmInfoWrapper";
+import { saveProgress } from "../../helpers/progress";
+import { useAuth } from "../../context/AuthContext";
 
 interface VisualizerLayoutProps<TStep> {
   type: "demo" | "learn";
@@ -56,10 +58,10 @@ export default function VisualizerLayout<TStep extends Step>({
   type = "learn",
   algorithmKey,
 }: VisualizerLayoutProps<TStep>) {
+  const { user } = useAuth();
   const [showQuiz, setShowQuiz] = useState(false);
   const { isPortrait, isMobile } = useOrientation();
   const { isFullscreen, stepIndex, isPlaying, setLocked } = usePlayback();
-
   const explanation = steps[stepIndex]?.explanation ?? "";
 
   const shouldShowRotateBanner = !isFullscreen && isMobile && isPortrait;
@@ -82,22 +84,32 @@ export default function VisualizerLayout<TStep extends Step>({
   }
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     if (!isPlaying && stepIndex === steps.length - 1) {
-      timer = setTimeout(() => {
+      if (user)
+        saveProgress(user.uid, algorithmKey, { visualizationCompleted: true });
+
+      const timer = setTimeout(() => {
         setShowQuiz(true);
         setLocked(true);
         clearTimeout(timer);
       }, 500);
-    }
 
-    return () => clearTimeout(timer);
-  }, [isPlaying, stepIndex, steps.length]);
+      return () => clearTimeout(timer);
+    }
+  }, [isPlaying, stepIndex, steps.length, user]);
 
   const closeQuizWindow = () => {
     setShowQuiz(false);
     setLocked(false);
+  };
+
+  const isQuizCompleted = (score: number, total: number) => {
+    if (!user) return;
+    saveProgress(user.uid, algorithmKey, {
+      quizCompleted: true,
+      lastQuizScore: score,
+      quizTotal: total,
+    });
   };
 
   const captionBottomClass = isFullscreen
@@ -138,6 +150,7 @@ export default function VisualizerLayout<TStep extends Step>({
                 <QuizWindow
                   algorithmKey={algorithmKey}
                   onClose={closeQuizWindow}
+                  onFinish={isQuizCompleted}
                 />
               )}
               <div

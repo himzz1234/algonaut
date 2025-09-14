@@ -8,16 +8,18 @@ import { useEffect, useState } from "react";
 import { db } from "../lib/firebase";
 import {
   collection,
-  query,
-  where,
   getDocs,
   doc,
   updateDoc,
   arrayUnion,
   arrayRemove,
+  getDoc,
 } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 import type { AlgorithmMeta } from "../data/algorithms";
+import { useProgress } from "../context/ProgressContext";
+import { FiCheckCircle, FiClock } from "react-icons/fi";
+import AuthPanel from "./AuthPanel";
 
 export type Algo = {
   id: string;
@@ -67,29 +69,45 @@ const AlgoRowWrapper = ({
 };
 
 export default function AlgoRow({ algo }: AlgoRowProps) {
-  const { openModal } = useModal();
   const { user } = useAuth();
+  const { openModal } = useModal();
   const [note, setNote] = useState<string | null>(null);
   const [bookmarked, setBookmarked] = useState(false);
+  const [progress, setProgress] = useState<"none" | "partial" | "complete">(
+    "none"
+  );
+
+  const { progressMap } = useProgress();
 
   useEffect(() => {
-    if (!user) return;
+    if (!progressMap) return;
+
+    const data = progressMap[algo.id];
+    if (!data) return setProgress("none");
+
+    if (data.visualizationCompleted && data.quizCompleted) {
+      setProgress("complete");
+    } else if (data.visualizationCompleted || data.quizCompleted) {
+      setProgress("partial");
+    } else {
+      setProgress("none");
+    }
+  }, [progressMap, algo.id]);
+
+  useEffect(() => {
+    if (!user) {
+      setNote(null);
+      return;
+    }
 
     const fetchNote = async () => {
-      const notesRef = collection(db, "users", user.uid, "notes");
-      const q = query(notesRef, where("algoId", "==", algo.name)); // ⚡ better to use algo.id if you add it to AlgorithmMeta
-      const snap = await getDocs(q);
-
-      if (!snap.empty) {
-        const data = snap.docs[0].data();
-        setNote(data.content || null);
-      } else {
-        setNote(null);
-      }
+      const noteRef = doc(db, "users", user.uid, "notes", algo.id);
+      const snap = await getDoc(noteRef);
+      setNote(snap.exists() ? snap.data().content || null : null);
     };
 
     fetchNote();
-  }, [user, algo.name]);
+  }, [user, algo.id]);
 
   useEffect(() => {
     if (!user) return;
@@ -107,7 +125,7 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
     };
 
     checkBookmarks();
-  }, [user, algo.name]);
+  }, [user?.uid, algo.id]);
 
   const toggleBookmark = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -163,13 +181,25 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
         )}
 
         {hasNote && (
-          <span className="text-xs md:text-sm text-gray-400 truncate max-w-[40ch] italic">
+          <span className="text-xs md:text-sm text-gray-400 truncate max-w-24 italic">
             — {note}
           </span>
         )}
       </div>
 
       <div className="flex items-center gap-3">
+        {progress === "complete" && (
+          <FiCheckCircle
+            className="text-green-400 w-4 h-4 mr-2"
+            title="Completed"
+          />
+        )}
+        {progress === "partial" && (
+          <FiClock
+            className="text-yellow-400 w-4 h-4 mr-2"
+            title="In Progress"
+          />
+        )}
         <button
           type="button"
           onClick={toggleBookmark}
@@ -182,13 +212,18 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
             <BsStar className="h-4 w-4 text-gray-400" />
           )}
         </button>
-
         <button
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+
+            if (!user) return openModal(<AuthPanel />);
             openModal(
-              <NoteEditor algorithm={algo} initialContent={note ?? ""} />
+              <NoteEditor
+                algorithm={algo}
+                initialContent={note ?? ""}
+                onSave={(newNote) => setNote(newNote)}
+              />
             );
           }}
           title={hasNote ? "Edit note" : "Add note"}

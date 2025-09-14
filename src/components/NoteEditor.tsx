@@ -1,24 +1,27 @@
 import { useState } from "react";
 import { db } from "../lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { serverTimestamp, doc, setDoc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 import type { AlgorithmMeta } from "../data/algorithms";
+import { useModal } from "../context/ModalContext";
 
 type NoteEditorProps = {
   algorithm: AlgorithmMeta;
   initialContent?: string;
+  onSave: (note: string) => void;
 };
 
 export default function NoteEditor({
   algorithm,
   initialContent = "",
+  onSave,
 }: NoteEditorProps) {
+  const { closeModal } = useModal();
   const [content, setContent] = useState(initialContent);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { user } = useAuth();
-
   const handleSave = async () => {
     if (!user) {
       setError("You must be signed in to save notes.");
@@ -29,15 +32,19 @@ export default function NoteEditor({
     setError(null);
 
     try {
-      const notesRef = collection(db, "users", user.uid, "notes");
-      await addDoc(notesRef, {
-        algoId: algorithm.id,
+      const noteRef = doc(db, "users", user.uid, "notes", algorithm.id);
+
+      const newNote = {
         content,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      });
+      };
 
+      await setDoc(noteRef, newNote, { merge: true });
+
+      onSave(newNote.content);
       setContent("");
+      closeModal();
     } catch (e: any) {
       setError(e?.message ?? "Failed to save note");
     } finally {

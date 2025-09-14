@@ -4,29 +4,8 @@ import { useAuth } from "../../../context/AuthContext";
 import StatsGrid from "../../../components/StatsGrid";
 import { FiMapPin } from "react-icons/fi";
 import { RiGraduationCapLine } from "react-icons/ri";
-
-const topics = [
-  { name: "Arrays", count: 93 },
-  { name: "Hashing", count: 29 },
-  { name: "Linked List", count: 25 },
-  { name: "Graph", count: 22 },
-  { name: "Binary Search", count: 20 },
-  { name: "String", count: 20 },
-  { name: "Maths", count: 18 },
-  { name: "Sorting", count: 16 },
-  { name: "Stack", count: 13 },
-  { name: "Two Pointer", count: 12 },
-  { name: "Greedy", count: 9 },
-  { name: "Recursion", count: 8 },
-  { name: "Bit Manipulation", count: 5 },
-  { name: "Dynamic Programming", count: 5 },
-  { name: "Queue", count: 2 },
-  { name: "Heap", count: 1 },
-  { name: "Binary Search Tree", count: 0 },
-  { name: "Binary Tree", count: 0 },
-  { name: "Python", count: 0 },
-  { name: "Sliding Window", count: 0 },
-];
+import { useProgress } from "../../../context/ProgressContext";
+import { algorithms } from "../../../data/algorithms";
 
 function ProfileCard() {
   const { user } = useAuth();
@@ -74,14 +53,27 @@ function ProfileCard() {
         </p>
       </div>
 
-      <button className="mt-6 w-full py-2 rounded-md text-sm font-medium bg-green-600/20 text-green-300 border border-green-600/30 hover:bg-green-600/30 transition">
-        Edit Profile
-      </button>
+      {user && (
+        <button className="mt-6 w-full py-2 rounded-md text-sm font-medium bg-green-600/20 text-green-300 border border-green-600/30 hover:bg-green-600/30 transition">
+          Edit Profile
+        </button>
+      )}
     </div>
   );
 }
 
 export default function Dashboard() {
+  const { progressMap, loading } = useProgress();
+
+  const topicCounts: Record<string, number> = {};
+  Object.entries(progressMap).forEach(([algoId, data]) => {
+    if (data.visualizationCompleted && data.quizCompleted) {
+      const meta = algorithms[algoId];
+      if (!meta) return;
+      topicCounts[meta.category] = (topicCounts[meta.category] || 0) + 1;
+    }
+  });
+
   return (
     <>
       <Navbar />
@@ -96,16 +88,24 @@ export default function Dashboard() {
 
           <div className="rounded-lg bg-[#0f1014] border border-gray-700/60 p-4 space-y-4">
             <h2 className="text-lg font-semibold text-white">Topics Covered</h2>
-            <div className="flex flex-wrap gap-2">
-              {topics.map((t) => (
-                <span
-                  key={t.name}
-                  className="px-3 py-1.5 rounded-md text-sm bg-gray-700/20 text-gray-300"
-                >
-                  {t.name} <span className="text-gray-400">× {t.count}</span>
-                </span>
-              ))}
-            </div>
+
+            {loading ? (
+              <p className="text-gray-400">Loading progress…</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(topicCounts).map(([name, count]) => (
+                  <span
+                    key={name}
+                    className="capitalize px-3 py-1.5 rounded-md text-sm bg-gray-700/20 text-gray-300"
+                  >
+                    {name} <span className="text-gray-400">× {count}</span>
+                  </span>
+                ))}
+                {Object.keys(topicCounts).length === 0 && (
+                  <p className="text-gray-500">No topics covered yet.</p>
+                )}
+              </div>
+            )}
           </div>
         </section>
       </main>
