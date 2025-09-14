@@ -121,7 +121,7 @@ export default function Select({
                   setIsOpen(false);
                 }
               }}
-              className="px-4 py-2 text-white/90 hover:text-white 
+              className="px-4 py-2 capitalize text-white/90 hover:text-white 
                 hover:bg-green-500/40 transition-all duration-200 cursor-pointer outline-none"
             >
               {option}

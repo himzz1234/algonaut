@@ -1,94 +1,25 @@
 import { useMemo, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { FiSearch } from "react-icons/fi";
-import { Link } from "react-router-dom";
-import { algorithms, type AlgorithmMeta } from "../../data/algorithms";
+import { algorithms } from "../../data/algorithms";
 import Footer from "../../components/Footer";
-import type { Variants } from "motion";
-import { motion } from "motion/react";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import Select from "../../components/ui/Select";
+import AlgoCard from "../../components/AlgoCard";
 
-const ALGO_CATEGORIES = [
-  "All",
-  "Sorting",
-  "Arrays",
-  "Linked Lists",
-  "Strings",
-  "Searching",
-  "Graphs",
-  "Dynamic Programming",
-  "Greedy",
-  "Backtracking",
-];
-
-function AlgoCard({ algorithm }: { algorithm: AlgorithmMeta }) {
-  const Wrapper: any = algorithm.href ? Link : "div";
-  const wrapperProps: any = algorithm.href ? { to: algorithm.href } : {};
-
-  const isComingSoon = !algorithm.href;
-
-  return (
-    <Wrapper
-      {...wrapperProps}
-      aria-label={
-        algorithm.href
-          ? `Open ${algorithm.name}`
-          : `${algorithm.name} (Coming Soon)`
-      }
-      className={`block transition-transform duration-150 ${
-        algorithm.href ? "hover:-translate-y-1" : "opacity-95"
-      }`}
-    >
-      <article
-        className={`relative w-full h-52 rounded-xl p-4 flex flex-col
-          bg-[#0f1014] border border-gray-700/60
-          shadow-md transition-all duration-300 overflow-hidden
-          ${
-            algorithm.href
-              ? "hover:shadow-green-500/20 hover:border-green-400/50 group"
-              : "opacity-80"
-          }
-        `}
-      >
-        <div
-          className={`absolute inset-0 bg-gradient-to-br from-green-500/8 via-transparent to-green-400/8
-            opacity-0 ${
-              algorithm.href ? "group-hover:opacity-100" : ""
-            } transition-opacity duration-300 pointer-events-none`}
-        />
-
-        <div className="flex flex-col items-start flex-1 relative z-10">
-          <h3 className="text-base md:text-xl font-medium text-white line-clamp-1">
-            {algorithm.name}
-          </h3>
-
-          <p className="mt-1 flex-1 text-gray-400 text-sm md:text-[15px] leading-normal line-clamp-4">
-            {algorithm.shortDescription}
-          </p>
-
-          <div className="mt-4 flex flex-wrap gap-2 items-center">
-            {algorithm?.tags && (
-              <div className="flex flex-wrap gap-2">
-                {algorithm?.tags.slice(0, 2).map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-1 text-xs rounded-sm font-light bg-gray-700/40 text-gray-300"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {isComingSoon && (
-          <div className="absolute inset-0 rounded-xl bg-black/30 pointer-events-none" />
-        )}
-      </article>
-    </Wrapper>
-  );
-}
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.42, 0, 0.58, 1] },
+  },
+  exit: {
+    opacity: 0,
+    y: 20,
+    transition: { duration: 0.35, ease: "easeInOut" },
+  },
+};
 
 export default function ExplorePage() {
   const [query, setQuery] = useState("");
@@ -118,13 +49,22 @@ export default function ExplorePage() {
     },
   };
 
-  const DIFFICULTY_OPTIONS = ["Any", "Easy", "Medium", "Hard"];
+  const DIFFICULTY_OPTIONS = ["Any", "Beginner", "Intermediate", "Advanced"];
+  const ALGO_CATEGORIES = [
+    "All",
+    ...new Set(Object.values(algorithms).map((algo) => algo.category)),
+  ];
 
   const filtered = useMemo(() => {
     return Object.values(algorithms).filter((a) => {
-      if (category !== "All" && a.category !== category) return false;
-      if (difficultyFilter !== "Any" && a.difficulty !== difficultyFilter)
+      if (category !== "All" && a.category !== category.toLowerCase())
         return false;
+      if (
+        difficultyFilter !== "Any" &&
+        a.difficulty !== difficultyFilter.toLowerCase()
+      )
+        return false;
+
       if (!query) return true;
       const q = query.toLowerCase();
       return (
@@ -176,7 +116,7 @@ export default function ExplorePage() {
             />
           </div>
 
-          <div className="w-full sm:w-56 flex flex-1 gap-3">
+          <div className="w-full sm:w-56 flex flex-1 flex-col sm:flex-row gap-3">
             <Select
               options={DIFFICULTY_OPTIONS}
               selected={difficultyFilter}
@@ -219,7 +159,7 @@ export default function ExplorePage() {
               {({ toggle, isOpen }) => (
                 <button
                   onClick={toggle}
-                  className="w-full h-full px-4 py-2 rounded-md flex justify-between items-center bg-[#0f1014] backdrop-blur-sm text-gray-200 border border-gray-700/60 hover:border-green-400/50 hover:bg-white/10 focus:outline-none focus:ring-1 focus:ring-green-400 transition-all duration-200 text-sm sm:text-base"
+                  className="w-full h-full capitalize px-4 py-2 rounded-md flex justify-between items-center bg-[#0f1014] backdrop-blur-sm text-gray-200 border border-gray-700/60 hover:border-green-400/50 hover:bg-white/10 focus:outline-none focus:ring-1 focus:ring-green-400 transition-all duration-200 text-sm sm:text-base"
                   aria-haspopup="menu"
                   aria-expanded={isOpen}
                 >
@@ -246,15 +186,15 @@ export default function ExplorePage() {
         </div>
 
         <main>
-          <div className="grid grid-cols-12 gap-8">
-            <aside className="col-span-3">
+          <div className="grid grid-cols-12 md:gap-8">
+            <aside className="hidden md:block md:col-span-3">
               <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 sticky top-24">
                 <h2 className="text-lg font-semibold mb-4">Categories</h2>
                 <ul className="flex flex-col gap-2">
                   {ALGO_CATEGORIES.map((c) => (
                     <li key={c}>
                       <button
-                        className={`w-full text-left px-3 py-2 rounded-md ${
+                        className={`w-full capitalize text-left px-3 py-2 rounded-md ${
                           category === c
                             ? "bg-green-600/20 text-green-300"
                             : "text-gray-200 hover:bg-gray-800/40"
@@ -269,18 +209,37 @@ export default function ExplorePage() {
               </div>
             </aside>
 
-            <section className="col-span-9">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filtered.length === 0 ? (
-                  <div className="col-span-3 text-center text-gray-400">
-                    No algorithms match your filters.
-                  </div>
-                ) : (
-                  filtered.map((algo, index) => (
-                    <AlgoCard key={index} algorithm={algo} />
-                  ))
-                )}
-              </div>
+            <section className="col-span-12 md:col-span-9">
+              <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <AnimatePresence mode="sync">
+                  {filtered.length === 0 ? (
+                    <motion.div
+                      key="empty"
+                      className="col-span-3 text-center text-gray-400"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      No algorithms match your filters.
+                    </motion.div>
+                  ) : (
+                    filtered.map((algo, index) => (
+                      <motion.div
+                        key={algo.name + index}
+                        variants={cardVariants}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, amount: 0.2 }}
+                        exit="exit"
+                        transition={{ delay: index * 0.08 }}
+                        layout
+                      >
+                        <AlgoCard algorithm={algo} />
+                      </motion.div>
+                    ))
+                  )}
+                </AnimatePresence>
+              </motion.div>
             </section>
           </div>
         </main>
