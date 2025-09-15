@@ -5,6 +5,10 @@
 An interactive platform to **visualize algorithms step-by-step**, explore their pseudocode, and test your understanding with quizzes.  
 Built with **React + Firebase** for smooth UI, authentication, progress tracking, notes, and bookmarks.
 
+<p align="center">
+  <img src="public/images/demo.gif" alt="AlgoVisualizer Logo" width="100%" />
+</p>
+
 ## Features
 
 - **Interactive Visualizations** – Watch algorithms run step by step.  
