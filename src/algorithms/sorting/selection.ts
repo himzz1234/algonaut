@@ -19,7 +19,7 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
       type: "highlight",
       ids: [a[minIdx].id],
       drag: false,
-      pointers: { min: a[minIdx].id },
+      pointers: { min: a[minIdx].id, i: a[minIdx].id },
       lines: [2],
       explanation: `Assume ${a[minIdx].value} (index ${minIdx}) is the minimum.`,
     };
@@ -36,7 +36,7 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
         type: "compare",
         ids: [a[minIdx].id, a[j].id],
         relation,
-        pointers: { min: a[minIdx].id, j: a[j].id },
+        pointers: { min: a[minIdx].id, j: a[j].id, i: a[i].id },
         lines: [3],
         explanation: `Compare current min ${a[minIdx].value} with ${a[j].value}.`,
       };
@@ -47,7 +47,7 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
           type: "highlight",
           ids: [a[minIdx].id],
           drag: false,
-          pointers: { min: a[minIdx].id, j: a[j].id },
+          pointers: { min: a[minIdx].id, j: a[j].id, i: a[i].id },
           lines: [4],
           explanation: `New minimum found: ${a[minIdx].value} at index ${minIdx}.`,
         };
@@ -60,7 +60,7 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
       yield {
         type: "swap",
         ids: [a[i].id, a[minIdx].id],
-        pointers: { min: a[i].id, i: a[minIdx].id },
+        pointers: { i: a[i].id, min: a[minIdx].id },
         lines: [5],
         explanation: `Swap ${a[minIdx].value} into position ${i}.`,
       };

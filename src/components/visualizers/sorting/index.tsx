@@ -66,12 +66,13 @@ export default function SortingVisualizer({ steps }: Props) {
             depths[id] = step.depth!;
           });
         }
-        pointers = step.pointers ?? pointers;
+
+        pointers = step.pointers ?? {};
         break;
 
       case "compare":
         highlight = { ids: step.ids ?? [], mode: "compare" };
-        pointers = step.pointers ?? pointers;
+        pointers = step.pointers ?? {};
         break;
 
       case "swap": {
@@ -82,15 +83,19 @@ export default function SortingVisualizer({ steps }: Props) {
           positions[idA] = posB;
           positions[idB] = posA;
         }
-        pointers = step.pointers ?? pointers;
+
+        pointers = step.pointers ?? {};
         break;
       }
 
       case "stage_move": {
+        highlight = { ids: step.ids ?? [], mode: "key" };
         (step.ids ?? []).forEach((id) => {
           positions[id] = step.toIndex!;
           depths[id] = step.depth ?? 1;
         });
+
+        pointers = step.pointers ?? {};
         break;
       }
 
@@ -99,12 +104,14 @@ export default function SortingVisualizer({ steps }: Props) {
         (step.ids ?? []).forEach((id) => {
           depths[id] = step.depth ?? 0;
         });
+
+        pointers = step.pointers ?? {};
         break;
       }
 
       case "mark_sorted":
         sorted = [...new Set([...sorted, ...(step.ids ?? [])])];
-        pointers = step.pointers ?? pointers;
+        pointers = step.pointers ?? {};
         break;
 
       case "done":

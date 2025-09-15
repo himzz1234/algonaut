@@ -246,6 +246,18 @@ export default function LinkedListVisualizer({ steps }: Props) {
           </marker>
 
           <marker
+            id="arrow-new"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d" />
+          </marker>
+
+          <marker
             id="arrow-highlight"
             viewBox="0 0 10 10"
             refX="8"
@@ -272,6 +284,9 @@ export default function LinkedListVisualizer({ steps }: Props) {
             currentStep.from === node.id &&
             currentStep.id === next;
 
+          const isNew =
+            currentStep.type === "link_next" && currentStep.ids[1] === next;
+
           return (
             <AnimatePresence>
               <motion.g key={`arrow-${node.id}-${node.next.id}`}>
@@ -279,10 +294,10 @@ export default function LinkedListVisualizer({ steps }: Props) {
                   <motion.path
                     key={`arrow-${node.id}-${node.next.id}`}
                     d={d}
-                    stroke="#4b5563"
+                    stroke={isNew ? "#15803d" : "#4b5563"}
                     strokeWidth={2}
                     fill="none"
-                    markerEnd="url(#arrow)"
+                    markerEnd={isNew ? "url(#arrow-new)" : "url(#arrow)"}
                     initial={{ pathLength: 0 }}
                     animate={
                       isHighlighted

@@ -35,7 +35,7 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
         yield {
           type: "swap",
           ids: [a[j].id, a[j + 1].id],
-          pointers: { i: a[j + 1].id, j: a[j].id },
+          pointers: { i: a[j].id, j: a[j + 1].id },
           lines: [3],
           explanation: `Swap to place ${a[j].value} before ${a[j + 1].value}.`,
         };

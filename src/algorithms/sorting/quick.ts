@@ -45,6 +45,8 @@ export function* quickSort(
 
     if (arr[j].value < pivot.value) {
       if (i !== j) {
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+
         yield {
           type: "swap",
           ids: [arr[i].id, arr[j].id],
@@ -52,8 +54,6 @@ export function* quickSort(
           lines: [2, 3],
           explanation: `Swap ${arr[i].value} and ${arr[j].value} (smaller than pivot).`,
         };
-
-        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
       i++;
     }
@@ -76,6 +76,8 @@ export function* quickSort(
       explanation: `Place pivot ${pivot.value} into correct position.`,
     };
 
+    [arr[i], arr[right]] = [arr[right], arr[i]];
+
     yield {
       type: "swap",
       ids: [arr[i].id, arr[right].id],
@@ -83,8 +85,6 @@ export function* quickSort(
       lines: [2, 3],
       explanation: `Swap pivot ${pivot.value} with ${arr[i].value}.`,
     };
-
-    [arr[i], arr[right]] = [arr[right], arr[i]];
   }
 
   yield {

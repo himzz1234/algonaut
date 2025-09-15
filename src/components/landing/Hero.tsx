@@ -116,7 +116,7 @@ export default function Hero() {
           >
             <defs>
               <linearGradient id="gradient" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="35%" stopColor="#000" stopOpacity="1" />
+                <stop offset="0%" stopColor="#000" stopOpacity="1" />
                 <stop offset="100%" stopColor="transparent" stopOpacity="0" />
               </linearGradient>
             </defs>

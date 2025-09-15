@@ -58,7 +58,7 @@ export function* linearSearch(
         indices: [i],
         values: [a[i].value],
         target,
-        lines: [3],
+        lines: [1],
         explanation: `Element ${a[i].value} is less than ${target}, continue searching.`,
       };
     } else {
@@ -70,7 +70,7 @@ export function* linearSearch(
         indices: [i],
         values: [a[i].value],
         target,
-        lines: [4],
+        lines: [1],
         explanation: `Element ${a[i].value} is greater than ${target}, continue searching.`,
       };
     }

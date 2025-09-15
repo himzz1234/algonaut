@@ -35,7 +35,7 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
         type: "compare",
         ids: [a[j].id, a[j + 1].id],
         relation,
-        pointers: { key: a[j + 1].id, j: a[j].id },
+        pointers: { key: a[j + 1].id, i: a[j].id },
         lines: [3],
         explanation: `Compare ${a[j].value} and key ${a[j + 1].value}.`,
       };
@@ -45,7 +45,7 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
         yield {
           type: "swap",
           ids: [a[j].id, a[j + 1].id],
-          pointers: { key: a[j].id, j: a[j + 1].id },
+          pointers: { key: a[j].id, i: a[j + 1].id },
           lines: [3, 4],
           explanation: `Shift ${a[j + 1].value} right to make space for key.`,
         };

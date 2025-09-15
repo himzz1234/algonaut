@@ -37,9 +37,8 @@ export function* reverseList(head: Node | null): Generator<ListStep> {
 
     if (nextIndex !== null) {
       yield {
-        type: "move",
-        from: curr.id,
-        id: nodes[nextIndex].id,
+        type: "highlight",
+        ids: [nodes[nextIndex].id],
         pointers: {
           head: nodes[0].id,
           curr: curr.id,
@@ -47,13 +46,12 @@ export function* reverseList(head: Node | null): Generator<ListStep> {
           next: nodes[nextIndex].id,
         },
         lines: [4],
-        explanation: `Move 'next' from ${curr.value} ahead to ${nodes[nextIndex].value} for later traversal.`,
+        explanation: `Save 'next' at ${nodes[nextIndex].value} for later traversal.`,
       };
     } else {
       yield {
-        type: "move",
-        from: curr.id,
-        id: curr.id,
+        type: "highlight",
+        ids: [curr.id],
         pointers: {
           head: nodes[0].id,
           curr: curr.id,

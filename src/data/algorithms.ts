@@ -149,8 +149,8 @@ export const algorithms: Record<string, AlgorithmMeta> = {
     pseudocode: [
       "start with the array",
       "choose the last element as the pivot",
-      "    put all smaller elements to the left of the pivot",
-      "    put all bigger elements to the right of the pivot",
+      "    put all smaller elements to the left of the array",
+      "    put all bigger elements to the right of the array",
       "place the pivot in its correct position",
       "recursively sort the left part",
       "recursively sort the right part",
