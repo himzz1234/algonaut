@@ -200,6 +200,41 @@ export type ListStep =
       type: "done";
     });
 
+export type BitmaskStep =
+  | (Step & {
+      type: "init";
+      bits: Block[];
+      mask: Block[];
+      result: Block[];
+      initialNum: number;
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+      mode: "check" | "found";
+    })
+  | (Step & {
+      type: "operation";
+      op: "AND" | "OR" | "XOR" | "SHL" | "SHR" | "NOT";
+      target?: "bits" | "mask";
+      explanation: string;
+      lines: number[];
+    })
+  | (Step & {
+      type: "update";
+      bits?: Block[];
+      mask?: Block[];
+      result?: Block[];
+    })
+  | (Step & {
+      type: "overwrite";
+      id: number;
+      value: number;
+    })
+  | (Step & {
+      type: "done";
+    });
+
 export type PathfindingStep =
   | {
       type: "init";

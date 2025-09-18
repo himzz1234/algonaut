@@ -437,7 +437,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 2,
     },
   ],
-
   "reverse-string": [
     {
       id: 1,
@@ -456,7 +455,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 1,
     },
   ],
-
   "check-odd-even": [
     {
       id: 1,
@@ -470,24 +468,24 @@ export const quizzes: Record<string, Question[]> = {
       options: ["O(1)", "O(N)", "O(log N)"],
       answer: 0,
     },
-  ],
-
-  "ith-bit": [
     {
-      id: 1,
-      question: "Which operation gets the ith bit?",
-      options: ["n & (1<<i)", "n | (1<<i)", "n ^ (1<<i)"],
+      id: 3,
+      question: "Why does n & 1 work to check odd/even?",
+      options: [
+        "Because the least significant bit represents 1’s place",
+        "Because AND always returns 1 for odd numbers",
+        "Because 1 is a mask for all bits",
+      ],
       answer: 0,
     },
     {
-      id: 2,
-      question: "Which operation toggles the ith bit?",
-      options: ["n & (1<<i)", "n | (1<<i)", "n ^ (1<<i)"],
-      answer: 2,
+      id: 4,
+      question: "If n is even, what is the result of n & 1?",
+      options: ["0", "1", "Depends on n"],
+      answer: 0,
     },
   ],
-
-  "count-bits": [
+  "count-set-bits": [
     {
       id: 1,
       question: "Brian Kernighan’s algorithm clears:",
@@ -500,27 +498,24 @@ export const quizzes: Record<string, Question[]> = {
       options: ["Number of bits set", "Array length", "Value of n squared"],
       answer: 0,
     },
-  ],
-
-  "single-number": [
     {
-      id: 1,
-      question: "XOR is used in single number problem because:",
+      id: 3,
+      question: "What does n & (n-1) do?",
       options: [
-        "XOR of duplicates cancels out",
-        "XOR sorts the numbers",
-        "XOR gives maximum value",
+        "Unsets the rightmost set bit",
+        "Unsets the leftmost set bit",
+        "Flips all bits",
       ],
       answer: 0,
     },
     {
-      id: 2,
-      question: "What is the space complexity of single number algorithm?",
-      options: ["O(1)", "O(N)", "O(log N)"],
-      answer: 0,
+      id: 4,
+      question:
+        "If n = 15 (1111), how many iterations will Brian Kernighan’s algorithm take?",
+      options: ["1", "4", "log2(n)"],
+      answer: 1,
     },
   ],
-
   "power-of-two": [
     {
       id: 1,
@@ -534,41 +529,111 @@ export const quizzes: Record<string, Question[]> = {
       options: ["n & (n-1) == 0", "n | (n-1) == 0", "n ^ (n-1) == 0"],
       answer: 0,
     },
+    {
+      id: 3,
+      question: "Why must n > 0 when checking power of two?",
+      options: [
+        "Because 0 also satisfies n & (n-1) == 0",
+        "Because negative numbers can be powers of two",
+        "Because the AND operation doesn’t work for zero",
+      ],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question: "Which of these numbers is NOT a power of two?",
+      options: ["1", "8", "12"],
+      answer: 2,
+    },
   ],
-
-  "swap-using-xor": [
+  "get-ith-bit": [
     {
       id: 1,
-      question: "The XOR swap trick avoids using:",
-      options: ["Extra variable", "Array", "Loop"],
+      question: "How do you check if the i-th bit of n is set?",
+      options: ["(n & (1 << i)) != 0", "(n | (1 << i))", "(n ^ (1 << i))"],
       answer: 0,
     },
     {
       id: 2,
-      question: "Time complexity of XOR swap is:",
-      options: ["O(1)", "O(N)", "O(N²)"],
+      question: "If n = 13 (1101), what is the 2nd bit (0-indexed)?",
+      options: ["0", "1", "2"],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question: "Time complexity of get-ith-bit is:",
+      options: ["O(1)", "O(log n)", "O(n)"],
       answer: 0,
     },
   ],
-
-  "lowest-set-bit": [
+  "set-ith-bit": [
     {
       id: 1,
-      question: "Expression to extract lowest set bit is:",
-      options: ["n & -n", "n & (n-1)", "n | -n"],
+      question: "How do you set the i-th bit of n?",
+      options: ["n | (1 << i)", "n & (1 << i)", "n ^ (1 << i)"],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question: "If n = 8 (1000), setting the 0th bit gives:",
+      options: ["9 (1001)", "8 (1000)", "7 (0111)"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question: "What happens if the i-th bit is already set?",
+      options: ["It remains set", "It gets toggled off", "It resets to 0"],
       answer: 0,
     },
   ],
-
-  "clear-lowest-set-bit": [
+  "clear-ith-bit": [
     {
       id: 1,
-      question: "Expression to clear lowest set bit is:",
-      options: ["n & (n-1)", "n | (n-1)", "n ^ (n-1)"],
+      question: "How do you clear the i-th bit of n?",
+      options: ["n & ~(1 << i)", "n | (1 << i)", "n ^ (1 << i)"],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question: "If n = 7 (0111), clearing the 1st bit gives:",
+      options: ["5 (0101)", "6 (0110)", "3 (0011)"],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question: "What does ~ (bitwise NOT) do in the mask?",
+      options: [
+        "Inverts the mask bits so only i-th bit is 0",
+        "Clears all bits",
+        "Sets only the i-th bit",
+      ],
       answer: 0,
     },
   ],
-
+  "toggle-ith-bit": [
+    {
+      id: 1,
+      question: "How do you toggle the i-th bit of n?",
+      options: ["n ^ (1 << i)", "n | (1 << i)", "n & ~(1 << i)"],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question: "If n = 5 (0101), toggling the 0th bit gives:",
+      options: ["4 (0100)", "5 (0101)", "7 (0111)"],
+      answer: 2,
+    },
+    {
+      id: 3,
+      question: "If you toggle the same bit twice, the result is:",
+      options: [
+        "The bit stays unchanged",
+        "The bit clears permanently",
+        "Random",
+      ],
+      answer: 0,
+    },
+  ],
   "ll-insert-end": [
     {
       id: 1,

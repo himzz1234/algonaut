@@ -15,6 +15,7 @@ import ExplorePage from "./pages/explore/index.tsx";
 import Dashboard from "./pages/user/[slug]/index.tsx";
 import { ProgressProvider } from "./context/ProgressContext.tsx";
 import { Analytics } from "@vercel/analytics/react";
+import BitmaskPage from "./pages/learn/bitmask/index.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <>
@@ -31,6 +32,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="sorting" element={<SortingPage />} />
                 <Route path="searching" element={<SearchingPage />} />
                 <Route path="list" element={<ListPage />} />
+                <Route path="bitmask" element={<BitmaskPage />} />
               </Route>
               <Route path="/explore" element={<ExplorePage />} />
               <Route path="/user/:id" element={<Dashboard />} />

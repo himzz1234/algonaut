@@ -52,22 +52,7 @@ export const modules: Module[] = [
       "reverse-string",
     ],
   },
-  {
-    id: "m-linked-lists",
-    title: "Linked Lists",
-    description:
-      "Work with pointers, traversal, and in-place edits. Focused on singly linked lists (common interview patterns).",
-    level: "intermediate",
-    algos: [
-      "ll-insert-end",
-      "ll-delete-node",
-      "ll-reverse",
-      "ll-middle-node",
-      "ll-cycle-detect-floyd",
-      "ll-remove-cycle",
-      "ll-merge-two-sorted",
-    ],
-  },
+
   {
     id: "m-bits",
     title: "Bit Manipulation",
@@ -75,12 +60,13 @@ export const modules: Module[] = [
       "Learn how to use bitwise operations to solve problems efficiently.",
     level: "beginner",
     algos: [
+      "get-ith-bit",
+      "set-ith-bit",
+      "clear-ith-bit",
+      "toggle-ith-bit",
       "check-odd-even",
-      "ith-bit",
-      "count-bits",
-      "single-number",
+      "count-set-bits",
       "power-of-two",
-      "swap-using-xor",
       "lowest-set-bit",
       "clear-lowest-set-bit",
     ],
@@ -103,6 +89,22 @@ export const modules: Module[] = [
     ],
   },
   {
+    id: "m-linked-lists",
+    title: "Linked Lists",
+    description:
+      "Work with pointers, traversal, and in-place edits. Focused on singly linked lists (common interview patterns).",
+    level: "intermediate",
+    algos: [
+      "ll-insert-end",
+      "ll-delete-node",
+      "ll-reverse",
+      "ll-middle-node",
+      "ll-cycle-detect-floyd",
+      "ll-remove-cycle",
+      "ll-merge-two-sorted",
+    ],
+  },
+  {
     id: "m-graphs-intro",
     title: "Graphs (Intro)",
     description: "Model connections; explore with BFS/DFS.",
@@ -111,143 +113,7 @@ export const modules: Module[] = [
   },
 ];
 
-// type Algo = {
-//   id: string;
-//   label: string;
-//   href?: string;
-//   difficulty: "Easy" | "Medium" | "Hard";
-//   effort: string;
-// };
-
-// type Module = {
-//   id: string;
-//   title: string;
-//   description: string;
-//   level: "beginner" | "intermediate" | "interview";
-//   algos: Algo[];
-// };
-
 // export const modules: Module[] = [
-//   {
-//     id: "m-sorting",
-//     title: "Sorting Algorithms",
-//     description:
-//       "Learn and practice fundamental sorting algorithms, from simple quadratic methods to efficient divide-and-conquer approaches.",
-//     level: "beginner",
-//     algos: [
-//       {
-//         id: "bubble",
-//         label: "Bubble Sort",
-//         href: "/learn/sorting?algorithm=bubble-sort",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "selection",
-//         label: "Selection Sort",
-//         href: "/learn/sorting?algorithm=selection-sort",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "insertion",
-//         label: "Insertion Sort",
-//         href: "/learn/sorting?algorithm=insertion-sort",
-//         difficulty: "Easy",
-//         effort: "Low–Medium",
-//       },
-//       {
-//         id: "merge",
-//         label: "Merge Sort",
-//         href: "/learn/sorting?algorithm=merge-sort",
-//         difficulty: "Medium",
-//         effort: "Medium–High",
-//       },
-//       {
-//         id: "quick",
-//         label: "Quick Sort",
-//         href: "/learn/sorting?algorithm=quick-sort",
-//         difficulty: "Medium",
-//         effort: "High",
-//       },
-//       {
-//         id: "heap",
-//         label: "Heap Sort",
-//         href: "/learn/sorting?algorithm=heap-sort",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "counting",
-//         label: "Counting Sort",
-//         href: "/learn/sorting?algorithm=counting-sort",
-//         difficulty: "Easy",
-//         effort: "Low–Medium",
-//       },
-//     ],
-//   },
-//   {
-//     id: "m-arrays",
-//     title: "Arrays",
-//     description:
-//       "Master fundamental array operations and patterns commonly asked in coding interviews.",
-//     level: "beginner",
-//     algos: [
-//       {
-//         id: "linear-search",
-//         label: "Linear Search",
-//         href: "/learn/searching?algorithm=linear-search",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "binary-search",
-//         label: "Binary Search",
-//         href: "/learn/searching?algorithm=binary-search",
-//         difficulty: "Medium",
-//         effort: "Low–Medium",
-//       },
-//       {
-//         id: "find-min-max",
-//         label: "Find Minimum / Maximum Element",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "reverse-array",
-//         label: "Reverse Array",
-//         href: "/learn/array?algorithm=reverse-array",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "rotate-array",
-//         label: "Rotate Array by K Steps",
-//         href: "/learn/array?algorithm=rotate-array",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "prefix-sum",
-//         label: "Prefix Sum Array",
-//         difficulty: "Easy",
-//         effort: "Low–Medium",
-//       },
-//       {
-//         id: "move-zeroes",
-//         label: "Move Zeroes",
-//         difficulty: "Easy",
-//         effort: "Low–Medium",
-//       },
-//       {
-//         id: "max-subarray-sum",
-//         label: "Maximum Subarray (Kadane’s Algorithm)",
-//         href: "/learn/array?algorithm=kadane",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//     ],
-//   },
 //   {
 //     id: "m-recursion",
 //     title: "Recursion Basics",
