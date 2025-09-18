@@ -1,13 +1,9 @@
-import { useOrientation } from "../hooks/useOrientation";
-
 type Props = {
   disabled?: boolean;
 };
 
 export default function RotateBanner({ disabled }: Props) {
-  const { isPortrait, isMobile } = useOrientation();
-
-  if (disabled || !isMobile || !isPortrait) return null;
+  if (disabled) return null;
 
   return (
     <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-md flex items-center justify-center px-8 text-center">
