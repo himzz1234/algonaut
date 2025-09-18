@@ -230,7 +230,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
       <motion.svg
         width={Math.max(1, nodes.length - 1) * spacing + barWidth}
         height={barHeight}
-        style={{ overflow: "visible" }}
+        style={{ overflow: "visible", translateY: "-50%" }}
       >
         <defs>
           <marker
@@ -254,7 +254,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
             markerHeight="6"
             orient="auto-start-reverse"
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#00a73e" />
           </marker>
 
           <marker
@@ -294,7 +294,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
                   <motion.path
                     key={`arrow-${node.id}-${node.next.id}`}
                     d={d}
-                    stroke={isNew ? "#15803d" : "#4b5563"}
+                    stroke={isNew ? "#00a73e" : "#4b5563"}
                     strokeWidth={2}
                     fill="none"
                     markerEnd={isNew ? "url(#arrow-new)" : "url(#arrow)"}

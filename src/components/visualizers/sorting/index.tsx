@@ -146,9 +146,9 @@ export default function SortingVisualizer({ steps }: Props) {
 
   const svgY =
     steps[stepIndex]?.type === "init"
-      ? "50%"
+      ? "0%"
       : steps[stepIndex]?.type === "done"
-      ? "50%"
+      ? "0%"
       : "-100%";
 
   const svgTranslateY =
@@ -168,13 +168,13 @@ export default function SortingVisualizer({ steps }: Props) {
   });
 
   return (
-    <motion.div className="w-full h-full flex py-16 justify-center items-center relative">
+    <motion.div className="w-full h-full flex justify-center items-center relative">
       <motion.svg
         animate={{ y: svgY, translateY: svgTranslateY }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         width={Object.keys(blocks).length * spacing}
         height={barHeight}
-        style={{ overflow: "visible", position: "absolute" }}
+        style={{ overflow: "visible", translateY: "-50%" }}
       >
         {blocks.map((block) => {
           const depth = depths[block.id] ?? 0;
@@ -204,9 +204,7 @@ export default function SortingVisualizer({ steps }: Props) {
                 rx={6}
                 width={barWidth}
                 height={barHeight}
-                animate={{
-                  fill: fillColor,
-                }}
+                fill={fillColor}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
               <text

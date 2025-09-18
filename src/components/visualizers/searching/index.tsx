@@ -105,9 +105,9 @@ export default function SearchingVisualizer({ steps }: Props) {
   return (
     <motion.div className="relative w-full h-full flex flex-col py-16 items-center justify-center">
       <motion.svg
-        width={Object.keys(blocks).length * spacing}
         height={barHeight}
-        style={{ overflow: "visible" }}
+        style={{ overflow: "visible", translateY: "-50%" }}
+        width={Object.keys(blocks).length * spacing + barWidth * 2}
       >
         {blocks.map((block, i) => {
           const isHighlighted = highlight.ids.includes(block.id);
@@ -137,7 +137,7 @@ export default function SearchingVisualizer({ steps }: Props) {
                   fill: isHighlighted
                     ? highlight.mode === "found"
                       ? "#22c55e"
-                      : "#eab308"
+                      : "#f59e0b"
                     : "#475569",
                 }}
                 transition={{ duration: 0.3 }}
@@ -169,40 +169,46 @@ export default function SearchingVisualizer({ steps }: Props) {
             </motion.g>
           );
         })}
-      </motion.svg>
 
-      <div className="absolute top-5 right-5 flex flex-col items-center">
-        <svg height={barWidth} width={barHeight}>
-          <g>
-            <motion.rect
-              rx={6}
-              width={barWidth}
-              height={barHeight}
-              animate={{
-                fill:
-                  steps[stepIndex]?.type === "check"
-                    ? "#eab308"
-                    : steps[stepIndex]?.type === "found"
-                    ? "#22c55e"
-                    : "#475569",
-              }}
-              transition={{ duration: 0.3 }}
-            />
-            <text
-              x={barWidth / 2}
-              y={barHeight / 2}
-              fontFamily="Satoshi"
-              fontSize="16"
-              fill="white"
-              textAnchor="middle"
-              dominantBaseline="middle"
-            >
-              {target}
-            </text>
-          </g>
-        </svg>
-        <span className="mt-2 text-sm text-gray-200">Target</span>
-      </div>
+        <g transform={`translate(${blocks.length * spacing + 30}, 0)`}>
+          <motion.rect
+            rx={6}
+            width={barWidth}
+            height={barHeight}
+            animate={{
+              fill:
+                steps[stepIndex]?.type === "check"
+                  ? "#f59e0b"
+                  : steps[stepIndex]?.type === "found"
+                  ? "#00a73e"
+                  : "#475569",
+            }}
+            transition={{ duration: 0.3 }}
+          />
+          <text
+            x={barWidth / 2}
+            y={barHeight / 2}
+            fontFamily="Satoshi"
+            fontSize="16"
+            fill="white"
+            textAnchor="middle"
+            dominantBaseline="middle"
+          >
+            {target}
+          </text>
+          <text
+            x={barWidth / 2}
+            y={barHeight + 20}
+            fontFamily="Satoshi"
+            fontSize="14"
+            fill="white"
+            textAnchor="middle"
+            dominantBaseline="middle"
+          >
+            Target
+          </text>
+        </g>
+      </motion.svg>
     </motion.div>
   );
 }

@@ -58,7 +58,7 @@ export function LearningPathSection({
         {modules.map((m) => (
           <details
             key={m.id}
-            className="group rounded-xl border border-gray-700/60 bg-[#0f1014] transition-shadow focus-within:shadow-lg hover:shadow-lg"
+            className="group rounded-xl bg-[#141414] transition-shadow focus-within:shadow-lg hover:shadow-lg"
           >
             <summary
               className="cursor-pointer list-none p-3 sm:p-4 flex flex-col sm:justify-between gap-2 sm:gap-2
