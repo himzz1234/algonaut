@@ -128,41 +128,40 @@ export default function ArrayVisualizer({ steps }: Props) {
     return { blocks, variables, positions, depths, highlight, pointers };
   }
 
-  const { blocks, variables, positions, depths, highlight, pointers } =
-    useMemo(() => {
-      let state = {
-        blocks: [] as Block[],
-        variables: {} as Record<number, VariableBlock>,
-        positions: {} as Record<number, number>,
-        depths: {} as Record<number, number>,
-        highlight: {
-          ids: [] as number[],
-          mode: null as "key" | "compare" | null,
-        },
-        pointers: {} as Record<
-          string,
-          number | number[] | { ids: number[]; value: number } | null
-        >,
-      };
+  const { blocks, positions, depths, highlight, pointers } = useMemo(() => {
+    let state = {
+      blocks: [] as Block[],
+      variables: {} as Record<number, VariableBlock>,
+      positions: {} as Record<number, number>,
+      depths: {} as Record<number, number>,
+      highlight: {
+        ids: [] as number[],
+        mode: null as "key" | "compare" | null,
+      },
+      pointers: {} as Record<
+        string,
+        number | number[] | { ids: number[]; value: number } | null
+      >,
+    };
 
-      for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-        state = applyStep(state, steps[i]);
-      }
+    for (let i = 0; i <= stepIndex && i < steps.length; i++) {
+      state = applyStep(state, steps[i]);
+    }
 
-      return state;
-    }, [steps, stepIndex]);
+    return state;
+  }, [steps, stepIndex]);
 
   const svgY =
     steps[stepIndex]?.type === "init"
-      ? "50%"
+      ? "0%"
       : steps[stepIndex]?.type === "done"
-      ? "50%"
-      : "-100%";
+      ? "0%"
+      : "-75%";
 
   const svgTranslateY =
     steps[stepIndex]?.type === "init" || steps[stepIndex]?.type === "done"
       ? "-50%"
-      : "-100%";
+      : "-75%";
 
   let groupedPointers: Record<number, string[]> = {};
   Object.entries(pointers).forEach(([label, value]) => {
@@ -174,49 +173,12 @@ export default function ArrayVisualizer({ steps }: Props) {
 
   return (
     <motion.div className="w-full h-full flex py-16 justify-center items-center relative">
-      <div className="absolute top-5 right-5 flex flex-col gap-5">
-        {Object.entries(variables).map(([_, block]) => {
-          const isOverwritten =
-            steps[stepIndex].type === "overwrite" &&
-            steps[stepIndex].id === block.id;
-
-          return (
-            <div className="flex flex-col items-center">
-              <svg height={barWidth} width={barHeight}>
-                <g key={block.id}>
-                  <motion.rect
-                    rx={6}
-                    width={barWidth}
-                    height={barHeight}
-                    animate={{
-                      fill: isOverwritten ? "#00a73e" : "#475569",
-                    }}
-                    transition={{ duration: 0.4 }}
-                  />
-                  <text
-                    x={barWidth / 2}
-                    y={barHeight / 2}
-                    fontFamily="Satoshi"
-                    fontSize="16"
-                    fill="white"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                  >
-                    {block.value}
-                  </text>
-                </g>
-              </svg>
-              <span className="mt-2 text-sm text-gray-200">{block.label}</span>
-            </div>
-          );
-        })}
-      </div>
       <motion.svg
         animate={{ y: svgY, translateY: svgTranslateY }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         width={Object.keys(blocks).length * spacing}
         height={barHeight}
-        style={{ overflow: "visible", position: "absolute" }}
+        style={{ overflow: "visible", translateY: "-50%" }}
       >
         {blocks.map((block) => {
           const depth = depths[block.id] ?? 0;
@@ -238,14 +200,16 @@ export default function ArrayVisualizer({ steps }: Props) {
                 rx={6}
                 width={barWidth}
                 height={barHeight}
-                animate={{
-                  fill: isHighlighted
+                fill={
+                  isHighlighted
                     ? highlight.mode === "key"
                       ? "#ef4444"
                       : "#f59e0b"
                     : depths[block.id] > 0
                     ? "#6366f1"
-                    : "#475569",
+                    : "#475569"
+                }
+                animate={{
                   scale: isHighlighted ? 1.05 : 1,
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -279,7 +243,7 @@ export default function ArrayVisualizer({ steps }: Props) {
           );
         })}
 
-        {Object.entries(pointers).map(([label, value]) => {
+        {Object.entries(pointers).map(([label, value], idx) => {
           if (!value) return null;
           if (typeof value === "number") return null;
 
@@ -293,10 +257,25 @@ export default function ArrayVisualizer({ steps }: Props) {
           const minX = Math.min(...xs) - barWidth / 2;
           const maxX = Math.max(...xs) + barWidth / 2;
           const midX = (minX + maxX) / 2;
-          const yBase = depth * (barHeight + 30) + barHeight + 10;
 
           const braceHeight = 10;
-          const bracePath = makeCurlyBrace(minX, yBase, maxX, yBase);
+
+          const isAbove = idx % 2 === 0;
+
+          const yBase = isAbove
+            ? depth * (barHeight + 30) - 10
+            : depth * (barHeight + 30) +
+              barHeight +
+              10 +
+              Math.floor(idx / 2) * 50;
+
+          const bracePath = makeCurlyBrace(
+            minX,
+            yBase,
+            maxX,
+            yBase,
+            isAbove ? -braceHeight : braceHeight
+          );
 
           return (
             <motion.g key={label}>
@@ -313,8 +292,8 @@ export default function ArrayVisualizer({ steps }: Props) {
                 }}
               />
               <motion.text
-                initial={{ x: midX, y: yBase + braceHeight + 20 }}
-                animate={{ x: midX, y: yBase + braceHeight + 20 }}
+                initial={{ x: midX, y: isAbove ? yBase - 30 : yBase + 30 }}
+                animate={{ x: midX, y: isAbove ? yBase - 30 : yBase + 30 }}
                 transition={{
                   type: "spring",
                   stiffness: 120,

@@ -7,13 +7,11 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
   let currentSum = a[0].value;
   let maxSum = a[0].value;
   let startIndex = 0;
+  let bestRange: [number, number] = [0, 0];
 
   yield {
     type: "init",
     array: [...a],
-    variables: {
-      [a.length + 1]: { id: a.length + 1, value: maxSum, label: "maxsum" },
-    },
     lines: [0],
     explanation: `We need to find the maximum sum subarray in [${a
       .map((b) => b.value)
@@ -27,7 +25,10 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
     values: [a[0].value],
     drag: false,
     role: "current",
-    pointers: { currentsum: { ids: [a[0].id], value: currentSum } },
+    pointers: {
+      currentsum: { ids: [a[0].id], value: currentSum },
+      maxsum: { ids: [a[0].id], value: maxSum },
+    },
     lines: [3],
     explanation: `Start with the first element ${a[0].value} as both currentSum and maxSum.`,
   };
@@ -55,6 +56,10 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
       drag: false,
       pointers: {
         currentsum: { ids, value: currentSum },
+        maxsum: {
+          ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
+          value: maxSum,
+        },
       },
       explanation:
         newCurrent >= value
@@ -64,12 +69,20 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
 
     if (currentSum > maxSum) {
       maxSum = currentSum;
+      bestRange = [startIndex, i];
 
       yield {
-        type: "overwrite",
-        id: a.length + 1,
-        value: currentSum,
+        type: "highlight",
+        ids,
+        indices: ids.map((_, idx) => startIndex + idx),
+        values: ids.map((id) => a.find((b) => b.id === id)!.value),
+        role: "subarray",
         lines: [7, 8],
+        drag: false,
+        pointers: {
+          currentsum: { ids, value: currentSum },
+          maxsum: { ids, value: maxSum },
+        },
         explanation: `Update maxSum to ${maxSum}, the largest sum found so far.`,
       };
     }
@@ -82,6 +95,10 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
       currentsum: {
         ids: a.slice(startIndex, a.length).map((b) => b.id),
         value: currentSum,
+      },
+      maxsum: {
+        ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
+        value: maxSum,
       },
     },
     explanation: `Kadane’s algorithm complete. The maximum subarray sum is ${maxSum}.`,
