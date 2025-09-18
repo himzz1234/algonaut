@@ -56,7 +56,7 @@ export default function QuizWindow({
   }, [phase]);
 
   return (
-    <div className="absolute flex items-center justify-center inset-0 z-20 w-full h-full bg-black/70 border-b border-dashed border-green-600/40 backdrop-blur-sm rounded-t-lg rounded-b-sm">
+    <div className="absolute flex items-center justify-center inset-0 z-20 w-full h-full bg-black/70 backdrop-blur-sm rounded-t-lg rounded-b-sm">
       <AnimatePresence mode="wait">
         {phase === "intro" && (
           <motion.div
@@ -66,26 +66,31 @@ export default function QuizWindow({
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="relative bg-gradient-to-b from-[#111214] to-[#0f1014] 
-               border border-green-600/40 rounded-xl
-               px-6 py-8 sm:px-8 sm:py-10 
-               w-full max-w-xs sm:max-w-sm md:max-w-md 
-               text-center text-white shadow-2xl"
+               border border-green-600/40 rounded-2xl
+               px-6 py-8 sm:px-8 sm:py-6
+               w-full max-w-xs sm:max-w-sm md:max-w-md min-h-60 
+               text-center text-white shadow-2xl flex flex-col items-center"
           >
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-1 bg-green-500 rounded-b-full" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-1 bg-[#00a73e] rounded-b-full" />
 
-            <h2 className="text-xl sm:text-2xl font-bold mb-3 leading-snug text-white text-balance">
-              Good job on completing the visualization!
-            </h2>
-            <p className="text-sm sm:text-base text-gray-400 mb-6 text-balance">
-              Now, let's test your understanding.
-            </p>
+            <div className="flex-1">
+              <h2 className="text-xl md:text-2xl font-medium mb-3 text-balance leading-normal text-white">
+                Congratulations on completing the visualization.
+              </h2>
+              <p className="text-sm md:text-base text-gray-400 mb-6 text-balance">
+                Now, let's test your understanding with a quiz.
+              </p>
+            </div>
 
             <button
               onClick={() => setPhase("quiz")}
-              className="px-5 py-2 rounded-md bg-green-600 hover:bg-green-500 transition text-sm sm:text-base font-medium shadow-lg"
+              className="w-fit px-5 py-2 rounded-md text-sm md:text-base 
+             bg-gradient-to-r from-green-500 to-emerald-600
+             hover:from-green-400 hover:to-emerald-500
+             text-white font-medium shadow-lg
+             transition-transform hover:scale-105"
             >
               Start Quiz
-              <FiArrowRight className="ml-2 inline-block" />
             </button>
 
             <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-28 sm:w-40 h-10 sm:h-12 bg-green-500/20 blur-2xl rounded-full" />
@@ -100,7 +105,7 @@ export default function QuizWindow({
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="relative bg-gradient-to-b from-[#111214] to-[#0f1014] 
-             border border-green-600/40 rounded-2xl 
+             border border-green-600/40 rounded-xl 
              p-4 sm:p-6 
              w-full max-w-xs sm:max-w-sm md:max-w-md 
              shadow-2xl text-white"
@@ -114,11 +119,11 @@ export default function QuizWindow({
               <FiX size={18} className="sm:w-5 sm:h-5" />
             </button>
 
-            <p className="text-xs sm:text-sm text-gray-400 mb-2">
+            <p className="text-xs md:text-sm text-gray-400 mb-2">
               Question {current + 1} of {sampleQuestions.length}
             </p>
 
-            <h2 className="text-base sm:text-lg md:text-xl font-medium mb-4">
+            <h2 className="text-base md:text-xl font-medium mb-4">
               {q.question}
             </h2>
 
@@ -131,20 +136,20 @@ export default function QuizWindow({
                     key={i}
                     onClick={() => handleAnswer(i)}
                     disabled={answered}
-                    className={`w-full px-3 py-2 sm:px-4 sm:py-2.5 rounded flex items-center justify-between transition
+                    className={`w-full px-3 border-gray-800/40 border py-2 sm:px-4 sm:py-2.5 rounded flex items-center justify-between transition
             ${
               isCorrect
-                ? "bg-green-700/80 border border-green-500"
+                ? "bg-green-700/80 border-green-500"
                 : isWrong
-                ? "bg-red-700/80 border border-red-500"
+                ? "bg-red-700/80 border-red-500"
                 : "bg-gray-800/40 hover:bg-green-700/80"
             }`}
                   >
-                    <span className="text-sm sm:text-base text-left">
+                    <span className="text-sm md:text-base text-left">
                       {opt}
                     </span>
                     {isCorrect && (
-                      <FiCheckCircle className="text-green-300 w-4 h-4 sm:w-5 sm:h-5" />
+                      <FiCheckCircle className="text-green-300 w-4 h-4 md:w-5 md:h-5" />
                     )}
                   </button>
                 );
@@ -154,10 +159,14 @@ export default function QuizWindow({
             <div className="flex justify-end mt-4 sm:mt-6">
               <button
                 onClick={nextQuestion}
-                className="flex items-center text-xs sm:text-sm gap-1 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded bg-green-600 hover:bg-green-500 transition"
+                className="w-fit px-5 py-2 rounded-md 
+                bg-gradient-to-r from-green-500 to-emerald-600
+                hover:from-green-400 hover:to-emerald-500
+                text-white font-medium shadow-lg
+                transition-transform hover:scale-105 flex items-center text-sm md:text-base"
               >
                 {current < sampleQuestions.length - 1 ? "Next" : "Finish"}
-                <FiArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                <FiArrowRight className="w-4 h-4 ml-2 md:w-5 md:h-5" />
               </button>
             </div>
 
@@ -172,19 +181,22 @@ export default function QuizWindow({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="relative bg-gradient-to-b from-[#111214] to-[#0f1014] border border-green-600/40 
-                       rounded-xl px-6 py-8 sm:px-8 sm:py-10 
-                       w-full max-w-xs sm:max-w-sm md:max-w-md 
-                       text-center text-white shadow-2xl"
+            className="relative bg-gradient-to-b from-[#111214] to-[#0f1014] 
+               border border-green-600/40 rounded-2xl
+               px-6 py-8 sm:px-8 sm:py-6
+               w-full max-w-xs sm:max-w-sm md:max-w-md min-h-48 
+               text-center text-white shadow-2xl flex flex-col items-center justify-between"
           >
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-1 bg-green-500 rounded-b-full" />
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 leading-snug text-balance">
-              Congratulations, you’ve completed this quiz!
+            <h2 className="text-lg md:text-2xl font-medium mb-4 sm:mb-6 leading-snug text-balance">
+              Congratulations, you’ve completed this quiz
             </h2>
-            <p className="text-xs sm:text-sm text-gray-300">Your score</p>
-            <p className="mt-2 text-2xl sm:text-3xl font-bold text-green-400 tracking-tight">
-              {score} / {sampleQuestions.length}
-            </p>
+            <div>
+              <p className="text-sm md:text-base text-gray-300">Your score</p>
+              <p className="mt-2 text-2xl sm:text-3xl md:text-4xl font-bold text-green-400 tracking-tight">
+                {score} / {sampleQuestions.length}
+              </p>
+            </div>
             <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-28 sm:w-40 h-10 sm:h-12 bg-green-500/20 blur-2xl rounded-full" />
           </motion.div>
         )}

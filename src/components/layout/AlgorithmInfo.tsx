@@ -44,7 +44,7 @@ export default function AlgorithmInfo({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm rounded-sm bg-gray-700/40 text-gray-300"
+                className="px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm rounded-sm bg-[#141414] text-gray-300"
               >
                 #{tag}
               </span>
@@ -53,30 +53,30 @@ export default function AlgorithmInfo({
         )}
       </div>
 
-      <div className="h-fit col-span-12 lg:col-span-4 bg-[#0f1014] border border-gray-700/60 rounded-lg p-3 sm:p-4 backdrop-blur-sm shadow-lg mt-4 lg:mt-0">
+      <div className="h-fit col-span-12 lg:col-span-4 bg-[#000] border border-gray-700/60 rounded-lg p-3 sm:p-4 backdrop-blur-sm shadow-lg mt-4 lg:mt-0">
         <h3 className="font-medium text-gray-200 text-sm sm:text-base md:text-lg mb-3">
           Time & Space Complexity
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
-          <div className="bg-gray-800/40 rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
+          <div className="bg-[#141414] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
             <span className="text-gray-400">Best:</span>
             <span className="text-green-400 font-medium">
               {complexities?.best}
             </span>
           </div>
-          <div className="bg-gray-800/40 rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
+          <div className="bg-[#141414] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
             <span className="text-gray-400">Average:</span>
             <span className="text-green-400 font-medium">
               {complexities?.average}
             </span>
           </div>
-          <div className="bg-gray-800/40 rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
+          <div className="bg-[#141414] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
             <span className="text-gray-400">Worst:</span>
             <span className="text-green-400 font-medium">
               {complexities?.worst}
             </span>
           </div>
-          <div className="bg-gray-800/40 rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
+          <div className="bg-[#141414] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
             <span className="text-gray-400">Space:</span>
             <span className="text-green-400 font-medium">
               {complexities?.space}

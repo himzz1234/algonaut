@@ -15,7 +15,7 @@ export default function ProgressSlider({
 
   return (
     <div
-      className={`flex-1 h-1 bg-gray-700/60 relative cursor-pointer rounded-b-sm ${className}`}
+      className={`flex-1 h-1 bg-gray-700/60 relative cursor-pointer rounded-full ${className}`}
       onClick={(e) => {
         const rect = (
           e.currentTarget as HTMLDivElement

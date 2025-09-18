@@ -30,7 +30,7 @@ export default function Controls() {
     ${
       disabled
         ? "opacity-40 pointer-events-none cursor-not-allowed hover:bg-transparent"
-        : "hover:bg-gray-700/30"
+        : "hover:bg-[#141414]"
     }
   `;
 
@@ -41,6 +41,7 @@ export default function Controls() {
           disabled={locked}
           onClick={() => setStepIndex(0)}
           className={`${btnClass(locked)} rotate-180`}
+          title="Go to first step"
         >
           <TbPlayerTrackNextFilled />
         </button>
@@ -48,6 +49,7 @@ export default function Controls() {
           disabled={locked}
           onClick={() => setStepIndex((i) => Math.max(0, i - 1))}
           className={`${btnClass(locked)} rotate-180`}
+          title="Previous step"
         >
           <IoPlaySkipForward />
         </button>
@@ -62,6 +64,9 @@ export default function Controls() {
               : () => setIsPlaying((p) => !p)
           }
           className={`${btnClass(locked)}`}
+          title={
+            isLastStep ? "Replay from start" : isPlaying ? "Pause" : "Play"
+          }
         >
           {isLastStep ? <MdReplay /> : isPlaying ? <FaPause /> : <FaPlay />}
         </button>
@@ -69,6 +74,7 @@ export default function Controls() {
           disabled={locked}
           onClick={() => setStepIndex((i) => Math.min(stepsLength - 1, i + 1))}
           className={`${btnClass(locked)}`}
+          title="Next step"
         >
           <IoPlaySkipForward />
         </button>
@@ -76,6 +82,7 @@ export default function Controls() {
           disabled={locked}
           onClick={() => setStepIndex(stepsLength - 1)}
           className={`${btnClass(locked)}`}
+          title="Go to last step"
         >
           <TbPlayerTrackNextFilled />
         </button>
@@ -85,6 +92,7 @@ export default function Controls() {
         <button
           onClick={() => setIsFullscreen((f) => !f)}
           className={`${btnClass(false)}`}
+          title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
           {!isFullscreen ? <FaExpandAlt /> : <FaCompressAlt />}
         </button>
@@ -97,7 +105,11 @@ export default function Controls() {
             align="right"
           >
             {({ toggle }) => (
-              <button onClick={toggle} className={`${btnClass(locked)}`}>
+              <button
+                onClick={toggle}
+                className={`${btnClass(locked)}`}
+                title="Playback speed"
+              >
                 <IoSettingsSharp />
               </button>
             )}

@@ -59,7 +59,7 @@ export default function StatsGrid() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-[#0f1014] border border-gray-700/60 shadow-md rounded-lg min-h-24">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-[#141414] border border-gray-700/60 shadow-md rounded-lg min-h-24">
       <div className="flex items-center justify-between px-5 py-4 border-r border-gray-800/80">
         <div>
           <h4 className="text-gray-400 capitalize tracking-wide">
