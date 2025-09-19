@@ -9,6 +9,7 @@ type LearningPathCardProps = {
   progress: number;
   href: string;
   duration?: string;
+  lessons: number;
 };
 
 export default function LearningPathCard({
@@ -17,6 +18,7 @@ export default function LearningPathCard({
   progress,
   href,
   duration,
+  lessons,
 }: LearningPathCardProps) {
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
@@ -55,7 +57,7 @@ export default function LearningPathCard({
                 <FiClock className="w-4 h-4" /> {duration}
               </span>
               <span className="flex items-center gap-1">
-                <FiBookOpen className="w-4 h-4" /> 6 lessons
+                <FiBookOpen className="w-4 h-4" /> {lessons} lessons
               </span>
             </div>
           </div>

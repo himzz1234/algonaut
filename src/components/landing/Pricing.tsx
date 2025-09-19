@@ -184,7 +184,7 @@ export default function Pricing() {
               >
                 {tier.recommended && (
                   <div className="absolute -top-4 right-4 transform rotate-2">
-                    <span className="inline-flex items-center gap-2 bg-green-600 text-black text-xs font-medium px-3 py-1.5 rounded-full shadow-[0_8px_30px_rgba(16,185,129,0.12)]">
+                    <span className="inline-flex items-center gap-2 bg-green-600 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-[0_8px_30px_rgba(16,185,129,0.12)]">
                       Recommended
                     </span>
                   </div>
@@ -238,7 +238,7 @@ export default function Pricing() {
                   <button
                     className={`w-full py-3 rounded-lg font-medium transition-transform duration-150 ${
                       tier.recommended
-                        ? "bg-gradient-to-b from-green-600 to-green-500 text-black shadow-[0_10px_30px_rgba(16,185,129,0.12)] hover:translate-y-[-2px]"
+                        ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-[0_10px_30px_rgba(16,185,129,0.12)] hover:translate-y-[-2px]"
                         : "bg-gray-800/30 text-slate-100 border border-gray-700/50 hover:brightness-105"
                     }`}
                     aria-label={`${tier.cta} ${tier.name}`}

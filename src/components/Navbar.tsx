@@ -21,7 +21,7 @@ export default function Navbar() {
             <img
               src="/logo.png"
               alt="logo"
-              className="w-36 h-auto sm:w-40 md:w-44"
+              className="w-36 h-auto sm:w-40 md:w-40"
             />
           </Link>
         </div>

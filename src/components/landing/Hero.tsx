@@ -41,7 +41,7 @@ export default function Hero() {
           className="text-3xl sm:text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 bg-clip-text text-transparent leading-tight"
         >
           Visualize{" "}
-          <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
             Algorithms
           </span>
           .

@@ -137,13 +137,13 @@ export default function QuizWindow({
                     onClick={() => handleAnswer(i)}
                     disabled={answered}
                     className={`w-full px-3 border-gray-800/40 border py-2 sm:px-4 sm:py-2.5 rounded flex items-center justify-between transition
-            ${
-              isCorrect
-                ? "bg-green-700/80 border-green-500"
-                : isWrong
-                ? "bg-red-700/80 border-red-500"
-                : "bg-gray-800/40 hover:bg-green-700/80"
-            }`}
+                    ${
+                      isCorrect
+                        ? "bg-green-700/80 border-green-500"
+                        : isWrong
+                        ? "bg-red-700/80 border-red-500"
+                        : "bg-gray-800/40 hover:bg-green-700/80"
+                    }`}
                   >
                     <span className="text-sm md:text-base text-left">
                       {opt}

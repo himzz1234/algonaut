@@ -18,14 +18,11 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-
       if (currentUser) {
         const userRef = doc(db, "users", currentUser.uid);
         const docSnap = await getDoc(userRef);
@@ -35,12 +32,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             uid: currentUser.uid,
             email: currentUser.email,
             displayName: currentUser.displayName || "",
-            photoUrl: currentUser.photoURL || "",
+            photoURL: currentUser.photoURL || "",
             provider: currentUser.providerId,
             createdAt: serverTimestamp(),
             lastActive: serverTimestamp(),
           });
+
+          setUser({
+            ...currentUser,
+          });
         } else {
+          const data = docSnap.data();
+
+          setUser({
+            ...currentUser,
+            college: data.college || "",
+            location: data.location || "",
+            github: data.github || "",
+            linkedin: data.linkedin || "",
+          });
+
           await setDoc(
             userRef,
             {
@@ -50,7 +61,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             { merge: true }
           );
         }
+      } else {
+        setUser(null);
       }
+
+      setLoading(false);
     });
 
     return () => unsubscribe();

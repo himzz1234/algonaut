@@ -3,7 +3,11 @@ import { modules } from "../data/modules";
 import ProgressCircle from "./ui/ProgressCircle";
 import { useProgress } from "../context/ProgressContext";
 
-type Counts = { beginner: number; intermediate: number; advanced: number };
+export type Counts = {
+  beginner: number;
+  intermediate: number;
+  advanced: number;
+};
 
 export default function StatsGrid() {
   const { progressMap, loading } = useProgress();

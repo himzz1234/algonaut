@@ -10,7 +10,6 @@ export default function AlgorithmInfo({
 }: Partial<AlgorithmMeta>) {
   return (
     <>
-      {/* Left Panel */}
       <div className="col-span-12 lg:col-span-8 backdrop-blur-sm shadow-lg">
         <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
           {name}

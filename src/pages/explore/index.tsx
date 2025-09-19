@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
-import Navbar from "../../components/Navbar";
 import { FiSearch } from "react-icons/fi";
 import { algorithms } from "../../data/algorithms";
-import Footer from "../../components/Footer";
 import { motion, AnimatePresence, type Variants } from "motion/react";
 import Select from "../../components/ui/Select";
 import AlgoCard from "../../components/AlgoCard";
@@ -75,9 +73,12 @@ export default function ExplorePage() {
   }, [query, category, difficultyFilter]);
 
   return (
-    <>
-      <Navbar />
-
+    <div
+      style={{
+        background:
+          "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(226, 232, 240, 0.15), transparent 70%), #000000",
+      }}
+    >
       <header>
         <div className="flex flex-col items-center justify-center lg:max-w-6xl lg:mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.div
@@ -244,8 +245,6 @@ export default function ExplorePage() {
           </div>
         </main>
       </section>
-
-      <Footer />
-    </>
+    </div>
   );
 }

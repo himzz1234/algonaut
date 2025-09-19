@@ -9,7 +9,7 @@ export default function Testimonials() {
       name: "Pravalika V.K.",
       role: "Expert Coder @ Google",
       quote:
-        "AlgoVisualizer made algorithms finally click for me. The visuals kept me engaged and motivated.",
+        "Algonaut made algorithms finally click for me. The visuals kept me engaged and motivated.",
     },
     {
       id: 2,

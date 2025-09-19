@@ -52,7 +52,7 @@ export default function Faqs() {
         {faqs.map((faq, i) => (
           <motion.div
             key={i}
-            className="rounded-lg bg-[#121316] min-h-16 space-y-3 py-4 border border-gray-800 overflow-hidden"
+            className="rounded-lg bg-[#121316] py-4 border border-gray-800 overflow-hidden"
           >
             <button
               onClick={() => toggle(i)}
@@ -83,19 +83,20 @@ export default function Faqs() {
               </motion.svg>
             </button>
 
-            <AnimatePresence initial={false}>
-              {openIndex === i && (
-                <motion.div
-                  key="content"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="px-6 text-sm sm:text-base text-gray-400 leading-relaxed"
-                >
-                  {faq.answer}
-                </motion.div>
-              )}
+            <AnimatePresence>
+              <motion.div
+                key="content"
+                initial={{ height: 0, opacity: 0 }}
+                animate={
+                  openIndex === i
+                    ? { height: "auto", opacity: 1, marginTop: 10 }
+                    : { height: 0, opacity: 0 }
+                }
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden px-6 text-sm sm:text-base text-gray-400 leading-relaxed"
+              >
+                {faq.answer}
+              </motion.div>
             </AnimatePresence>
           </motion.div>
         ))}
