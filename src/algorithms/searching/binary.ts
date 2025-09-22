@@ -13,9 +13,9 @@ export function* binarySearch(
     array: [...a],
     target,
     lines: [0],
-    explanation: `Start binary search for ${target} in [${a
+    explanation: `Let's search for ${target} in [${a
       .map((b) => b.value)
-      .join(", ")}].`,
+      .join(", ")}] using Binary search.`,
   };
 
   yield {
@@ -23,10 +23,8 @@ export function* binarySearch(
     low: a[left].id,
     high: a[right].id,
     pointers: { low: a[left].id, high: a[right].id },
-    indices: [left, right],
-    values: [a[left].value, a[right].value],
     lines: [1],
-    explanation: `Initial search range is from index ${left} (${a[left].value}) to index ${right} (${a[right].value}).`,
+    explanation: `Start with the whole range: ${a[left].value} to ${a[right].value}.`,
   };
 
   while (left <= right) {
@@ -36,10 +34,8 @@ export function* binarySearch(
       type: "check",
       id: a[mid].id,
       pointers: { low: a[left].id, mid: a[mid].id, high: a[right].id },
-      indices: [mid],
-      values: [a[mid].value],
       lines: [3],
-      explanation: `Check middle element at index ${mid}: ${a[mid].value}.`,
+      explanation: `Middle is ${a[mid].value} at index ${mid}.`,
     };
 
     if (a[mid].value === target) {
@@ -48,21 +44,19 @@ export function* binarySearch(
         id: a[mid].id,
         relation: "=",
         pointers: { low: a[left].id, mid: a[mid].id, high: a[right].id },
-        indices: [mid],
-        values: [a[mid].value],
         target,
         lines: [4],
-        explanation: `Found target ${target} at index ${mid}.`,
+        explanation: `Element ${a[mid].value} equals target ${target}.`,
       };
+
       yield {
         type: "found",
         id: a[mid].id,
         pointers: { low: a[left].id, mid: a[mid].id, high: a[right].id },
-        indices: [mid],
-        values: [a[mid].value],
         lines: [4],
-        explanation: `Search successful. Element ${target} located.`,
+        explanation: `TA-DA! Target ${target} found at index ${mid}.`,
       };
+
       return;
     } else if (a[mid].value > target) {
       yield {
@@ -70,11 +64,9 @@ export function* binarySearch(
         id: a[mid].id,
         relation: ">",
         pointers: { low: a[left].id, mid: a[mid].id, high: a[right].id },
-        indices: [mid],
-        values: [a[mid].value],
         target,
         lines: [5],
-        explanation: `Since ${a[mid].value} > ${target}, discard right half.`,
+        explanation: `${a[mid].value} is greater, start searching in the left half.`,
       };
 
       right = mid - 1;
@@ -84,10 +76,8 @@ export function* binarySearch(
           low: a[left].id,
           high: a[right].id,
           pointers: { low: a[left].id, high: a[right].id },
-          indices: [left, right],
-          values: [a[left].value, a[right].value],
           lines: [6],
-          explanation: `New search range: index ${left} (${a[left].value}) to index ${right} (${a[right].value}).`,
+          explanation: `New search range from index ${left} (${a[left].value}) to index ${right} (${a[right].value}).`,
         };
       }
     } else {
@@ -96,11 +86,9 @@ export function* binarySearch(
         id: a[mid].id,
         relation: "<",
         pointers: { low: a[left].id, mid: a[mid].id, high: a[right].id },
-        indices: [mid],
-        values: [a[mid].value],
         target,
         lines: [7],
-        explanation: `Since ${a[mid].value} < ${target}, discard left half.`,
+        explanation: `${a[mid].value} is smaller, start searching in the right half.`,
       };
 
       left = mid + 1;
@@ -110,10 +98,8 @@ export function* binarySearch(
           low: a[left].id,
           high: a[right].id,
           pointers: { low: a[left].id, high: a[right].id },
-          indices: [left, right],
-          values: [a[left].value, a[right].value],
           lines: [8],
-          explanation: `New search range: index ${left} (${a[left].value}) to index ${right} (${a[right].value}).`,
+          explanation: `New search range from index ${left} (${a[left].value}) to index ${right} (${a[right].value}).`,
         };
       }
     }
@@ -121,10 +107,9 @@ export function* binarySearch(
 
   yield {
     type: "not-found",
-    reason: "left > right",
     pointers: { low: a[left].id, high: a[right].id },
     target,
     lines: [9],
-    explanation: `Search complete. ${target} not found in the array.`,
+    explanation: `Search complete. ${target} not found.`,
   };
 }

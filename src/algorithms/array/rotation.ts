@@ -20,8 +20,6 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
     yield {
       type: "highlight",
       ids: [element.id],
-      indices: [0],
-      values: [element.value],
       drag: false,
       role: "current",
       pointers: { current: element.id },
@@ -44,8 +42,6 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       yield {
         type: "highlight",
         ids: [a[j].id],
-        indices: [j],
-        values: [a[j].value],
         drag: false,
         role: "current",
         pointers: { temp: element.id, current: a[j].id },
@@ -57,8 +53,6 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
         type: "move",
         id: a[j].id,
         targetIndex: j - 1,
-        indices: [j, j - 1],
-        values: [a[j].value, a[j].value],
         pointers: { temp: element.id, current: a[j].id },
         lines: [3],
         explanation: `${a[j].value} moved to index ${j - 1}.`,
@@ -69,8 +63,6 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       type: "insert",
       id: element.id,
       targetIndex: n - 1,
-      indices: [n - 1],
-      values: [element.value],
       depth: 0,
       lines: [4],
       explanation: `Place ${element.value} at the end.`,
@@ -82,7 +74,6 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
 
   yield {
     type: "done",
-    op: "rotate",
     lines: [5],
     explanation: `Rotation complete → [${a.map((b) => b.value).join(", ")}].`,
   };

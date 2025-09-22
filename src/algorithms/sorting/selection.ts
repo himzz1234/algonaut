@@ -6,7 +6,7 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
     type: "init",
     array: [...a],
     lines: [0],
-    explanation: `Start Selection Sort on [${a
+    explanation: `Let's perform Selection Sort on [${a
       .map((b) => b.value)
       .join(", ")}].`,
   };
@@ -19,9 +19,9 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
       type: "highlight",
       ids: [a[minIdx].id],
       drag: false,
-      pointers: { min: a[minIdx].id, i: a[minIdx].id },
+      pointers: { minIdx: a[minIdx].id, i: a[minIdx].id },
       lines: [2],
-      explanation: `Assume ${a[minIdx].value} (index ${minIdx}) is the minimum.`,
+      explanation: `Assume ${a[minIdx].value} at index ${minIdx} is the smallest.`,
     };
 
     for (let j = i + 1; j < n; j++) {
@@ -36,7 +36,7 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
         type: "compare",
         ids: [a[minIdx].id, a[j].id],
         relation,
-        pointers: { min: a[minIdx].id, j: a[j].id, i: a[i].id },
+        pointers: { minIdx: a[minIdx].id, j: a[j].id, i: a[i].id },
         lines: [3],
         explanation: `Compare current min ${a[minIdx].value} with ${a[j].value}.`,
       };
@@ -47,9 +47,9 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
           type: "highlight",
           ids: [a[minIdx].id],
           drag: false,
-          pointers: { min: a[minIdx].id, j: a[j].id, i: a[i].id },
-          lines: [4],
-          explanation: `New minimum found: ${a[minIdx].value} at index ${minIdx}.`,
+          pointers: { minIdx: a[minIdx].id, j: a[j].id, i: a[i].id },
+          lines: [4, 5],
+          explanation: `Found a new smaller value ${a[minIdx].value} at index ${minIdx}.`,
         };
       }
     }
@@ -60,8 +60,8 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
       yield {
         type: "swap",
         ids: [a[i].id, a[minIdx].id],
-        pointers: { i: a[i].id, min: a[minIdx].id },
-        lines: [5],
+        pointers: { i: a[i].id, minIdx: a[minIdx].id },
+        lines: [6],
         explanation: `Swap ${a[minIdx].value} into position ${i}.`,
       };
     }
@@ -69,14 +69,14 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
     yield {
       type: "mark_sorted",
       ids: [a[i].id],
-      lines: [6],
-      explanation: `${a[i].value} is now fixed in sorted order.`,
+      lines: [7],
+      explanation: `${a[i].value} is now in its sorted position.`,
     };
   }
 
   yield {
     type: "done",
-    lines: [7],
+    lines: [8],
     explanation: `Selection Sort complete.`,
   };
 }

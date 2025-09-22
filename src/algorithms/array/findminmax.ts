@@ -21,8 +21,6 @@ export function* findMinMax(arr: Block[]): Generator<ArrayStep> {
   yield {
     type: "highlight",
     ids: [a[0].id],
-    indices: [0],
-    values: [a[0].value],
     drag: false,
     role: "current",
     pointers: { i: a[0].id, min: minId, max: maxId },
@@ -48,8 +46,6 @@ export function* findMinMax(arr: Block[]): Generator<ArrayStep> {
     yield {
       type: "highlight",
       ids: [a[i].id],
-      indices: [i],
-      values: [value],
       role: "current",
       lines: [2, 3, 4],
       drag: false,

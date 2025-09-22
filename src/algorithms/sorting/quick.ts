@@ -12,7 +12,7 @@ export function* quickSort(
       type: "init",
       array: [...arr],
       lines: [0],
-      explanation: `Start Quick Sort on [${arr
+      explanation: `Let's perform Quick Sort on [${arr
         .map((b) => b.value)
         .join(", ")}].`,
     };
@@ -26,7 +26,7 @@ export function* quickSort(
     drag: true,
     pointers: { pivot: pivot.id },
     lines: [1],
-    explanation: `Choose ${pivot.value} as pivot.`,
+    explanation: `Choose ${pivot.value} (rightmost element) as the pivot.`,
   };
 
   let i = left;
@@ -73,7 +73,7 @@ export function* quickSort(
       relation,
       pointers: { i: arr[i].id, pivot: arr[right].id },
       lines: [2, 3],
-      explanation: `Place pivot ${pivot.value} into correct position.`,
+      explanation: `Place pivot ${pivot.value} into the correct position.`,
     };
 
     [arr[i], arr[right]] = [arr[right], arr[i]];
@@ -104,7 +104,7 @@ export function* quickSort(
       depth: depth + 1,
       pointers: { left: arr[left].id, right: arr[i - 1].id },
       lines: [5],
-      explanation: `Recurse on left subarray [${leftSlice
+      explanation: `Let's focus on the left side of the pivot [${leftSlice
         .map((b) => b.value)
         .join(", ")}].`,
     };
@@ -114,7 +114,7 @@ export function* quickSort(
     yield {
       type: "mark_sorted",
       ids: leftSlice.map((b) => b.id),
-      explanation: `Left subarray sorted.`,
+      explanation: `Left side is now sorted.`,
     };
 
     yield {
@@ -123,7 +123,7 @@ export function* quickSort(
       drag: true,
       depth,
       pointers: { left: arr[left].id, right: arr[i - 1].id },
-      explanation: `Exit left recursion.`,
+      explanation: `Move left side up one level.`,
     };
   }
 
@@ -137,7 +137,7 @@ export function* quickSort(
       depth: depth + 1,
       pointers: { left: arr[i + 1].id, right: arr[right].id },
       lines: [6],
-      explanation: `Recurse on right subarray [${rightSlice
+      explanation: `Let's focus on the right side of the pivot [${rightSlice
         .map((b) => b.value)
         .join(", ")}].`,
     };
@@ -147,7 +147,7 @@ export function* quickSort(
     yield {
       type: "mark_sorted",
       ids: rightSlice.map((b) => b.id),
-      explanation: `Right subarray sorted.`,
+      explanation: `Right side is now sorted.`,
     };
 
     yield {
@@ -156,7 +156,7 @@ export function* quickSort(
       drag: true,
       depth,
       pointers: { left: arr[i + 1].id, right: arr[right].id },
-      explanation: `Exit right recursion.`,
+      explanation: `Move right side up one level.`,
     };
   }
 
@@ -164,7 +164,7 @@ export function* quickSort(
     yield {
       type: "mark_sorted",
       ids: arr.map((x) => x.id),
-      explanation: `All elements sorted.`,
+      explanation: `Quick Sort complete.`,
     };
     yield { type: "done", lines: [7], explanation: `Quick Sort finished.` };
   }

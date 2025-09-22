@@ -30,7 +30,7 @@ export default function ArrayVisualizer({ steps }: Props) {
       variables: Record<number, VariableBlock>;
       positions: Record<number, number>;
       depths: Record<number, number>;
-      highlight: { ids: number[]; mode: "key" | "compare" | null };
+      highlight: { ids: number[]; mode: "key" | "compare" | "swap" | null };
       pointers: Record<
         string,
         number | number[] | { ids: number[]; value: number } | null
@@ -57,7 +57,6 @@ export default function ArrayVisualizer({ steps }: Props) {
           positions[b.id] = i;
           depths[b.id] = 0;
         });
-        variables = step.variables ?? {};
         highlight = { ids: [], mode: null };
         pointers = step.pointers ?? {};
         break;
@@ -97,6 +96,8 @@ export default function ArrayVisualizer({ steps }: Props) {
 
       case "swap": {
         const [idA, idB] = step.ids ?? [];
+        highlight = { ids: step.ids ?? [], mode: "swap" };
+
         if (idA !== undefined && idB !== undefined) {
           const posA = positions[idA];
           const posB = positions[idB];
@@ -136,7 +137,7 @@ export default function ArrayVisualizer({ steps }: Props) {
       depths: {} as Record<number, number>,
       highlight: {
         ids: [] as number[],
-        mode: null as "key" | "compare" | null,
+        mode: null as "key" | "compare" | "swap" | null,
       },
       pointers: {} as Record<
         string,
@@ -204,6 +205,8 @@ export default function ArrayVisualizer({ steps }: Props) {
                   isHighlighted
                     ? highlight.mode === "key"
                       ? "#ef4444"
+                      : highlight.mode === "swap"
+                      ? "#22c55e"
                       : "#f59e0b"
                     : depths[block.id] > 0
                     ? "#6366f1"
@@ -229,7 +232,7 @@ export default function ArrayVisualizer({ steps }: Props) {
               {labelsAtIndex && (
                 <text
                   x={barWidth / 2}
-                  y={barHeight + 15}
+                  y={barHeight + 20}
                   fontFamily="Satoshi"
                   fontSize="14"
                   fill="white"
@@ -243,7 +246,7 @@ export default function ArrayVisualizer({ steps }: Props) {
           );
         })}
 
-        {Object.entries(pointers).map(([label, value], idx) => {
+        {Object.entries(pointers).map(([label, value]) => {
           if (!value) return null;
           if (typeof value === "number") return null;
 
@@ -260,21 +263,13 @@ export default function ArrayVisualizer({ steps }: Props) {
 
           const braceHeight = 10;
 
-          const isAbove = idx % 2 === 0;
-
-          const yBase = isAbove
-            ? depth * (barHeight + 30) - 10
-            : depth * (barHeight + 30) +
-              barHeight +
-              10 +
-              Math.floor(idx / 2) * 50;
-
+          const yBase = depth * (barHeight + 30) - 10;
           const bracePath = makeCurlyBrace(
             minX,
             yBase,
             maxX,
             yBase,
-            isAbove ? -braceHeight : braceHeight
+            -braceHeight
           );
 
           return (
@@ -292,8 +287,8 @@ export default function ArrayVisualizer({ steps }: Props) {
                 }}
               />
               <motion.text
-                initial={{ x: midX, y: isAbove ? yBase - 30 : yBase + 30 }}
-                animate={{ x: midX, y: isAbove ? yBase - 30 : yBase + 30 }}
+                initial={{ x: midX, y: yBase - 30 }}
+                animate={{ x: midX, y: yBase - 30 }}
                 transition={{
                   type: "spring",
                   stiffness: 120,

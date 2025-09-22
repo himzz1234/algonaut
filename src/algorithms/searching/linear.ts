@@ -10,9 +10,9 @@ export function* linearSearch(
     array: [...a],
     target,
     lines: [0],
-    explanation: `Start linear search for ${target} in [${a
+    explanation: `Let's search for ${target} in [${a
       .map((b) => b.value)
-      .join(", ")}].`,
+      .join(", ")}] using Linear search.`,
   };
 
   const n = a.length;
@@ -21,10 +21,8 @@ export function* linearSearch(
       type: "check",
       id: a[i].id,
       pointers: { index: a[i].id },
-      indices: [i],
-      values: [a[i].value],
       lines: [1],
-      explanation: `Check element ${a[i].value} at index ${i}.`,
+      explanation: `Compare element ${a[i].value} at index ${i} with ${target}.`,
     };
 
     if (a[i].value === target) {
@@ -33,20 +31,17 @@ export function* linearSearch(
         id: a[i].id,
         relation: "=",
         pointers: { index: a[i].id },
-        indices: [i],
-        values: [a[i].value],
         target,
         lines: [2],
         explanation: `Element ${a[i].value} equals target ${target}.`,
       };
+
       yield {
         type: "found",
         id: a[i].id,
         pointers: { index: a[i].id },
-        indices: [i],
-        values: [a[i].value],
         lines: [2],
-        explanation: `Target ${target} found at index ${i}.`,
+        explanation: `TA-DA! Target ${target} found at index ${i}.`,
       };
       return;
     } else if (a[i].value < target) {
@@ -55,8 +50,6 @@ export function* linearSearch(
         id: a[i].id,
         relation: "<",
         pointers: { index: a[i].id },
-        indices: [i],
-        values: [a[i].value],
         target,
         lines: [1],
         explanation: `Element ${a[i].value} is less than ${target}, continue searching.`,
@@ -67,8 +60,6 @@ export function* linearSearch(
         id: a[i].id,
         relation: ">",
         pointers: { index: a[i].id },
-        indices: [i],
-        values: [a[i].value],
         target,
         lines: [1],
         explanation: `Element ${a[i].value} is greater than ${target}, continue searching.`,
@@ -78,10 +69,9 @@ export function* linearSearch(
 
   yield {
     type: "not-found",
-    reason: "end of array reached",
     pointers: { index: a[n - 1].id },
     target,
     lines: [5],
-    explanation: `Reached end of array. Target ${target} not found.`,
+    explanation: `Search complete. ${target} not found.`,
   };
 }

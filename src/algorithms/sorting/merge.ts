@@ -12,7 +12,7 @@ export function* mergeSort(
       type: "init",
       array: [...arr],
       lines: [0],
-      explanation: `Start Merge Sort on [${arr
+      explanation: `Lets Perform Merge Sort on [${arr
         .map((b) => b.value)
         .join(", ")}].`,
     };
@@ -32,7 +32,7 @@ export function* mergeSort(
       depth: depth + 1,
       lines: [1, 2],
       pointers: { left: arr[l].id, right: arr[mid].id },
-      explanation: `Split left half: [${leftSlice
+      explanation: `Split left half [${leftSlice
         .map((b) => b.value)
         .join(", ")}].`,
     };
@@ -48,7 +48,7 @@ export function* mergeSort(
       depth: depth + 1,
       lines: [1, 3],
       pointers: { left: arr[mid + 1].id, right: arr[r].id },
-      explanation: `Split right half: [${rightSlice
+      explanation: `Split right half [${rightSlice
         .map((b) => b.value)
         .join(", ")}].`,
     };
@@ -186,7 +186,7 @@ export function* mergeSort(
       type: "done",
       lines: [10],
       pointers: {},
-      explanation: `Merge Sort finished.`,
+      explanation: `Merge Sort complete.`,
     };
   }
 }

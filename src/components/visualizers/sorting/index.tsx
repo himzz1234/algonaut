@@ -30,7 +30,7 @@ export default function SortingVisualizer({ steps }: Props) {
       positions: Record<number, number>;
       depths: Record<number, number>;
       sorted: number[];
-      highlight: { ids: number[]; mode: "key" | "compare" | null };
+      highlight: { ids: number[]; mode: "key" | "compare" | "swap" | null };
       pointers: Record<string, PointerValue>;
     },
     step: SortingStep
@@ -77,6 +77,7 @@ export default function SortingVisualizer({ steps }: Props) {
 
       case "swap": {
         const [idA, idB] = step.ids ?? [];
+        highlight = { ids: step.ids ?? [], mode: "swap" };
         if (idA !== undefined && idB !== undefined) {
           const posA = positions[idA];
           const posB = positions[idB];
@@ -133,7 +134,7 @@ export default function SortingVisualizer({ steps }: Props) {
         sorted: [] as number[],
         highlight: {
           ids: [] as number[],
-          mode: null as "key" | "compare" | null,
+          mode: null as "key" | "compare" | "swap" | null,
         },
         pointers: {} as Record<string, PointerValue>,
       };
@@ -184,9 +185,11 @@ export default function SortingVisualizer({ steps }: Props) {
           const fillColor = isHighlighted
             ? highlight.mode === "key"
               ? "#ef4444"
+              : highlight.mode === "swap"
+              ? "#22c55e"
               : "#f59e0b"
             : sorted.includes(block.id)
-            ? "#00a73e"
+            ? "#22c55e"
             : "#475569";
 
           const labelsAtIndex = groupedPointers[block.id];
@@ -234,31 +237,6 @@ export default function SortingVisualizer({ steps }: Props) {
             </motion.g>
           );
         })}
-
-        {/* {Object.entries(groupedPointers).map(([value, labels]) => {
-          if (!value) return null;
-
-          const valueNum = Number(value);
-          const xPos = positions[valueNum] * spacing + barWidth / 2;
-          const depth = depths[valueNum] ?? 0;
-          const yPos = depth * (barHeight + 30) + barHeight + 15;
-
-          return (
-            <motion.text
-              key={labels.join(" = ")}
-              initial={false}
-              animate={{ x: xPos, y: yPos }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              fontFamily="Satoshi"
-              fontSize="14"
-              fill="white"
-              textAnchor="middle"
-              dominantBaseline="middle"
-            >
-              {labels.join(" = ")}
-            </motion.text>
-          );
-        })} */}
       </motion.svg>
     </motion.div>
   );

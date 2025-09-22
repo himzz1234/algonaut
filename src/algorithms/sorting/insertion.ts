@@ -6,7 +6,7 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
     type: "init",
     array: [...a],
     lines: [0],
-    explanation: `Start Insertion Sort on [${a
+    explanation: `Lets perform Insertion sort on [${a
       .map((b) => b.value)
       .join(", ")}].`,
   };
@@ -19,7 +19,7 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
       depth: 1,
       pointers: { key: a[i].id },
       lines: [2],
-      explanation: `Take ${a[i].value} as the key element to insert.`,
+      explanation: `Pick ${a[i].value} as the key element to insert.`,
     };
 
     let j = i - 1;
@@ -35,7 +35,7 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
         type: "compare",
         ids: [a[j].id, a[j + 1].id],
         relation,
-        pointers: { key: a[j + 1].id, i: a[j].id },
+        pointers: { key: a[j + 1].id, j: a[j].id },
         lines: [3],
         explanation: `Compare ${a[j].value} and key ${a[j + 1].value}.`,
       };
@@ -45,9 +45,11 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
         yield {
           type: "swap",
           ids: [a[j].id, a[j + 1].id],
-          pointers: { key: a[j].id, i: a[j + 1].id },
-          lines: [3, 4],
-          explanation: `Shift ${a[j + 1].value} right to make space for key.`,
+          pointers: { key: a[j].id, j: a[j + 1].id },
+          lines: [4, 5],
+          explanation: `Shift ${a[j + 1].value} right since ${
+            a[j + 1].value
+          } is smaller than ${a[j].value}.`,
         };
       } else break;
       j--;
@@ -61,21 +63,21 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
       drag: true,
       depth: 0,
       pointers: { key: a[finalIndex].id },
-      lines: [5],
+      lines: [6],
       explanation: `Place key at position ${finalIndex}.`,
     };
 
     yield {
       type: "mark_sorted",
       ids: a.slice(0, i + 1).map((b) => b.id),
-      lines: [6],
-      explanation: `First ${i + 1} elements are sorted.`,
+      lines: [7],
+      explanation: `First ${i + 1} elements are now in their sorted positions.`,
     };
   }
 
   yield {
     type: "done",
-    lines: [7],
-    explanation: `Array is sorted with Insertion Sort.`,
+    lines: [8],
+    explanation: `Insertion Sort complete.`,
   };
 }

@@ -6,7 +6,9 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
     type: "init",
     array: [...a],
     lines: [0],
-    explanation: `Start Bubble Sort on [${a.map((b) => b.value).join(", ")}].`,
+    explanation: `Let's perform Bubble Sort on [${a
+      .map((b) => b.value)
+      .join(", ")}].`,
   };
 
   const n = a.length;
@@ -23,8 +25,8 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
         type: "compare",
         ids: [a[j].id, a[j + 1].id],
         relation,
-        pointers: { i: a[j].id, j: a[j + 1].id },
-        lines: [2],
+        pointers: { i: a[j].id, "i + 1": a[j + 1].id },
+        lines: [2, 3],
         explanation: `Compare ${a[j].value} and ${a[j + 1].value} → ${
           a[j].value
         } ${relation} ${a[j + 1].value}.`,
@@ -35,8 +37,8 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
         yield {
           type: "swap",
           ids: [a[j].id, a[j + 1].id],
-          pointers: { i: a[j].id, j: a[j + 1].id },
-          lines: [3],
+          pointers: { i: a[j].id, "i + 1": a[j + 1].id },
+          lines: [3, 4],
           explanation: `Swap to place ${a[j].value} before ${a[j + 1].value}.`,
         };
       }
@@ -45,14 +47,14 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
     yield {
       type: "mark_sorted",
       ids: [a[n - i - 1].id],
-      lines: [4],
-      explanation: `${a[n - i - 1].value} is now in its correct position.`,
+      lines: [5],
+      explanation: `${a[n - i - 1].value} is now in its sorted position.`,
     };
   }
 
   yield {
     type: "done",
-    lines: [5],
-    explanation: `Array is sorted with Bubble Sort.`,
+    lines: [6],
+    explanation: `Bubble Sort complete.`,
   };
 }

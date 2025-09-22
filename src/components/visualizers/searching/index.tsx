@@ -156,7 +156,7 @@ export default function SearchingVisualizer({ steps }: Props) {
               {labelsAtIndex && (
                 <text
                   x={barWidth / 2}
-                  y={barHeight + 20}
+                  y={barHeight + 15}
                   fontFamily="Satoshi"
                   fontSize="14"
                   fill="white"
@@ -198,14 +198,14 @@ export default function SearchingVisualizer({ steps }: Props) {
           </text>
           <text
             x={barWidth / 2}
-            y={barHeight + 20}
+            y={barHeight + 15}
             fontFamily="Satoshi"
             fontSize="14"
             fill="white"
             textAnchor="middle"
             dominantBaseline="middle"
           >
-            Target
+            target
           </text>
         </g>
       </motion.svg>
