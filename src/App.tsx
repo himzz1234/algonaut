@@ -16,6 +16,7 @@ import BitmaskPage from "./pages/learn/bitmask";
 import ExplorePage from "./pages/explore";
 import ProfilePage from "./pages/user/[slug]";
 import EditProfilePage from "./pages/user/[slug]/edit";
+import TwoPointersPage from "./pages/learn/two-pointers";
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
                 <Route path="/learn/searching" element={<SearchingPage />} />
                 <Route path="/learn/list" element={<ListPage />} />
                 <Route path="/learn/bitmask" element={<BitmaskPage />} />
+                <Route
+                  path="/learn/two-pointers"
+                  element={<TwoPointersPage />}
+                />
                 <Route path="/explore" element={<ExplorePage />} />
                 <Route path="/user/:id" element={<ProfilePage />} />
                 <Route path="/user/:id/edit" element={<EditProfilePage />} />
