@@ -78,7 +78,7 @@ export const modules: Module[] = [
     level: "beginner",
     algos: [
       "two-sum-sorted",
-      "remove-duplicates-sorted",
+      "three-sum",
       "container-most-water",
       "trap-rain-water",
       "max-sum-subarray-k",

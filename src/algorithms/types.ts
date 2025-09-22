@@ -19,6 +19,26 @@ export type Cell = {
   weight: number;
 };
 
+export type Overlay =
+  | {
+      kind: "range";
+      ids: [number, number];
+      value?: number;
+      style?: "candidate" | "best";
+      label?: string;
+    }
+  | {
+      kind: "bar";
+      id: number;
+      value: number;
+      label?: string;
+    }
+  | {
+      kind: "region";
+      ids: number[];
+      label?: string;
+    };
+
 export type PointerValue<AllowNull extends boolean = false> =
   | (AllowNull extends true ? number | null : number)
   | (AllowNull extends true ? (number | null)[] : number[])
@@ -33,14 +53,11 @@ export type Step<AllowNull extends boolean = false> = {
 export type ArrayStep =
   | (Step<false> & {
       type: "init";
-      variables?: Record<number, VariableBlock>;
       array: Block[];
     })
   | (Step & {
       type: "highlight";
       ids: number[];
-      indices?: number[];
-      values?: number[];
       drag: true | false;
       depth?: number;
       role: "pair" | "current" | "subarray";
@@ -48,16 +65,12 @@ export type ArrayStep =
   | (Step & {
       type: "swap";
       ids: [number, number];
-      indices?: [number, number];
-      values?: [number, number];
       depth?: number;
     })
   | (Step & {
       type: "move";
       id: number;
       targetIndex: number;
-      values?: number[];
-      indices?: number[];
     })
   | (Step & {
       type: "remove";
@@ -70,8 +83,6 @@ export type ArrayStep =
       type: "insert";
       id: number;
       targetIndex: number;
-      values?: number[];
-      indices?: number[];
       depth?: number;
     })
   | (Step & {
@@ -81,8 +92,6 @@ export type ArrayStep =
     })
   | (Step & {
       type: "done";
-      op?: "reverse" | "rotate" | "shuffle" | "custom";
-      meta?: Record<string, any>;
     });
 
 export type SortingStep =
@@ -135,34 +144,25 @@ export type SearchingStep =
   | (Step & {
       type: "check";
       id: number;
-      indices?: number[];
-      values?: number[];
     })
   | (Step & {
       type: "compare";
       id: number;
       relation: string;
-      indices?: number[];
-      values?: number[];
       target: number;
     })
   | (Step & {
       type: "found";
       id: number;
-      indices?: number[];
-      values?: number[];
     })
   | (Step & {
       type: "not-found";
-      reason: string;
       target: number;
     })
   | (Step & {
       type: "set-range";
       low: number;
       high: number;
-      indices?: number[];
-      values?: number[];
     });
 
 export type ListStep =
@@ -233,6 +233,38 @@ export type BitmaskStep =
     })
   | (Step & {
       type: "done";
+    });
+
+export type TwoPointerStep =
+  | (Step & {
+      type: "init";
+      array: Block[];
+      showBars?: "centered" | "full";
+      overlays?: Overlay[];
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+      overlays?: Overlay[];
+    })
+  | (Step & {
+      type: "compare";
+      ids: number[];
+      relation?: "<" | ">" | "=";
+      overlays?: Overlay[];
+    })
+  | (Step & {
+      type: "found";
+      ids: number[];
+      overlays?: Overlay[];
+    })
+  | (Step & {
+      type: "not-found";
+      overlays?: Overlay[];
+    })
+  | (Step & {
+      type: "done";
+      overlays?: Overlay[];
     });
 
 export type PathfindingStep =

@@ -724,7 +724,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "two-sum-sorted": [
     {
       id: 1,
@@ -736,8 +735,103 @@ export const quizzes: Record<string, Question[]> = {
       ],
       answer: 1,
     },
+    {
+      id: 2,
+      question: "Why does the two pointers approach work for a sorted array?",
+      options: [
+        "Because sorting eliminates duplicates",
+        "Because we can move pointers based on sum comparison",
+        "Because binary search is faster on sorted arrays",
+      ],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question: "Time complexity of the two-pointer two-sum solution is:",
+      options: ["O(n)", "O(n log n)", "O(n^2)"],
+      answer: 0,
+    },
   ],
 
+  "three-sum": [
+    {
+      id: 1,
+      question: "What is the typical first step in solving three-sum?",
+      options: [
+        "Build a hash map",
+        "Sort the array",
+        "Use dynamic programming",
+      ],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question:
+        "Which technique is used after fixing one element in three-sum?",
+      options: [
+        "Hash map lookups",
+        "Two pointers inward",
+        "Divide and conquer",
+      ],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question: "How are duplicates usually avoided in three-sum?",
+      options: [
+        "Using a hash set of triplets",
+        "Skipping identical numbers during iteration",
+        "Sorting multiple times",
+      ],
+      answer: 1,
+    },
+    {
+      id: 4,
+      question: "Time complexity of the standard three-sum solution is:",
+      options: ["O(n)", "O(n^2)", "O(n^3)"],
+      answer: 1,
+    },
+  ],
+
+  "container-most-water": [
+    {
+      id: 1,
+      question: "What is the two-pointer strategy in container-most-water?",
+      options: [
+        "Move the taller line inward",
+        "Move the shorter line inward",
+        "Move both lines inward together",
+      ],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question:
+        "Why do we move the shorter line inward in container-most-water?",
+      options: [
+        "Because only the shorter line limits area",
+        "Because it’s always optimal",
+        "Because it reduces time complexity",
+      ],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question: "Time complexity of the container-most-water solution is:",
+      options: ["O(n)", "O(n log n)", "O(n^2)"],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question: "What is the key idea of the container-most-water problem?",
+      options: [
+        "Maximize base × height with two lines",
+        "Find largest rectangle in histogram",
+        "Use dynamic programming for max area",
+      ],
+      answer: 0,
+    },
+  ],
   "remove-duplicates-sorted": [
     {
       id: 1,
@@ -746,26 +840,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
-  "container-most-water": [
-    {
-      id: 1,
-      question: "Container With Most Water is solved using:",
-      options: ["Two pointers", "Dynamic Programming", "Greedy heap"],
-      answer: 0,
-    },
-    {
-      id: 2,
-      question: "Area is computed as:",
-      options: [
-        "(right-left) * min(height[left], height[right])",
-        "(right+left) * max(height[left], height[right])",
-        "right-left",
-      ],
-      answer: 0,
-    },
-  ],
-
   "trap-rain-water": [
     {
       id: 1,
