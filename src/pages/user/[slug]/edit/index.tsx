@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../../context/AuthContext";
 import { FiEdit2 } from "react-icons/fi";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
+import imageCompression from "browser-image-compression";
+import { getAuth, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../lib/firebase";
 
 export default function EditProfilePage() {
   const { user } = useAuth();
-  console.log(user);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,6 +16,7 @@ export default function EditProfilePage() {
     location: "",
     profilePic: "",
   });
+
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -51,16 +52,28 @@ export default function EditProfilePage() {
       let photoURL = formData.profilePic;
 
       if (file) {
+        const options = {
+          maxSizeMB: 0.1,
+          maxWidthOrHeight: 125,
+          useWebWorker: true,
+        };
+
+        const compressedFile = await imageCompression(file, options);
+
         const storage = getStorage();
         const storageRef = ref(storage, `profilePics/${user.uid}`);
-        await uploadBytes(storageRef, file);
+        await uploadBytes(storageRef, compressedFile);
         photoURL = await getDownloadURL(storageRef);
       }
 
-      await updateProfile(user, {
-        displayName: formData.name,
-        photoURL,
-      });
+      const auth = getAuth();
+      const firebaseUser = auth.currentUser;
+      if (firebaseUser) {
+        await updateProfile(firebaseUser, {
+          displayName: formData.name,
+          photoURL,
+        });
+      }
 
       await setDoc(
         doc(db, "users", user.uid),
@@ -168,7 +181,7 @@ export default function EditProfilePage() {
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-4 py-2 rounded-md bg-gray-800 text-gray-300 hover:bg-gray-700"
+          className="px-4 py-2 rounded-md hover:bg-[#141414] border border-gray-700/60"
           disabled={loading}
         >
           Cancel

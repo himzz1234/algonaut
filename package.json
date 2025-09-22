@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",
     "@vercel/analytics": "^1.5.0",
+    "browser-image-compression": "^2.0.2",
     "firebase": "^12.1.0",
     "motion": "^12.23.12",
     "react": "^19.1.1",
