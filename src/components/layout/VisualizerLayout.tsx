@@ -12,7 +12,7 @@ import { PseudoCodeBlock } from "./PseudoCodeBlock";
 import ProgressSlider from "../ui/ProgressSlider";
 import Controls from "./Controls";
 import AlgorithmInfoWrapper from "./AlgorithmInfoWrapper";
-import { saveProgress } from "../../helpers/progress";
+import { saveProgress, getProgress } from "../../helpers/progress";
 import { useAuth } from "../../context/AuthContext";
 import { MdQuiz } from "react-icons/md";
 
@@ -31,7 +31,7 @@ function UpNextCard() {
   return (
     <Link
       to={nextAlgo.href}
-      className="absolute bottom-18 md:bottom-22 right-0 cursor-pointer
+      className="absolute bottom-18 md:bottom-20 right-0 cursor-pointer
         flex items-center justify-between gap-2
         backdrop-blur-md bg-[#141414] border border-gray-700/60 shadow-md 
         rounded-l-lg px-3 py-2 w-44 md:w-48
@@ -79,18 +79,26 @@ export default function VisualizerLayout<TStep extends Step>({
   }, [shouldShowRotateBanner]);
 
   useEffect(() => {
-    if (!isPlaying && stepIndex === steps.length - 1) {
-      if (user)
-        saveProgress(user.uid, algorithmKey, { visualizationCompleted: true });
+    const startQuiz = async () => {
+      const isQuizCompleted = await getProgress(user?.uid || "", algorithmKey);
+      if (!isPlaying && stepIndex === steps.length - 1) {
+        if (user)
+          saveProgress(user.uid, algorithmKey, {
+            visualizationCompleted: true,
+          });
 
-      const timer = setTimeout(() => {
-        setShowQuiz(true);
-        setLocked(true);
-        clearTimeout(timer);
-      }, 500);
+        if (isQuizCompleted) return;
+        const timer = setTimeout(async () => {
+          setShowQuiz(true);
+          setLocked(true);
+          clearTimeout(timer);
+        }, 500);
 
-      return () => clearTimeout(timer);
-    }
+        return () => clearTimeout(timer);
+      }
+    };
+
+    startQuiz();
   }, [isPlaying, stepIndex, steps.length, user]);
 
   const closeQuizWindow = () => {
@@ -107,7 +115,7 @@ export default function VisualizerLayout<TStep extends Step>({
     });
   };
 
-  const captionBottomClass = isMobile ? "bottom-18" : "bottom-22";
+  const captionBottomClass = isMobile ? "bottom-18" : "bottom-20";
 
   return (
     <main className="bg-[#000] min-h-screen text-white">
@@ -170,13 +178,11 @@ export default function VisualizerLayout<TStep extends Step>({
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 px-5 pb-2.5">
-                <div>
-                  <ProgressSlider
-                    stepsLength={steps.length}
-                    className="-mt-[5px] mx-auto"
-                  />
-                </div>
+              <div className="absolute bottom-0 left-0 right-0 px-5 pb-1 lg:pb-2">
+                <ProgressSlider
+                  stepsLength={steps.length}
+                  className="mx-auto"
+                />
 
                 {!isDemo && <Controls />}
               </div>

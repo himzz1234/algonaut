@@ -25,7 +25,7 @@ export default function Controls() {
 
   const btnClass = (disabled: boolean) => `
     active:scale-95 transition-all duration-150
-    px-2 py-1 sm:px-3 sm:py-2 lg:px-4 lg:py-3
+    px-2 sm:px-3 lg:px-4 py-1 sm:py-2 lg:py-4
     text-sm sm:text-base rounded-md
     ${
       disabled
@@ -35,7 +35,7 @@ export default function Controls() {
   `;
 
   return (
-    <div className="mt-4 flex flex-col sm:flex-row sm:items-center w-full gap-3">
+    <div className="mt-2 flex flex-col sm:flex-row sm:items-center w-full gap-3">
       <div className="flex justify-center sm:justify-start flex-wrap gap-2 flex-1">
         <button
           disabled={locked}

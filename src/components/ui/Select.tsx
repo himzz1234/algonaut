@@ -60,6 +60,7 @@ export default function Select({
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
 
       let finalPlacement: "top" | "bottom" = placement ?? "bottom";
+
       if (!placement) {
         const spaceBelow = window.innerHeight - rect.bottom;
         const spaceAbove = rect.top;
@@ -68,8 +69,8 @@ export default function Select({
 
       const top =
         finalPlacement === "bottom"
-          ? rect.bottom + window.scrollY + 8
-          : rect.top - dropdownRect.height + window.scrollY - 8;
+          ? rect.bottom + window.scrollY + 5
+          : rect.top - dropdownRect.height + window.scrollY - 5;
 
       let left = rect.left + window.scrollX;
 

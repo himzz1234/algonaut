@@ -30,13 +30,13 @@ export function AvatarMenu({ user }: { user: User }) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-black shadow-sm hover:brightness-110 transition"
+        className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-black shadow-sm hover:brightness-110 transition"
       >
         {user.photoURL ? (
           <img
             src={user.photoURL}
             alt="profile"
-            className="w-8 h-8 rounded-full object-cover"
+            className="w-10 h-10 shrink-0 rounded-full object-cover"
           />
         ) : (
           <div className="w-10 h-10 shrink-0 text-lg font-semibold text-emerald-400 border-2 border-emerald-500/40 rounded-full flex items-center justify-center">
