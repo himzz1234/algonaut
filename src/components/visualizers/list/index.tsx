@@ -3,10 +3,10 @@ import { useMemo } from "react";
 import type { ListStep, Node, PointerValue } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
-
-const GAP = 40;
-const BAR_WIDTH = 65;
-const BAR_HEIGHT = 65;
+import {
+  BASE_CONFIG,
+  getBlockDimensions,
+} from "../../../config/visualizerConfig";
 
 type Props = {
   steps: ListStep[];
@@ -15,9 +15,10 @@ type Props = {
 export default function LinkedListVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const barWidth = isMobile ? 50 : BAR_WIDTH;
-  const barHeight = isMobile ? 50 : BAR_HEIGHT;
-  const spacing = barWidth + GAP;
+  const { barWidth, barHeight, spacing, FONT_SIZE } = getBlockDimensions(
+    isMobile,
+    { ...BASE_CONFIG, GAP: 50 }
+  );
 
   function applyStep(
     prev: {
@@ -146,7 +147,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
     return state;
   }, [steps, stepIndex]);
 
-  const colorFor = (id: number) => {
+  const colorBlock = (id: number) => {
     if (!highlight.mode) return "#475569";
     if (!highlight.ids.includes(id)) return "#475569";
 
@@ -233,41 +234,24 @@ export default function LinkedListVisualizer({ steps }: Props) {
         style={{ overflow: "visible", translateY: "-50%" }}
       >
         <defs>
-          <marker
-            id="arrow"
-            viewBox="0 0 10 10"
-            refX="8"
-            refY="5"
-            markerWidth="6"
-            markerHeight="6"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563" />
-          </marker>
-
-          <marker
-            id="arrow-new"
-            viewBox="0 0 10 10"
-            refX="8"
-            refY="5"
-            markerWidth="6"
-            markerHeight="6"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#00a73e" />
-          </marker>
-
-          <marker
-            id="arrow-highlight"
-            viewBox="0 0 10 10"
-            refX="8"
-            refY="5"
-            markerWidth="6"
-            markerHeight="6"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#0284c7" />
-          </marker>
+          {[
+            { id: "arrow", fill: "#4b5563" },
+            { id: "arrow-new", fill: "#00a73e" },
+            { id: "arrow-highlight", fill: "#0284c7" },
+          ].map(({ id, fill }) => (
+            <marker
+              key={id}
+              id={id}
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill={fill} />
+            </marker>
+          ))}
         </defs>
 
         {nodes.map((node) => {
@@ -341,7 +325,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
           const pos = positions[node.id] ?? 0;
           const isHighlighted = highlight.ids.includes(node.id);
 
-          const fillColor = colorFor(node.id);
+          const rectFill = colorBlock(node.id);
           const labelsAtIndex = groupedPointers[node.id];
 
           return (
@@ -356,10 +340,10 @@ export default function LinkedListVisualizer({ steps }: Props) {
                 height={barHeight}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{
-                  fill: fillColor,
                   opacity: 1,
                   scale: isHighlighted ? 1.05 : 1,
                 }}
+                fill={rectFill}
                 exit={{ opacity: 0, scale: 0 }}
                 transition={{ type: "spring", stiffness: 280, damping: 18 }}
               />
@@ -367,7 +351,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
                 x={barWidth / 2}
                 y={barHeight / 2}
                 fontFamily="Satoshi"
-                fontSize="16"
+                fontSize={FONT_SIZE.block}
                 fill="white"
                 textAnchor="middle"
                 dominantBaseline="middle"
@@ -379,7 +363,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
                   x={barWidth / 2}
                   y={barHeight + 20}
                   fontFamily="Satoshi"
-                  fontSize="14"
+                  fontSize={FONT_SIZE.label}
                   fill="white"
                   textAnchor="middle"
                   dominantBaseline="middle"
@@ -418,19 +402,18 @@ export default function LinkedListVisualizer({ steps }: Props) {
                 x={barWidth / 2}
                 y={barHeight / 2}
                 fontFamily="Satoshi"
-                fontSize="14"
+                fontSize={FONT_SIZE.block}
                 fill="#9ca3af"
                 textAnchor="middle"
                 dominantBaseline="middle"
               >
                 null
               </text>
-
               <text
                 x={barWidth / 2}
                 y={barHeight + 18}
                 fontFamily="Satoshi"
-                fontSize="12"
+                fontSize={FONT_SIZE.label}
                 fill="#fff"
                 textAnchor="middle"
                 dominantBaseline="middle"

@@ -45,7 +45,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="#contact"
+                href="mailto:himanshuhim1230@gmail.com"
                 className="hover:text-green-400 transition-colors"
               >
                 Contact

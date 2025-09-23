@@ -32,17 +32,11 @@ export function AvatarMenu({ user }: { user: User }) {
         aria-expanded={open}
         className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-black shadow-sm hover:brightness-110 transition"
       >
-        {user.photoURL ? (
-          <img
-            src={user.photoURL}
-            alt="profile"
-            className="w-10 h-10 shrink-0 rounded-full object-cover"
-          />
-        ) : (
-          <div className="w-10 h-10 shrink-0 text-lg font-semibold text-emerald-400 border-2 border-emerald-500/40 rounded-full flex items-center justify-center">
-            {user?.displayName?.[0]?.toUpperCase() ?? "?"}
-          </div>
-        )}
+        <img
+          src={user.photoURL || "/images/default.jpg"}
+          alt="profile"
+          className="w-10 h-10 shrink-0 rounded-full object-cover"
+        />
       </button>
 
       <AnimatePresence>
@@ -61,17 +55,11 @@ export function AvatarMenu({ user }: { user: User }) {
             <div className="p-3">
               <div className="flex gap-3">
                 <Link to={`/user/${user.email?.split("@")[0]}`}>
-                  {user.photoURL ? (
-                    <img
-                      src={user.photoURL}
-                      alt="profile"
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 shrink-0 text-lg font-semibold text-emerald-400 border-2 border-emerald-500/40 rounded-full flex items-center justify-center">
-                      {user?.displayName?.[0]?.toUpperCase() ?? "?"}
-                    </div>
-                  )}
+                  <img
+                    src={user.photoURL || "/images/default.jpg"}
+                    alt="profile"
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
                 </Link>
 
                 <Link to={`/user/${user.email?.split("@")[0]}`}>

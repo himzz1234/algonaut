@@ -104,6 +104,7 @@ export default function StatsGrid() {
         <ProgressCircle
           progress={pct(completed.intermediate, counts.intermediate)}
           size={50}
+          color="#e2990d"
         />
       </div>
 
@@ -118,6 +119,7 @@ export default function StatsGrid() {
         <ProgressCircle
           progress={pct(completed.advanced, counts.advanced)}
           size={50}
+          color="#db3239"
         />
       </div>
     </div>

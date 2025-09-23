@@ -133,7 +133,7 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!user) return;
+    if (!user) return openModal(<AuthPanel />);
     const userRef = doc(db, "users", user.uid);
 
     try {

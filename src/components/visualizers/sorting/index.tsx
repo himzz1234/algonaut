@@ -7,10 +7,7 @@ import type {
 } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
-
-const GAP = 5;
-const BAR_WIDTH = 65;
-const BAR_HEIGHT = 65;
+import { getBlockDimensions } from "../../../config/visualizerConfig";
 
 type Props = {
   steps: SortingStep[];
@@ -19,9 +16,9 @@ type Props = {
 export default function SortingVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const barWidth = isMobile ? 50 : BAR_WIDTH;
-  const barHeight = isMobile ? 50 : BAR_HEIGHT;
-  const spacing = barWidth + GAP;
+  const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
+    getBlockDimensions(isMobile);
+
   const laneOffset = barHeight + 30;
 
   function applyStep(
@@ -145,17 +142,11 @@ export default function SortingVisualizer({ steps }: Props) {
       return state;
     }, [steps, stepIndex]);
 
-  const svgY =
-    steps[stepIndex]?.type === "init"
-      ? "0%"
-      : steps[stepIndex]?.type === "done"
-      ? "0%"
-      : "-100%";
+  const stepType = steps[stepIndex]?.type;
+  const isReset = stepType === "init" || stepType === "done";
 
-  const svgTranslateY =
-    steps[stepIndex]?.type === "init" || steps[stepIndex]?.type === "done"
-      ? "-50%"
-      : "-100%";
+  const svgY = isReset ? "0%" : "-125%";
+  const svgTranslateY = isReset ? "-50%" : "-125%";
 
   let groupedPointers: Record<number, string[]> = {};
   Object.entries(pointers).forEach(([label, value]) => {
@@ -182,7 +173,7 @@ export default function SortingVisualizer({ steps }: Props) {
           const pos = positions[block.id] ?? 0;
           const isHighlighted = highlight.ids.includes(block.id);
 
-          const fillColor = isHighlighted
+          const rectFill = isHighlighted
             ? highlight.mode === "key"
               ? "#ef4444"
               : highlight.mode === "swap"
@@ -204,17 +195,17 @@ export default function SortingVisualizer({ steps }: Props) {
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >
               <motion.rect
-                rx={6}
+                rx={radius}
                 width={barWidth}
                 height={barHeight}
-                fill={fillColor}
+                fill={rectFill}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
               <text
                 x={barWidth / 2}
                 y={barHeight / 2}
                 fontFamily="Satoshi"
-                fontSize="16"
+                fontSize={FONT_SIZE.block}
                 fill="white"
                 textAnchor="middle"
                 dominantBaseline="middle"
@@ -226,7 +217,7 @@ export default function SortingVisualizer({ steps }: Props) {
                   x={barWidth / 2}
                   y={barHeight + 15}
                   fontFamily="Satoshi"
-                  fontSize="14"
+                  fontSize={FONT_SIZE.label}
                   fill="white"
                   textAnchor="middle"
                   dominantBaseline="middle"

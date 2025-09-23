@@ -3,10 +3,7 @@ import { useMemo } from "react";
 import type { Block, Overlay, TwoPointerStep } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
-
-const GAP = 5;
-const BAR_WIDTH = 65;
-const BAR_HEIGHT = 65;
+import { getBlockDimensions } from "../../../config/visualizerConfig";
 
 type Props = {
   steps: TwoPointerStep[];
@@ -15,12 +12,10 @@ type Props = {
 export default function TwoPointersVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
+  const { barHeight, barWidth, spacing, radius, FONT_SIZE } =
+    getBlockDimensions(isMobile);
 
-  const barWidth = isMobile ? 50 : BAR_WIDTH;
-  const barHeight = isMobile ? 50 : BAR_HEIGHT;
-  const spacing = barWidth + GAP;
-
-  const unit = (barHeight / BAR_HEIGHT) * 25;
+  const unit = isMobile ? 15 : 25;
   const showBars = steps[0]?.type === "init" && steps[0].showBars;
 
   function applyStep(
@@ -261,7 +256,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                     textAnchor="middle"
                     dominantBaseline="baseline"
                     fontFamily="Satoshi"
-                    fontSize="14"
+                    fontSize={FONT_SIZE.label}
                   >
                     {overlay.label}
                   </motion.text>
@@ -275,14 +270,14 @@ export default function TwoPointersVisualizer({ steps }: Props) {
           const isHighlighted = highlight.ids.includes(block.id);
           const labelsAtIndex = groupedPointers[block.id];
 
-          let rectfill = "#475569";
+          let rectFill = "#475569";
           if (isHighlighted) {
             if (highlight.mode === "found") {
-              rectfill = "#22c55e";
+              rectFill = "#22c55e";
             } else if (highlight.mode === "compare") {
-              rectfill = "#f59e0b";
+              rectFill = "#f59e0b";
             } else {
-              rectfill = "#ef4444";
+              rectFill = "#ef4444";
             }
           }
 
@@ -313,10 +308,10 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                 />
               )}
               <motion.rect
-                rx={6}
+                rx={radius}
                 width={barWidth}
                 height={barHeight}
-                fill={rectfill}
+                fill={rectFill}
                 animate={{ scale: isHighlighted ? 1.05 : 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
@@ -324,7 +319,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                 x={barWidth / 2}
                 y={barHeight / 2}
                 fontFamily="Satoshi"
-                fontSize="16"
+                fontSize={FONT_SIZE.block}
                 fill="white"
                 textAnchor="middle"
                 dominantBaseline="middle"
@@ -336,7 +331,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                   x={barWidth / 2}
                   y={barHeight + 20}
                   fontFamily="Satoshi"
-                  fontSize="14"
+                  fontSize={FONT_SIZE.label}
                   fill="white"
                   textAnchor="middle"
                   dominantBaseline="middle"
@@ -421,7 +416,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                   y: isAbove ? yBase - height - 20 : yBase + height + 20,
                 }}
                 fontFamily="Satoshi"
-                fontSize="14"
+                fontSize={FONT_SIZE.pointer}
                 fill="white"
                 textAnchor="middle"
                 dominantBaseline="middle"

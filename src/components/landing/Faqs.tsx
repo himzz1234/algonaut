@@ -32,7 +32,7 @@ export default function Faqs() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <div id="faqs" className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-12">
         <h2
           className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 
@@ -101,6 +101,6 @@ export default function Faqs() {
           </motion.div>
         ))}
       </div>
-    </main>
+    </div>
   );
 }

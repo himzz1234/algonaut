@@ -53,7 +53,7 @@ export default function NoteEditor({
   };
 
   return (
-    <div className="rounded-xl bg-black/60 border-2 border-white/10 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
+    <div className="rounded-xl bg-[#000] border border-gray-700/60 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
       <div className="p-6 space-y-4">
         <div className="flex items-center justify-center gap-2 text-white">
           <h2 className="text-lg sm:text-2xl font-medium">Save Notes</h2>

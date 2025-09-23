@@ -7,22 +7,16 @@ import type {
 } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
-
-const GAP = 5;
-const BAR_WIDTH = 65;
-const BAR_HEIGHT = 65;
-
+import { getBlockDimensions } from "../../../config/visualizerConfig";
 type Props = {
   steps: SearchingStep[];
 };
 
 export default function SearchingVisualizer({ steps }: Props) {
-  const { isMobile } = useOrientation();
   const { stepIndex } = usePlayback();
-
-  const barWidth = isMobile ? 50 : BAR_WIDTH;
-  const barHeight = isMobile ? 50 : BAR_HEIGHT;
-  const spacing = barWidth + GAP;
+  const { isMobile } = useOrientation();
+  const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
+    getBlockDimensions(isMobile);
 
   function applyStep(
     prev: {
@@ -118,6 +112,11 @@ export default function SearchingVisualizer({ steps }: Props) {
             i <= Object.values(blocks).findIndex((b) => b.id === range.high);
 
           const labelsAtIndex = groupedPointers[block.id];
+          const rectFill = isHighlighted
+            ? highlight.mode === "found"
+              ? "#22c55e"
+              : "#f59e0b"
+            : "#475569";
 
           return (
             <motion.g
@@ -130,23 +129,17 @@ export default function SearchingVisualizer({ steps }: Props) {
               transition={{ duration: 0.5 }}
             >
               <motion.rect
-                rx={6}
+                rx={radius}
                 width={barWidth}
                 height={barHeight}
-                animate={{
-                  fill: isHighlighted
-                    ? highlight.mode === "found"
-                      ? "#22c55e"
-                      : "#f59e0b"
-                    : "#475569",
-                }}
+                fill={rectFill}
                 transition={{ duration: 0.3 }}
               />
               <text
                 x={barWidth / 2}
                 y={barHeight / 2}
                 fontFamily="Satoshi"
-                fontSize="16"
+                fontSize={FONT_SIZE.block}
                 fill="white"
                 textAnchor="middle"
                 dominantBaseline="middle"
@@ -158,7 +151,7 @@ export default function SearchingVisualizer({ steps }: Props) {
                   x={barWidth / 2}
                   y={barHeight + 15}
                   fontFamily="Satoshi"
-                  fontSize="14"
+                  fontSize={FONT_SIZE.label}
                   fill="white"
                   textAnchor="middle"
                   dominantBaseline="middle"
@@ -172,7 +165,7 @@ export default function SearchingVisualizer({ steps }: Props) {
 
         <g transform={`translate(${blocks.length * spacing + 30}, 0)`}>
           <motion.rect
-            rx={6}
+            rx={radius}
             width={barWidth}
             height={barHeight}
             animate={{
@@ -189,7 +182,7 @@ export default function SearchingVisualizer({ steps }: Props) {
             x={barWidth / 2}
             y={barHeight / 2}
             fontFamily="Satoshi"
-            fontSize="16"
+            fontSize={FONT_SIZE.block}
             fill="white"
             textAnchor="middle"
             dominantBaseline="middle"
@@ -200,7 +193,7 @@ export default function SearchingVisualizer({ steps }: Props) {
             x={barWidth / 2}
             y={barHeight + 15}
             fontFamily="Satoshi"
-            fontSize="14"
+            fontSize={FONT_SIZE.label}
             fill="white"
             textAnchor="middle"
             dominantBaseline="middle"

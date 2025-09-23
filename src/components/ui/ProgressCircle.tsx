@@ -13,6 +13,7 @@ interface ProgressCircleProps {
   strokeWidth?: number;
   className?: string;
   once?: boolean;
+  color?: string;
 }
 
 export default function ProgressCircle({
@@ -21,6 +22,7 @@ export default function ProgressCircle({
   strokeWidth = 4,
   className,
   once = true,
+  color = "#00c77b",
 }: ProgressCircleProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const inView = useInView(ref, { once });
@@ -77,7 +79,7 @@ export default function ProgressCircle({
         />
 
         <motion.circle
-          stroke="#00c77b"
+          stroke={color}
           fill="transparent"
           strokeWidth={strokeWidth}
           r={radius}

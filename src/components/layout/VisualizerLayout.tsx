@@ -4,9 +4,6 @@ import RotateBanner from "../RotateBanner";
 import { useOrientation } from "../../hooks/useOrientation";
 import { usePlayback } from "../../context/PlaybackContext";
 import type { Step } from "../../algorithms/types";
-import { Link } from "react-router-dom";
-import { FiChevronRight } from "react-icons/fi";
-import useUpNext from "../../hooks/useUpNext";
 import QuizWindow from "../QuizWindow";
 import { PseudoCodeBlock } from "./PseudoCodeBlock";
 import ProgressSlider from "../ui/ProgressSlider";
@@ -15,42 +12,13 @@ import AlgorithmInfoWrapper from "./AlgorithmInfoWrapper";
 import { saveProgress, getProgress } from "../../helpers/progress";
 import { useAuth } from "../../context/AuthContext";
 import { MdQuiz } from "react-icons/md";
+import UpNextCard from "../UpNextCard";
 
 interface VisualizerLayoutProps<TStep> {
   type: "demo" | "learn";
   algorithmKey: string;
   children: React.ReactNode;
   steps: TStep[];
-}
-
-function UpNextCard() {
-  const nextAlgo = useUpNext();
-  if (!nextAlgo) return null;
-  if (!nextAlgo.href) return null;
-
-  return (
-    <Link
-      to={nextAlgo.href}
-      className="absolute bottom-18 md:bottom-20 right-0 cursor-pointer
-        flex items-center justify-between gap-2
-        backdrop-blur-md bg-[#141414] border border-gray-700/60 shadow-md 
-        rounded-l-lg px-3 py-2 w-44 md:w-48
-        hover:bg-green-500/40 transition-all z-20"
-    >
-      <div className="flex flex-col leading-tight">
-        <span className="text-xs text-green-400 uppercase">Up Next</span>
-        <span className="text-sm md:text-base mt-2 text-white truncate max-w-32">
-          {nextAlgo.name}
-        </span>
-      </div>
-      <motion.div
-        animate={{ x: [0, 3, 0] }}
-        transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }}
-      >
-        <FiChevronRight className="text-gray-300" size={18} />
-      </motion.div>{" "}
-    </Link>
-  );
 }
 
 export default function VisualizerLayout<TStep extends Step>({
@@ -63,31 +31,32 @@ export default function VisualizerLayout<TStep extends Step>({
   const [showQuiz, setShowQuiz] = useState(false);
   const { isPortrait, isMobile } = useOrientation();
   const { isFullscreen, stepIndex, isPlaying, setLocked } = usePlayback();
-  const explanation = steps[stepIndex]?.explanation ?? "";
+
   const isDemo = type === "demo";
+  const explanation = steps[stepIndex]?.explanation ?? "";
 
   const shouldShowRotateBanner =
     !isFullscreen && isMobile && isPortrait && !isDemo;
 
   useEffect(() => {
-    if (!shouldShowRotateBanner) return;
+    if (!shouldShowRotateBanner && !isFullscreen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [shouldShowRotateBanner]);
+  }, [shouldShowRotateBanner, isFullscreen]);
 
   useEffect(() => {
     const startQuiz = async () => {
-      const isQuizCompleted = await getProgress(user?.uid || "", algorithmKey);
+      const progress = await getProgress(user?.uid || "", algorithmKey);
       if (!isPlaying && stepIndex === steps.length - 1) {
         if (user)
           saveProgress(user.uid, algorithmKey, {
             visualizationCompleted: true,
           });
 
-        if (isQuizCompleted) return;
+        if (progress?.quizCompleted) return;
         const timer = setTimeout(async () => {
           setShowQuiz(true);
           setLocked(true);
@@ -115,10 +84,10 @@ export default function VisualizerLayout<TStep extends Step>({
     });
   };
 
-  const captionBottomClass = isMobile ? "bottom-18" : "bottom-20";
+  const captionBottomClass = isMobile ? "bottom-16" : "bottom-20";
 
   return (
-    <main className="bg-[#000] min-h-screen text-white">
+    <div className="bg-[#000] min-h-screen text-white">
       {shouldShowRotateBanner ? (
         <RotateBanner />
       ) : (
@@ -178,7 +147,7 @@ export default function VisualizerLayout<TStep extends Step>({
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 px-5 pb-1 lg:pb-2">
+              <div className="absolute bottom-0 left-0 right-0 px-5 pb-1 sm:pb-1.5 lg:pb-2">
                 <ProgressSlider
                   stepsLength={steps.length}
                   className="mx-auto"
@@ -205,6 +174,6 @@ export default function VisualizerLayout<TStep extends Step>({
           </div>
         </section>
       )}
-    </main>
+    </div>
   );
 }

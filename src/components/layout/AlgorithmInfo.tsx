@@ -15,31 +15,33 @@ export default function AlgorithmInfo({
           {name}
         </h2>
 
-        <div className="flex flex-wrap gap-2 mb-3 mt-4 sm:mt-5">
-          <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-sm text-xs sm:text-sm bg-blue-500/20 text-blue-400">
-            {category}
-          </span>
-          {difficulty && (
-            <span
-              className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-sm text-xs sm:text-sm ${
-                difficulty === "beginner"
-                  ? "bg-green-500/20 text-green-400"
-                  : difficulty === "intermediate"
-                  ? "bg-yellow-500/20 text-yellow-400"
-                  : "bg-red-500/20 text-red-400"
-              }`}
-            >
-              {difficulty}
+        <div className="bg-[#141414] p-4 rounded-lg mt-4">
+          <div className="flex flex-wrap gap-2">
+            <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-sm text-xs sm:text-sm bg-blue-500/20 text-blue-400">
+              {category}
             </span>
-          )}
+            {difficulty && (
+              <span
+                className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-sm text-xs sm:text-sm ${
+                  difficulty === "beginner"
+                    ? "bg-green-500/20 text-green-400"
+                    : difficulty === "intermediate"
+                    ? "bg-yellow-500/20 text-yellow-400"
+                    : "bg-red-500/20 text-red-400"
+                }`}
+              >
+                {difficulty}
+              </span>
+            )}
+          </div>
+
+          <p className="text-gray-300 mt-4 text-sm sm:text-base md:text-lg leading-relaxed">
+            {description}
+          </p>
         </div>
 
-        <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed">
-          {description}
-        </p>
-
         {tags && (
-          <div className="mt-4 sm:mt-5 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-2">
             {tags.map((tag) => (
               <span
                 key={tag}

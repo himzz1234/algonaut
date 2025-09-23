@@ -66,7 +66,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden ml-5 text-gray-400 hover:text-green-400 text-2xl focus:outline-none"
+          className="md:hidden ml-5 text-gray-400 hover:text-green-400 text-xl focus:outline-none"
         >
           {menuOpen ? "✕" : "☰"}
         </button>
@@ -79,7 +79,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="md:hidden absolute top-[80px] left-0 w-full bg-black/95 border-b border-green-500/20 backdrop-blur-lg z-40"
+            className="md:hidden absolute top-[80px] left-0 w-full bg-black/95 border-b border-green-500/20 backdrop-blur-lg shadow-xl z-40"
           >
             <ul className="flex flex-col gap-4 px-6 py-6 text-lg">
               <li
@@ -104,14 +104,16 @@ export default function Navbar() {
                   Explore
                 </Link>
               </li>
-              <li>
-                <button
-                  onClick={() => openModal(<AuthPanel />)}
-                  className="w-full px-5 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-500 rounded-md transition-colors"
-                >
-                  Login
-                </button>
-              </li>
+              {!user && (
+                <li>
+                  <button
+                    onClick={() => openModal(<AuthPanel />)}
+                    className="w-full px-5 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-500 rounded-md transition-colors"
+                  >
+                    Login
+                  </button>
+                </li>
+              )}
             </ul>
           </motion.div>
         )}

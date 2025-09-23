@@ -3,9 +3,7 @@ import { useMemo } from "react";
 import type { BitmaskStep, Block } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
-
-const GAP = 5;
-const CELL_SIZE = 50;
+import { getGridDimensions } from "../../../config/visualizerConfig";
 
 type Props = {
   steps: BitmaskStep[];
@@ -14,9 +12,7 @@ type Props = {
 export default function BitmaskVisualizer({ steps }: Props) {
   const { isMobile } = useOrientation();
   const { stepIndex } = usePlayback();
-
-  const cellSize = isMobile ? 30 : CELL_SIZE;
-  const spacing = cellSize + GAP;
+  const { cellSize, spacing, radius, FONT_SIZE } = getGridDimensions(isMobile);
 
   function applyStep(
     prev: {
@@ -189,7 +185,7 @@ export default function BitmaskVisualizer({ steps }: Props) {
 
   const n = bits.length || 8;
   const svgWidth = n * spacing;
-  const rowHeight = cellSize + 15;
+  const rowHeight = cellSize + (isMobile ? 10 : 15);
   const svgHeight = 5 * rowHeight;
 
   const rows = [
@@ -199,6 +195,41 @@ export default function BitmaskVisualizer({ steps }: Props) {
   ];
 
   const step = steps[stepIndex];
+
+  function getColors(
+    block: Block,
+    isHighlighted: boolean,
+    mode: "check" | "found" | "updated" | null
+  ) {
+    if (!isHighlighted) {
+      return {
+        rectFill: "#475569",
+        textFill: block.value === 1 ? "#a7f3d0" : "#e2e8f0",
+      };
+    }
+
+    switch (mode) {
+      case "check":
+        return { rectFill: "#fbbf24", textFill: "#111827" };
+      case "found":
+        return { rectFill: "#22c55e", textFill: "#f1f5f9" };
+      case "updated":
+        return { rectFill: "#3b82f6", textFill: "#f1f5f9" };
+      default:
+        return {
+          rectFill: "#475569",
+          textFill: block.value === 1 ? "#a7f3d0" : "#e2e8f0",
+        };
+    }
+  }
+
+  function shouldRenderOpLabel(step: BitmaskStep, rowLabel: string): boolean {
+    if (step.type !== "operation") return false;
+    if (step.target === "bits" && rowLabel.startsWith("N")) return true;
+    if (step.target === "mask" && rowLabel === "Mask") return true;
+    if (!step.target && rowLabel === "Mask") return true;
+    return false;
+  }
 
   return (
     <motion.div className="w-full flex justify-center">
@@ -210,7 +241,7 @@ export default function BitmaskVisualizer({ steps }: Props) {
       >
         {rows.map((row, rowIdx) => {
           let y = (rowIdx + 1) * rowHeight;
-          if (row.label === "Result") y += 15;
+          if (row.label === "Result") y += isMobile ? 10 : 15;
 
           return (
             <motion.g
@@ -224,31 +255,11 @@ export default function BitmaskVisualizer({ steps }: Props) {
 
                 const isHighlighted = highlight.ids.includes(block.id);
 
-                let rectFill: string;
-                let textFill: string;
-
-                if (isHighlighted) {
-                  switch (highlight.mode) {
-                    case "check":
-                      rectFill = "#fbbf24";
-                      textFill = "#111827";
-                      break;
-                    case "found":
-                      rectFill = "#22c55e";
-                      textFill = "#f1f5f9";
-                      break;
-                    case "updated":
-                      rectFill = "#3b82f6";
-                      textFill = "#f1f5f9";
-                      break;
-                    default:
-                      rectFill = "#475569";
-                      textFill = block.value === 1 ? "#a7f3d0" : "#e2e8f0";
-                  }
-                } else {
-                  rectFill = "#475569";
-                  textFill = block.value === 1 ? "#a7f3d0" : "#e2e8f0";
-                }
+                const { rectFill, textFill } = getColors(
+                  block,
+                  isHighlighted,
+                  highlight.mode
+                );
 
                 return (
                   <motion.g key={block.id} transform={`translate(${x}, 0)`}>
@@ -265,12 +276,13 @@ export default function BitmaskVisualizer({ steps }: Props) {
                         {bits.length - i - 1}
                       </motion.text>
                     )}
+
                     <motion.rect
                       width={cellSize}
                       height={cellSize}
                       fill={rectFill}
                       strokeWidth={isHighlighted ? 2 : 1}
-                      rx={4}
+                      rx={radius}
                     />
 
                     <motion.text
@@ -279,7 +291,7 @@ export default function BitmaskVisualizer({ steps }: Props) {
                       y={cellSize / 2 + 2}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      className="text-sm font-semibold"
+                      fontSize={FONT_SIZE.cell}
                       fill={textFill}
                       initial={{ rotateY: 90, opacity: 0 }}
                       animate={{ rotateY: 0, opacity: 1 }}
@@ -301,50 +313,25 @@ export default function BitmaskVisualizer({ steps }: Props) {
                   = {` ${row.label}`}
                 </text>
               )}
-              {op && (
-                <>
-                  {step.type === "operation" &&
-                    step.target &&
-                    row.label.startsWith("N") &&
-                    step.target === "bits" && (
-                      <text
-                        x={-spacing - 10}
-                        y={CELL_SIZE / 2}
-                        dominantBaseline="middle"
-                        className="fill-gray-400 text-sm md:text-lg"
-                      >
-                        {op}
-                      </text>
-                    )}
 
-                  {step.type === "operation" &&
-                    step.target &&
-                    row.label === "Mask" &&
-                    step.target === "mask" && (
-                      <text
-                        x={-spacing - 10}
-                        y={CELL_SIZE / 2}
-                        dominantBaseline="middle"
-                        className="fill-gray-400 text-sm md:text-lg"
-                      >
-                        {op}
-                      </text>
-                    )}
-
-                  {step.type === "operation" &&
-                    !step.target &&
-                    row.label === "Mask" && (
-                      <text
-                        x={-spacing - 10}
-                        y={-10}
-                        dominantBaseline="middle"
-                        className="fill-gray-400 text-sm md:text-lg"
-                      >
-                        {op}
-                      </text>
-                    )}
-                </>
-              )}
+              {step.type === "operation" &&
+                op &&
+                shouldRenderOpLabel(step, row.label) && (
+                  <text
+                    x={-spacing - 10}
+                    y={
+                      row.label.startsWith("N")
+                        ? cellSize / 2
+                        : row.label === "Mask" && !step.target
+                        ? -10
+                        : cellSize / 2
+                    }
+                    dominantBaseline="middle"
+                    className="fill-gray-400 text-sm md:text-lg"
+                  >
+                    {op}
+                  </text>
+                )}
 
               {row.label === "Mask" && result.length > 0 && (
                 <line

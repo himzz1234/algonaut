@@ -25,7 +25,7 @@ export default function Controls() {
 
   const btnClass = (disabled: boolean) => `
     active:scale-95 transition-all duration-150
-    px-2 sm:px-3 lg:px-4 py-1 sm:py-2 lg:py-4
+    px-2 sm:px-3 lg:px-4 py-2 sm:py-3 lg:py-4
     text-sm sm:text-base rounded-md
     ${
       disabled
