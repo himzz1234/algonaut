@@ -24,7 +24,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
       positions: Record<number, number>;
       highlight: {
         ids: number[];
-        mode: "compare" | "current" | "found" | null;
+        mode: "compare" | "current" | "found" | "swap" | null;
       };
       pointers: Record<
         string,
@@ -64,6 +64,20 @@ export default function TwoPointersVisualizer({ steps }: Props) {
         pointers = step.pointers ?? pointers;
         break;
 
+      case "swap": {
+        const [idA, idB] = step.ids ?? [];
+        highlight = { ids: step.ids ?? [], mode: "swap" };
+
+        if (idA !== undefined && idB !== undefined) {
+          const posA = positions[idA];
+          const posB = positions[idB];
+          positions[idA] = posB;
+          positions[idB] = posA;
+        }
+
+        break;
+      }
+
       case "found":
         highlight = { ids: step.ids ?? [], mode: "found" };
         pointers = step.pointers ?? pointers;
@@ -84,7 +98,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
       positions: {} as Record<number, number>,
       highlight: {
         ids: [] as number[],
-        mode: null as "compare" | "current" | "found" | null,
+        mode: null as "compare" | "current" | "found" | "swap" | null,
       },
       pointers: {} as Record<
         string,
@@ -272,7 +286,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
 
           let rectFill = "#475569";
           if (isHighlighted) {
-            if (highlight.mode === "found") {
+            if (highlight.mode === "found" || highlight.mode === "swap") {
               rectFill = "#22c55e";
             } else if (highlight.mode === "compare") {
               rectFill = "#f59e0b";

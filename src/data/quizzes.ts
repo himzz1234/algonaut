@@ -889,7 +889,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "sliding-window-median": [
     {
       id: 1,
@@ -898,7 +897,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   dfs: [
     {
       id: 1,
@@ -917,7 +915,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   bfs: [
     {
       id: 1,
@@ -930,6 +927,120 @@ export const quizzes: Record<string, Question[]> = {
       question: "BFS uses which data structure?",
       options: ["Queue", "Stack", "Heap"],
       answer: 0,
+    },
+  ],
+  "merge-intervals": [
+    {
+      id: 1,
+      question: "Why do we sort intervals before merging?",
+      options: [
+        "To minimize time complexity and ensure overlapping intervals are adjacent",
+        "To remove duplicates",
+        "To reduce memory usage",
+        "Sorting is optional for merging intervals",
+      ],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question:
+        "True or False: After sorting, it is enough to compare the current interval with the last merged interval to decide if they overlap.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question: "What is the overall time complexity of merging n intervals?",
+      options: ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
+      answer: 1,
+    },
+  ],
+
+  "insert-interval": [
+    {
+      id: 1,
+      question:
+        "What is the optimal way to insert a new interval into an already merged list?",
+      options: [
+        "Append it and re-run merge intervals on the entire list",
+        "Use binary search to find correct position, then merge as needed",
+        "Compare with every interval linearly",
+        "Sort only by end times and insert at the end",
+      ],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question:
+        "True or False: When merging during insert, the new interval can overlap with multiple existing intervals.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "What is the worst-case time complexity for inserting a new interval into a list of n intervals?",
+      options: ["O(log n)", "O(n)", "O(n log n)", "O(1)"],
+      answer: 1,
+    },
+  ],
+  "employee-free-time": [
+    {
+      id: 1,
+      question:
+        "What is the first step to find common free time among employees?",
+      options: [
+        "Take the union of all schedules and merge overlaps",
+        "Find intersection of intervals employee by employee",
+        "Sort by end times and pick the smallest",
+      ],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question:
+        "True or False: The free time intervals are just the gaps between consecutive merged busy intervals.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "If there are k employees with n intervals each, what is the time complexity of flattening and merging schedules?",
+      options: ["O(n)", "O(k + n)", "O(kn log(kn))"],
+      answer: 2,
+    },
+  ],
+  "meeting-rooms-ii": [
+    {
+      id: 1,
+      question: "What does the answer to Meeting Rooms II represent?",
+      options: [
+        "Number of unique meetings",
+        "Maximum number of rooms needed at the same time",
+        "Minimum number of overlapping intervals",
+        "The sum of all meeting durations",
+      ],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question:
+        "True or False: The problem can be solved by counting maximum overlap using sorted start and end times.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "What happens if we don't sort the start and end times separately?",
+      options: [
+        "The solution still works but is slower",
+        "We might count overlaps incorrectly",
+        "We only need to sort starts, not ends",
+        "No effect, as we iterate linearly",
+      ],
+      answer: 1,
     },
   ],
 };

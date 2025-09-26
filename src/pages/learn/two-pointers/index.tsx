@@ -1,9 +1,14 @@
 import { useSearchParams } from "react-router-dom";
 import type { Block, TwoPointerStep } from "../../../algorithms/types";
 import VisualizerLayoutWrapper from "../../../components/layout/VisualizerLayoutWrapper";
-import { mostWater, threeSum, twoSum } from "../../../algorithms/two-pointers";
+import {
+  mostWater,
+  threeSum,
+  twoSum,
+  moveZeroes,
+  trapWater,
+} from "../../../algorithms/two-pointers";
 import TwoPointersVisualizer from "../../../components/visualizers/two-pointers";
-import { trappingRainWater } from "../../../algorithms/two-pointers/trapwater";
 
 export default function TwoPointersPage() {
   const [searchParams] = useSearchParams();
@@ -18,11 +23,25 @@ export default function TwoPointersPage() {
     { id: 6, value: 8 },
   ];
 
+  const arrayWithZeroes: Block[] = [
+    { id: 1, value: 0 },
+    { id: 2, value: 1 },
+    { id: 3, value: 0 },
+    { id: 4, value: 3 },
+    { id: 5, value: 12 },
+    { id: 6, value: 0 },
+  ];
+
   let steps: TwoPointerStep[] = [];
   switch (algorithm) {
     case "two-sum-sorted": {
       const sortedArray = [...initialArray].sort((a, b) => a.value - b.value);
       steps = [...twoSum(sortedArray, 7)];
+      break;
+    }
+
+    case "move-zeroes": {
+      steps = [...moveZeroes(arrayWithZeroes)];
       break;
     }
 
@@ -38,7 +57,7 @@ export default function TwoPointersPage() {
     }
 
     case "trap-rain-water": {
-      steps = [...trappingRainWater(initialArray)];
+      steps = [...trapWater(initialArray)];
       break;
     }
 

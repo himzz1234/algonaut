@@ -1,6 +1,6 @@
 import type { Block, TwoPointerStep } from "../types";
 
-export function* trappingRainWater(arr: Block[]): Generator<TwoPointerStep> {
+export function* trapWater(arr: Block[]): Generator<TwoPointerStep> {
   const a = [...arr];
 
   let left = 1;
@@ -53,7 +53,7 @@ export function* trappingRainWater(arr: Block[]): Generator<TwoPointerStep> {
         yield {
           type: "highlight",
           ids: [a[left].id],
-          explanation: `Update leftMax to ${leftMax.value} because this bar is taller.`,
+          explanation: `Update leftMax to ${leftMax.value} because this bar is taller than previous leftMax.`,
           overlays: [...trappedOverlays],
           pointers: {
             left: a[left].id,
@@ -77,7 +77,7 @@ export function* trappingRainWater(arr: Block[]): Generator<TwoPointerStep> {
         yield {
           type: "highlight",
           ids: [a[left].id],
-          explanation: `This bar is shorter than leftMax ${leftMax.value}, so it traps ${trapped} water.`,
+          explanation: `This bar is ${trapped} units shorter than leftMax ${leftMax.value}, so it traps ${trapped} water.`,
           overlays: [...trappedOverlays],
           pointers: {
             left: a[left].id,
@@ -96,7 +96,7 @@ export function* trappingRainWater(arr: Block[]): Generator<TwoPointerStep> {
         yield {
           type: "highlight",
           ids: [a[right].id],
-          explanation: `Update rightMax to ${rightMax.value} because this bar is taller.`,
+          explanation: `Update rightMax to ${rightMax.value} because this bar is taller than previous rightMax.`,
           overlays: [...trappedOverlays],
           pointers: {
             left: a[left].id,
@@ -120,7 +120,7 @@ export function* trappingRainWater(arr: Block[]): Generator<TwoPointerStep> {
         yield {
           type: "highlight",
           ids: [a[right].id],
-          explanation: `This bar is shorter than rightMax ${rightMax.value}, so it traps ${trapped} water.`,
+          explanation: `This bar is ${trapped} units shorter than rightMax ${rightMax.value}, so it traps ${trapped} water.`,
           overlays: [...trappedOverlays],
           pointers: {
             left: a[left].id,

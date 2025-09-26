@@ -34,7 +34,6 @@ export const modules: Module[] = [
       "reverse-array",
       "rotate-array",
       "prefix-sum",
-      "move-zeroes",
       "kadane",
     ],
   },
@@ -78,6 +77,7 @@ export const modules: Module[] = [
     level: "beginner",
     algos: [
       "two-sum-sorted",
+      "move-zeroes",
       "three-sum",
       "container-most-water",
       "trap-rain-water",
@@ -113,84 +113,6 @@ export const modules: Module[] = [
 ];
 
 // export const modules: Module[] = [
-//   {
-//     id: "m-recursion",
-//     title: "Recursion Basics",
-//     description:
-//       "Understand recursion and the call stack through simple, classic problems.",
-//     level: "beginner",
-//     algos: [
-//       {
-//         id: "factorial",
-//         label: "Factorial (Stack View)",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "fibonacci",
-//         label: "Fibonacci (Recursion Tree)",
-//         difficulty: "Easy",
-//         effort: "Low–Medium",
-//       },
-//       {
-//         id: "sum-n",
-//         label: "Sum of First N Numbers",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "tower-of-hanoi",
-//         label: "Tower of Hanoi",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "reverse-string",
-//         label: "Reverse String (Recursive)",
-//         difficulty: "Easy",
-//         effort: "Low–Medium",
-//       },
-//     ],
-//   },
-//   {
-//     id: "m-bits",
-//     title: "Bit Manipulation",
-//     description:
-//       "Learn how to use bitwise operations to solve problems efficiently.",
-//     level: "beginner",
-//     algos: [
-//       {
-//         id: "check-odd-even",
-//         label: "Check if Number is Odd or Even",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "ith-bit",
-//         label: "Get/Set/Toggle ith Bit",
-//         difficulty: "Easy",
-//         effort: "Low–Medium",
-//       },
-//       {
-//         id: "count-bits",
-//         label: "Count Set Bits",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "single-number",
-//         label: "Find the Single Number",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "power-of-two",
-//         label: "Check if Number is Power of Two",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//     ],
-//   },
 //   {
 //     id: "m-strings",
 //     title: "Strings",
@@ -268,44 +190,6 @@ export const modules: Module[] = [
 //     ],
 //   },
 //   {
-//     id: "m-two-pointers",
-//     title: "Two Pointers & Sliding Window",
-//     description: "Master pointer movement and dynamic windows.",
-//     level: "beginner",
-//     algos: [
-//       {
-//         id: "palindrome-2p",
-//         label: "Palindrome (Two Pointers)",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "two-sum-sorted",
-//         label: "Two Sum in Sorted Array",
-//         difficulty: "Easy",
-//         effort: "Low",
-//       },
-//       {
-//         id: "longest-substring-unique",
-//         label: "Longest Substring Without Repeats",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "min-subarray-sum",
-//         label: "Minimum Size Subarray Sum",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "container-water",
-//         label: "Container With Most Water",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//     ],
-//   },
-//   {
 //     id: "m-stacks-queues-intro",
 //     title: "Stacks & Queues (Intro)",
 //     description: "Learn LIFO/FIFO with practical problems.",
@@ -367,111 +251,6 @@ export const modules: Module[] = [
 //         difficulty: "Medium",
 //         effort: "Medium",
 //       },
-//     ],
-//   },
-//   {
-//     id: "m-linked-lists",
-//     title: "Linked Lists",
-//     description:
-//       "Work with pointers, traversal, and in-place edits. Focused on singly linked lists (common interview patterns).",
-//     level: "intermediate",
-//     algos: [
-//       {
-//         id: "singly-impl",
-//         label: "Singly Linked List (Basics)",
-//         difficulty: "Easy",
-//         href: "/learn/list?algorithm=ll-insert-end",
-//         effort: "Low–Medium",
-//       },
-//       {
-//         id: "reverse-ll",
-//         label: "Reverse Linked List (Iterative)",
-//         difficulty: "Medium",
-//         href: "/learn/list?algorithm=ll-reverse",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "reverse-k-group",
-//         label: "Reverse Nodes in k-Group",
-//         difficulty: "Hard",
-//         effort: "High",
-//       },
-//       {
-//         id: "remove-nth-from-end",
-//         label: "Remove Nth Node From End",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "detect-cycle",
-//         label: "Cycle Detection (Floyd)",
-//         difficulty: "Medium",
-//         href: "/learn/list?algorithm=ll-cycle-detect-floyd",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "remove-cycle",
-//         label: "Detect & Remove Cycle",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "merge-two-sorted-ll",
-//         label: "Merge Two Sorted Lists",
-//         difficulty: "Medium",
-//         href: "/learn/list?algorithm=ll-merge-two-sorted",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "merge-sort-ll",
-//         label: "Sort Linked List (Merge Sort)",
-//         difficulty: "Medium",
-//         effort: "Medium–High",
-//       },
-//       {
-//         id: "middle-node",
-//         label: "Find Middle Node",
-//         difficulty: "Easy",
-//         href: "/learn/list?algorithm=ll-middle-node",
-//         effort: "Low",
-//       },
-//       {
-//         id: "palindrome-ll",
-//         label: "Palindrome Linked List",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "reorder-list",
-//         label: "Reorder List (L0→Ln→L1→Ln-1...)",
-//         difficulty: "Medium",
-//         effort: "Medium–High",
-//       },
-//       {
-//         id: "intersection-two-ll",
-//         label: "Intersection of Two Linked Lists",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "add-two-numbers",
-//         label: "Add Two Numbers (linked digits)",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "partition-list",
-//         label: "Partition List (around x)",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "swap-pairs",
-//         label: "Swap Nodes in Pairs",
-//         difficulty: "Easy",
-//         effort: "Low–Medium",
-//       },
-//       // optionally: { id: "copy-random-pointer", label: "Copy List with Random Pointer", difficulty: "Hard", effort: "High" }
 //     ],
 //   },
 //   {

@@ -254,6 +254,11 @@ export type TwoPointerStep =
       overlays?: Overlay[];
     })
   | (Step & {
+      type: "swap";
+      ids: number[];
+      overlays?: Overlay[];
+    })
+  | (Step & {
       type: "found";
       ids: number[];
       overlays?: Overlay[];
