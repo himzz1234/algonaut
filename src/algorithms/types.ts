@@ -19,6 +19,13 @@ export type Cell = {
   weight: number;
 };
 
+export type Interval = {
+  id: number;
+  start: number;
+  end: number;
+  isGap?: boolean;
+};
+
 export type Overlay =
   | {
       kind: "range";
@@ -270,6 +277,49 @@ export type TwoPointerStep =
   | (Step & {
       type: "done";
       overlays?: Overlay[];
+    });
+
+export type IntervalStep =
+  | (Step & {
+      type: "init";
+      intervals: Interval[];
+      pointers?: Record<string, PointerValue>;
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "compare";
+      ids: [number, number];
+    })
+  | (Step & {
+      type: "merge";
+      ids: [number, number];
+      newInterval: Interval;
+      mergeAtAxis: boolean;
+    })
+  | (Step & {
+      type: "append";
+      interval: Interval;
+    })
+  | (Step & {
+      type: "remove";
+      id: number;
+    })
+  | (Step & {
+      type: "sweep";
+      position: number;
+      activeCount: number;
+    })
+  | (Step & {
+      type: "gap";
+      interval: Interval;
+      style?: "discovered" | "final";
+    })
+  | (Step & {
+      type: "done";
+      result?: Interval[];
     });
 
 export type PathfindingStep =

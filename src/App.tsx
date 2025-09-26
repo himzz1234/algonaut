@@ -17,6 +17,7 @@ import ExplorePage from "./pages/explore";
 import ProfilePage from "./pages/user/[slug]";
 import EditProfilePage from "./pages/user/[slug]/edit";
 import TwoPointersPage from "./pages/learn/two-pointers";
+import IntervalsPage from "./pages/learn/intervals";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
                   path="/learn/two-pointers"
                   element={<TwoPointersPage />}
                 />
+                <Route path="/learn/intervals" element={<IntervalsPage />} />
                 <Route path="/explore" element={<ExplorePage />} />
                 <Route path="/user/:id" element={<ProfilePage />} />
                 <Route path="/user/:id/edit" element={<EditProfilePage />} />
