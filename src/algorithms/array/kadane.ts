@@ -25,7 +25,7 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
     role: "current",
     pointers: {
       sum: { ids: [a[0].id], value: sum },
-      index: a[0].id,
+      max: { ids: [a[0].id], value: max },
     },
     lines: [3],
     explanation: `Start with the first element ${a[0].value} as both sum and max.`,
@@ -52,8 +52,10 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
       drag: false,
       pointers: {
         sum: { ids, value: sum },
-
-        index: a[i].id,
+        max: {
+          ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
+          value: max,
+        },
       },
       explanation:
         newCurrent >= value
@@ -73,7 +75,7 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
         drag: false,
         pointers: {
           sum: { ids, value: sum },
-          index: a[i].id,
+          max: { ids, value: max },
         },
         explanation: `Update max to ${max}, the largest sum found so far.`,
       };

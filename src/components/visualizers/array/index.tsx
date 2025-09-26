@@ -226,7 +226,7 @@ export default function ArrayVisualizer({ steps }: Props) {
           );
         })}
 
-        {Object.entries(pointers).map(([label, value]) => {
+        {Object.entries(pointers).map(([label, value], idx) => {
           if (!value) return null;
           if (typeof value === "number") return null;
 
@@ -243,13 +243,21 @@ export default function ArrayVisualizer({ steps }: Props) {
 
           const braceHeight = 10;
 
-          const yBase = depth * (barHeight + 30) - 10;
+          const isAbove = idx % 2 === 0;
+
+          const yBase = isAbove
+            ? depth * (barHeight + 30) - 10
+            : depth * (barHeight + 30) +
+              barHeight +
+              10 +
+              Math.floor(idx / 2) * 50;
+
           const bracePath = makeCurlyBrace(
             minX,
             yBase,
             maxX,
             yBase,
-            -braceHeight
+            isAbove ? -braceHeight : braceHeight
           );
 
           return (
@@ -267,15 +275,15 @@ export default function ArrayVisualizer({ steps }: Props) {
                 }}
               />
               <motion.text
-                initial={{ x: midX, y: yBase - 25 }}
-                animate={{ x: midX, y: yBase - 25 }}
+                initial={{ x: midX, y: isAbove ? yBase - 30 : yBase + 30 }}
+                animate={{ x: midX, y: isAbove ? yBase - 30 : yBase + 30 }}
                 transition={{
                   type: "spring",
                   stiffness: 120,
                   damping: 18,
                 }}
                 fontFamily="Satoshi"
-                fontSize={FONT_SIZE.pointer}
+                fontSize="14"
                 fill="white"
                 textAnchor="middle"
                 dominantBaseline="middle"
