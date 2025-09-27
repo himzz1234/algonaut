@@ -8,7 +8,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../lib/firebase";
 
 export default function EditProfilePage() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -47,6 +47,7 @@ export default function EditProfilePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
     try {
       setLoading(true);
       let photoURL = formData.profilePic;
@@ -84,8 +85,16 @@ export default function EditProfilePage() {
         },
         { merge: true }
       );
+
+      setUser({
+        ...user,
+        displayName: formData.name,
+        photoURL,
+        college: formData.college,
+        location: formData.location,
+      });
     } catch (err) {
-      console.log(err);
+      console.error("Error updating profile:", err);
     } finally {
       setLoading(false);
     }

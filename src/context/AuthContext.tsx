@@ -13,6 +13,7 @@ type AuthUser = User & {
 type AuthContextType = {
   user: AuthUser | null;
   loading: boolean;
+  setUser: (User: AuthUser | null) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -72,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   );
