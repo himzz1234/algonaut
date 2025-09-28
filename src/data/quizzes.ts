@@ -354,7 +354,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "find-min-max": [
     {
       id: 1,
@@ -388,7 +387,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 1,
     },
   ],
-
   fibonacci: [
     {
       id: 1,
@@ -403,7 +401,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "sum-n": [
     {
       id: 1,
@@ -418,7 +415,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "tower-of-hanoi": [
     {
       id: 1,
@@ -752,7 +748,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "three-sum": [
     {
       id: 1,
@@ -792,7 +787,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 1,
     },
   ],
-
   "container-most-water": [
     {
       id: 1,
@@ -854,46 +848,75 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "max-sum-subarray-k": [
     {
       id: 1,
-      question: "Max sum subarray of size K uses:",
-      options: ["Sliding window", "Sorting", "Binary search"],
+      question:
+        "What is the time complexity of finding the maximum sum subarray of size k using the sliding window approach?",
+      options: ["O(n)", "O(n * k)", "O(log n)", "O(k)"],
       answer: 0,
     },
+    {
+      id: 2,
+      question:
+        "If the array is [2, 1, 5, 1, 3, 2] and k = 3, what is the maximum sum?",
+      options: ["9", "10", "8", "7"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "True or False: The sliding window sum must be recomputed from scratch for every window.",
+      options: ["True", "False"],
+      answer: 1,
+    },
   ],
-
+  "smallest-subarray-with-sum-greater-than-k": [
+    {
+      id: 1,
+      question: "Which of the following patterns does this problem introduce?",
+      options: [
+        "Fixed-size sliding window",
+        "Two pointers (expanding + shrinking)",
+        "Binary search",
+      ],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question:
+        "Array: [2, 3, 1, 2, 4, 3], k = 7 → What is the smallest subarray length with sum ≥ k?",
+      options: ["2", "3", "No such subarray"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "True or False: We shrink the window only when the sum becomes strictly greater than k.",
+      options: ["True", "False"],
+      answer: 1,
+    },
+  ],
   "longest-substring-without-repeat": [
     {
       id: 1,
-      question: "Longest substring without repeats uses:",
-      options: [
-        "Sliding window with set/map",
-        "Binary search",
-        "Divide and conquer",
-      ],
-      answer: 0,
+      question:
+        "Which data structure is commonly used to store the last seen indices of characters?",
+      options: ["Stack", "Queue", "HashMap or Dictionary", "Heap"],
+      answer: 2,
     },
-  ],
-
-  "min-window-substring": [
     {
-      id: 1,
-      question: "Minimum window substring is solved by:",
-      options: [
-        "Sliding window with frequency map",
-        "Sorting substrings",
-        "Greedy skipping",
-      ],
-      answer: 0,
+      id: 2,
+      question:
+        "Input: 'abcabcbb' → What is the length of the longest substring without repeating characters?",
+      options: ["2", "3", "4", "5"],
+      answer: 1,
     },
-  ],
-  "sliding-window-median": [
     {
-      id: 1,
-      question: "Sliding window median uses:",
-      options: ["Two heaps (max + min)", "Two pointers", "Hash maps"],
+      id: 3,
+      question:
+        "True or False: If we find a duplicate character inside the current window, we always move start to duplicate's last seen index + 1.",
+      options: ["True", "False"],
       answer: 0,
     },
   ],

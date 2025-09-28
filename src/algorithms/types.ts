@@ -1,6 +1,7 @@
 export type Block = {
   id: number;
   value: number;
+  label?: string;
 };
 
 export type VariableBlock = Block & {
@@ -42,7 +43,7 @@ export type Overlay =
 export type PointerValue<AllowNull extends boolean = false> =
   | (AllowNull extends true ? number | null : number)
   | (AllowNull extends true ? (number | null)[] : number[])
-  | { ids: number[]; value: number };
+  | { ids: number[]; value: number; pos?: "top" | "bottom" };
 
 export type Step<AllowNull extends boolean = false> = {
   pointers?: Record<string, PointerValue<AllowNull>>;
@@ -270,6 +271,33 @@ export type TwoPointerStep =
   | (Step & {
       type: "done";
       overlays?: Overlay[];
+    });
+
+export type SlidingWindowStep =
+  | (Step & {
+      type: "init";
+      array: Block[];
+      k?: number;
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "update";
+      value: number;
+    })
+  | (Step & {
+      type: "check";
+      condition: string;
+      result: boolean;
+    })
+  | (Step & {
+      type: "found";
+      ids: number[];
+    })
+  | (Step & {
+      type: "done";
     });
 
 export type PathfindingStep =

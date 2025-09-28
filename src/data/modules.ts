@@ -82,9 +82,8 @@ export const modules: Module[] = [
       "container-most-water",
       "trap-rain-water",
       "max-sum-subarray-k",
+      "smallest-subarray-with-sum-greater-than-k",
       "longest-substring-without-repeat",
-      "min-window-substring",
-      "sliding-window-median",
     ],
   },
   {
