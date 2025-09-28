@@ -17,6 +17,7 @@ import ExplorePage from "./pages/explore";
 import ProfilePage from "./pages/user/[slug]";
 import EditProfilePage from "./pages/user/[slug]/edit";
 import TwoPointersPage from "./pages/learn/two-pointers";
+import SlidingWindowPage from "./pages/learn/sliding-window";
 
 function App() {
   return (
@@ -37,6 +38,10 @@ function App() {
                 <Route
                   path="/learn/two-pointers"
                   element={<TwoPointersPage />}
+                />
+                <Route
+                  path="/learn/sliding-window"
+                  element={<SlidingWindowPage />}
                 />
                 <Route path="/explore" element={<ExplorePage />} />
                 <Route path="/user/:id" element={<ProfilePage />} />
