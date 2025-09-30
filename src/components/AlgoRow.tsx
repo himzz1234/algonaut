@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiPlus, FiEdit2 } from "react-icons/fi";
+import { FiPlus, FiEdit2, FiCheckCircle, FiClock } from "react-icons/fi";
 import { BsStar, BsStarFill } from "react-icons/bs";
 import type { ReactNode } from "react";
 import { useModal } from "../context/ModalContext";
@@ -18,7 +18,6 @@ import {
 import { useAuth } from "../context/AuthContext";
 import type { AlgorithmMeta } from "../data/algorithms";
 import { useProgress } from "../context/ProgressContext";
-import { FiCheckCircle, FiClock } from "react-icons/fi";
 import AuthPanel from "./AuthPanel";
 
 export type Algo = {
@@ -32,9 +31,9 @@ export type Algo = {
 type AlgoRowProps = {
   algo: AlgorithmMeta;
   note?: string;
-  onToggleStar: (algoId: string) => void;
-  starred: boolean;
-  onEditNote: (algoId: string, label: string) => void;
+  onToggleStar?: (algoId: string) => void;
+  starred?: boolean;
+  onEditNote?: (algoId: string, label: string) => void;
 };
 
 const AlgoRowWrapper = ({
@@ -47,7 +46,8 @@ const AlgoRowWrapper = ({
   const baseCls = `
     relative flex items-center justify-between
     rounded-lg border border-gray-700/50
-    px-4 py-3 transition-all duration-300
+    px-3 py-2 sm:px-4 sm:py-3
+    transition-all duration-300
     hover:scale-[1.01] hover:border-green-400/50 
     hover:shadow-md
     overflow-hidden
@@ -61,7 +61,7 @@ const AlgoRowWrapper = ({
       className={`${baseCls} group`}
       target={algo.href ? "_blank" : undefined}
     >
-      <div className="relative z-10 w-full flex items-center justify-between">
+      <div className="relative z-10 w-full flex items-center justify-between gap-2 sm:gap-3">
         {children}
       </div>
     </Wrapper>
@@ -157,54 +157,55 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
 
   return (
     <AlgoRowWrapper algo={algo}>
-      <div className="flex items-center gap-3 min-w-0">
-        <span className="text-gray-200 text-sm sm:text-base whitespace-nowrap max-w-40 sm:max-w-full truncate font-medium">
+      {/* Left content */}
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        <span className="text-gray-200 text-sm sm:text-base truncate font-medium max-w-[8rem] sm:max-w-[12rem] md:max-w-[16rem]">
           {algo.name}
         </span>
 
         {algo.difficulty && (
-          <span className="text-xs px-2 py-0.5 rounded-sm bg-blue-500/15 text-blue-300 border border-blue-500/20">
+          <span className="text-[10px] sm:text-xs px-1.5 py-0.5 rounded-sm bg-blue-500/15 text-blue-300 border border-blue-500/20">
             {algo.difficulty}
           </span>
         )}
 
         {algo.effort && (
-          <span className="hidden sm:inline-block text-xs px-2 py-0.5 rounded-sm bg-purple-500/15 text-purple-300 border border-purple-500/20">
+          <span className="hidden md:inline-block text-xs px-2 py-0.5 rounded-sm bg-purple-500/15 text-purple-300 border border-purple-500/20">
             {algo.effort}
           </span>
         )}
 
         {!algo.href && (
-          <span className="hidden sm:inline-block text-xs px-2 py-0.5 rounded-sm bg-yellow-600/15 text-yellow-300 border border-yellow-600/20">
+          <span className="hidden lg:inline-block text-xs px-2 py-0.5 rounded-sm bg-yellow-600/15 text-yellow-300 border border-yellow-600/20">
             Coming Soon
           </span>
         )}
 
         {hasNote && (
-          <span className="text-xs md:text-sm text-gray-400 truncate overflow-ellipsis w-24 italic">
+          <span className="hidden sm:inline-block text-xs md:text-sm text-gray-400 truncate italic max-w-[6rem] md:max-w-[10rem]">
             — {note}
           </span>
         )}
       </div>
 
-      <div className="flex items-center gap-3">
-        {progress === "complete" && (
-          <FiCheckCircle
-            className="text-green-400 w-4 h-4 mr-2"
-            title="Completed"
-          />
-        )}
-        {progress === "partial" && (
-          <FiClock
-            className="text-yellow-400 w-4 h-4 mr-2"
-            title="In Progress"
-          />
-        )}
+      <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+        <div className="p-1.5 sm:p-2">
+          {progress === "complete" && (
+            <FiCheckCircle
+              className="text-green-400 w-4 h-4"
+              title="Completed"
+            />
+          )}
+          {progress === "partial" && (
+            <FiClock className="text-yellow-400 w-4 h-4" title="In Progress" />
+          )}
+        </div>
+
         <button
           type="button"
           onClick={toggleBookmark}
           aria-label={bookmarked ? "Unstar algorithm" : "Star algorithm"}
-          className="p-2 rounded-full hover:bg-gray-700/40 transition-colors"
+          className="p-1.5 sm:p-2 rounded-full hover:bg-gray-700/40 transition-colors"
         >
           {bookmarked ? (
             <BsStarFill className="h-4 w-4 text-yellow-400" />
@@ -212,6 +213,7 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
             <BsStar className="h-4 w-4 text-gray-400" />
           )}
         </button>
+
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -228,12 +230,12 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
           }}
           title={hasNote ? "Edit note" : "Add note"}
           aria-label={hasNote ? "Edit note" : "Add note"}
-          className="p-2 rounded-full hover:bg-gray-700/40 transition-colors"
+          className="p-1.5 sm:p-2 rounded-full hover:bg-gray-700/40 transition-colors"
         >
           {hasNote ? (
             <FiEdit2 className="h-4 w-4 text-emerald-300" />
           ) : (
-            <FiPlus className="h-5 w-5 text-emerald-300" />
+            <FiPlus className="h-4 w-4 md:w-5 md:h-5 text-emerald-300" />
           )}
         </button>
       </div>

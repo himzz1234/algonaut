@@ -7,7 +7,7 @@ import Testimonials from "../../components/landing/Testimonials";
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <section
         style={{
           background:
