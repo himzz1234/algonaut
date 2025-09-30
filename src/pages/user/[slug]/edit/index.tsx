@@ -101,13 +101,13 @@ export default function EditProfilePage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
       <form
         onSubmit={handleSubmit}
-        className="flex items-start bg-[#000] border border-gray-700/60 rounded-lg p-10"
+        className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-[#000] border border-gray-700/60 rounded-lg p-6 sm:p-10"
       >
-        <div className="relative flex flex-1/3 flex-col items-center justify-center space-y-4">
-          <div className="w-28 h-28 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden group relative">
+        <div className="flex flex-col items-center justify-start">
+          <div className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden group relative">
             <img
               src={formData.profilePic || "/images/default.jpg"}
               alt="Profile"
@@ -128,15 +128,14 @@ export default function EditProfilePage() {
             onChange={handleFileChange}
             className="hidden"
           />
-          <label className="block text-sm mb-2 text-gray-400">
-            Profile Photo
-          </label>
-
-          <p className="text-xs text-gray-500">PNG, JPG (Max 1MB)</p>
+          <div className="mt-2.5 text-center space-y-1">
+            <p className="block text-sm text-gray-400">Profile Photo</p>
+            <p className="text-xs text-gray-500">PNG, JPG (Max 1MB)</p>
+          </div>
         </div>
 
-        <div className="flex-2/3 space-y-4">
-          <div className="flex space-x-4">
+        <div className="md:col-span-2 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
             <div className="flex-1">
               <label className="block text-sm mb-2 text-gray-400">Name</label>
               <input
@@ -186,11 +185,11 @@ export default function EditProfilePage() {
         </div>
       </form>
 
-      <div className="flex items-center justify-end space-x-2 mt-8">
+      <div className="flex flex-col sm:flex-row items-center justify-end gap-3 mt-8">
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-4 py-2 rounded-md hover:bg-[#141414] border border-gray-700/60"
+          className="w-full sm:w-auto px-4 py-2 rounded-md hover:bg-[#141414] border border-gray-700/60"
           disabled={loading}
         >
           Cancel
@@ -199,7 +198,7 @@ export default function EditProfilePage() {
           type="submit"
           onClick={handleSubmit}
           disabled={loading}
-          className={`px-6 py-2 rounded-md font-medium text-white transition ${
+          className={`w-full sm:w-auto px-6 py-2 rounded-md font-medium text-white transition ${
             loading
               ? "bg-gray-600 cursor-not-allowed"
               : "bg-gradient-to-r from-green-500 to-emerald-600 hover:opacity-90"
