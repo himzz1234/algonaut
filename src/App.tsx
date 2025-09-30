@@ -18,6 +18,7 @@ import ProfilePage from "./pages/user/[slug]";
 import EditProfilePage from "./pages/user/[slug]/edit";
 import TwoPointersPage from "./pages/learn/two-pointers";
 import SlidingWindowPage from "./pages/learn/sliding-window";
+import BacktrackingPage from "./pages/learn/backtracking";
 
 function App() {
   return (
@@ -42,6 +43,10 @@ function App() {
                 <Route
                   path="/learn/sliding-window"
                   element={<SlidingWindowPage />}
+                />
+                <Route
+                  path="/learn/backtracking"
+                  element={<BacktrackingPage />}
                 />
                 <Route path="/explore" element={<ExplorePage />} />
                 <Route path="/user/:id" element={<ProfilePage />} />

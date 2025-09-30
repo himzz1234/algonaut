@@ -920,6 +920,130 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
+  subsets: [
+    {
+      id: 1,
+      question:
+        "Given an array [2, 3], which of the following represents the correct power set?",
+      options: [
+        "[[], [2], [3], [2, 3]]",
+        "[[2], [3], [2, 3]]",
+        "[[], [2], [3]]",
+      ],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question:
+        "In backtracking for subsets, why do we usually use an index parameter during recursion?",
+      options: [
+        "To ensure we don't reuse elements and avoid duplicates",
+        "To make the recursion faster by skipping even numbers",
+        "To prevent stack overflow by limiting depth",
+      ],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "For an array of length n, how many subsets (including empty set) are there?",
+      options: ["2^n", "n^2", "2n"],
+      answer: 0,
+    },
+  ],
+  permutations: [
+    {
+      id: 1,
+      question:
+        "When generating permutations via backtracking, what is the usual base case?",
+      options: [
+        "When the array is sorted in ascending order",
+        "When we find a duplicate element",
+        "When all elements have been used & we have a permutation of length n",
+      ],
+      answer: 2,
+    },
+    {
+      id: 2,
+      question: "For input [1, 2, 3], how many permutations are possible?",
+      options: ["3", "6", "8"],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question:
+        "Why do we typically use a 'visited' or 'used' array in permutation backtracking?",
+      options: [
+        "To avoid choosing the same element multiple times in one permutation",
+        "To increase time complexity for practice",
+        "To reduce memory usage",
+      ],
+      answer: 0,
+    },
+  ],
+  "combination-sum": [
+    {
+      id: 1,
+      question:
+        "In combination sum, why do we usually pass the current index into recursion?",
+      options: [
+        "To generate permutations instead of combinations",
+        "To allow reuse of the same number multiple times (or control when not to reuse)",
+        "To skip the largest number always",
+      ],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question:
+        "If candidates = [2,3,6,7] and target = 7, which combinations are valid?",
+      options: ["[[7], [3,2,2], [6,1]]", "[[7], [2,2,3]]", "[[2,2,2,1], [7]]"],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question:
+        "Which pruning condition is commonly used in combination sum backtracking?",
+      options: [
+        "Stop recursion when sum is divisible by 2",
+        "Stop recursion when we encounter duplicates",
+        "Stop recursion when current sum exceeds target",
+      ],
+      answer: 2,
+    },
+  ],
+  "letter-combinations-phone": [
+    {
+      id: 1,
+      question: "Why do we stop exploring further when index == digits.length?",
+      options: [
+        "Because we have formed a complete combination",
+        "Because no more digits can be processed",
+        "Both of the above",
+      ],
+      answer: 2,
+    },
+    {
+      id: 2,
+      question: "What does each recursive call to backtrack represent?",
+      options: [
+        "Choosing a letter for the current digit",
+        "Completing one valid combination",
+        "Mapping all digits at once",
+      ],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question: "For input '23', why are there 9 possible combinations?",
+      options: [
+        "Because each digit maps to 3 letters (3 × 3 = 9)",
+        "Because there are 9 digits in total",
+        "Because recursion repeats 9 times by default",
+      ],
+      answer: 0,
+    },
+  ],
   dfs: [
     {
       id: 1,

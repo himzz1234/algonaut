@@ -13,6 +13,14 @@ export type Node = Block & {
   prev?: Node | null;
 };
 
+export type TreeNode = {
+  id: number;
+  label: string | number;
+  children: TreeNode[];
+  depth: number;
+  parentId: number;
+};
+
 export type Cell = {
   id: number;
   row: number;
@@ -298,6 +306,35 @@ export type SlidingWindowStep =
     })
   | (Step & {
       type: "done";
+    });
+
+export type BacktrackingStep =
+  | (Step & {
+      type: "init";
+      array: Block[];
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "pick";
+      ids: number[];
+      parentId: number;
+      node: TreeNode;
+    })
+  | (Step & {
+      type: "unpick";
+      ids: number[];
+      parentId: number;
+    })
+  | (Step & {
+      type: "found";
+      ids: number[];
+    })
+  | (Step & {
+      type: "done";
+      ids: number[];
     });
 
 export type PathfindingStep =
