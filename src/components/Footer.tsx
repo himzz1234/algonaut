@@ -6,8 +6,12 @@ export default function Footer() {
     <footer className="relative border-t border-gray-800 bg-[#0a0a0a]">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
         <div className="col-span-2">
-          <Link to="/">
-            <img src="/logo.png" width={160} height={160} alt="logo" />
+          <Link to="/" className="block">
+            <img
+              src="/logo.png"
+              alt="logo"
+              className="w-36 h-auto sm:w-40 md:w-40"
+            />
           </Link>
           <p className="mt-3 text-gray-400 text-base sm:text-base max-w-xs">
             Visualize and understand algorithms with clean animations.
@@ -100,7 +104,7 @@ export default function Footer() {
               Stay Updated
             </h3>
             <form>
-              <button className="whitespace-nowrap underline uppercase font-medium text-green-400 transition-colors">
+              <button className="text-sm md:text-base whitespace-nowrap underline uppercase font-medium text-green-400 transition-colors">
                 Sign up for our newsletter →
               </button>
             </form>

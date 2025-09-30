@@ -66,7 +66,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden ml-5 text-gray-400 hover:text-green-400 text-xl focus:outline-none"
+          className="md:hidden ml-4 text-gray-400 hover:text-green-400 text-xl w-6 h-6 focus:outline-none"
         >
           {menuOpen ? "✕" : "☰"}
         </button>
