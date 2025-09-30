@@ -157,9 +157,8 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
 
   return (
     <AlgoRowWrapper algo={algo}>
-      {/* Left content */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-        <span className="text-gray-200 text-sm sm:text-base truncate font-medium max-w-[8rem] sm:max-w-[12rem] md:max-w-[16rem]">
+        <span className="text-gray-200 text-sm sm:text-base truncate font-medium max-w-[8rem] sm:max-w-[12rem] md:max-w-full">
           {algo.name}
         </span>
 
