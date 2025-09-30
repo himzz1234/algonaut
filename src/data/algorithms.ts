@@ -896,7 +896,7 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       best: "O(N!)",
       average: "O(N!)",
       worst: "O(N!)",
-      space: "O(N)", // recursion depth
+      space: "O(N)",
     },
     pseudocode: [
       "result = []",
@@ -913,7 +913,6 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "return result",
     ],
     featured: true,
-    href: "/learn/backtracking?algorithm=n-queens",
     tags: ["matrix", "backtracking", "recursion", "constraints"],
     difficulty: "intermediate",
     effort: "High",
@@ -926,10 +925,10 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "Search for a word in a 2D grid by moving horizontally or vertically. Each letter cell can only be used once per word.",
     shortDescription: "Find if a word exists in a grid.",
     complexities: {
-      best: "O(N*M*L)", // grid size * word length
+      best: "O(N*M*L)",
       average: "O(N*M*L)",
       worst: "O(N*M*4^L)",
-      space: "O(L)", // recursion depth
+      space: "O(L)",
     },
     pseudocode: [
       "function dfs(r, c, index):",
@@ -945,7 +944,6 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "return false",
     ],
     featured: false,
-    href: "/learn/backtracking?algorithm=word-search",
     tags: ["matrix", "backtracking", "dfs"],
     difficulty: "intermediate",
     effort: "Medium",
@@ -958,10 +956,10 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "Fill a 9×9 Sudoku board so that every row, column, and 3×3 sub-box contains digits 1 to 9 without repetition.",
     shortDescription: "Solve Sudoku using backtracking.",
     complexities: {
-      best: "O(1)", // constant for a fixed 9x9 board
-      average: "O(9^m)" /* m = number of empty cells */,
+      best: "O(1)",
+      average: "O(9^m)",
       worst: "O(9^m)",
-      space: "O(m)", // recursion depth = number of blanks
+      space: "O(m)",
     },
     pseudocode: [
       "function solve():",
@@ -977,7 +975,6 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       "solve()",
     ],
     featured: false,
-    href: "/learn/backtracking?algorithm=sudoku-solver",
     tags: ["matrix", "backtracking", "constraint-satisfaction"],
     difficulty: "advanced",
     effort: "Very High",
