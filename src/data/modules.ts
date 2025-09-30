@@ -103,6 +103,22 @@ export const modules: Module[] = [
     ],
   },
   {
+    id: "m-backtracking",
+    title: "Backtracking",
+    description:
+      "Explore search spaces with recursion and pruning to efficiently generate combinations, permutations, and solutions to constraint problems.",
+    level: "intermediate",
+    algos: [
+      "subsets",
+      "permutations",
+      "combination-sum",
+      "n-queens",
+      "word-search",
+      "sudoku-solver",
+      "letter-combinations-phone",
+    ],
+  },
+  {
     id: "m-graphs-intro",
     title: "Graphs (Intro)",
     description: "Model connections; explore with BFS/DFS.",
@@ -393,37 +409,6 @@ export const modules: Module[] = [
 //     ],
 //   },
 //   {
-//     id: "m-backtracking",
-//     title: "Backtracking",
-//     description: "Explore search spaces with pruning.",
-//     level: "intermediate",
-//     algos: [
-//       {
-//         id: "subsets",
-//         label: "Subsets (Power Set)",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "permutations",
-//         label: "Permutations",
-//         difficulty: "Medium",
-//         effort: "Medium–High",
-//       },
-//       {
-//         id: "n-queens",
-//         label: "N-Queens",
-//         difficulty: "Medium",
-//         effort: "High",
-//       },
-//       {
-//         id: "combination-sum",
-//         label: "Combination Sum",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//     ],
-//   },
 //   {
 //     id: "m-dp-basics",
 //     title: "Dynamic Programming (Basics)",
