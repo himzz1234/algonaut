@@ -6,6 +6,7 @@ import { useOrientation } from "../../../hooks/useOrientation";
 import { makeCurlyBrace } from "../../../utils/paths";
 import { usePlayback } from "../../../context/PlaybackContext";
 import { getBlockDimensions } from "../../../config/visualizerConfig";
+import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: SlidingWindowStep[];
@@ -17,62 +18,11 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
   const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
-  function applyStep(
-    prev: {
-      blocks: Block[];
-      positions: Record<number, number>;
-      pointers: Record<string, PointerValue<false>>;
-      highlight: { ids: number[]; mode: "current" | "found" | null };
-      metrics: Record<string, number>;
-    },
-    step: SlidingWindowStep
-  ) {
-    let { blocks, positions, pointers, metrics, highlight } = {
-      blocks: [...prev.blocks],
-      positions: { ...prev.positions },
-      pointers: { ...prev.pointers },
-      metrics: { ...prev.metrics },
-      highlight: { ...prev.highlight },
-    };
-
-    switch (step.type) {
-      case "init":
-        blocks = [];
-        positions = {};
-        (step.array ?? []).forEach((b, i) => {
-          blocks[i] = b;
-          positions[b.id] = i;
-        });
-        pointers = step.pointers ?? {};
-        metrics = {};
-        highlight = { ids: [], mode: null };
-        break;
-
-      case "highlight":
-        highlight = { ids: step.ids ?? [], mode: "current" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "found":
-        highlight = { ids: step.ids ?? [], mode: "found" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "done":
-        highlight = { ids: [], mode: null };
-        pointers = {};
-        break;
-    }
-
-    return { blocks, positions, pointers, metrics, highlight };
-  }
-
   const { blocks, positions, pointers, highlight } = useMemo(() => {
-    let state = {
+    let { blocks, positions, pointers, highlight } = {
       blocks: [] as Block[],
       positions: {} as Record<number, number>,
       pointers: {} as Record<string, PointerValue<false>>,
-      metrics: {} as Record<string, number>,
       highlight: {
         ids: [] as number[],
         mode: null as "current" | "found" | null,
@@ -80,10 +30,37 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
     };
 
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      state = applyStep(state, steps[i]);
+      const step = steps[i];
+      switch (step.type) {
+        case "init":
+          blocks = [];
+          positions = {};
+          (step.array ?? []).forEach((b, i) => {
+            blocks[i] = b;
+            positions[b.id] = i;
+          });
+          pointers = step.pointers ?? {};
+          highlight = { ids: [], mode: null };
+          break;
+
+        case "highlight":
+          highlight = { ids: step.ids ?? [], mode: "current" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "found":
+          highlight = { ids: step.ids ?? [], mode: "found" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "done":
+          highlight = { ids: [], mode: null };
+          pointers = {};
+          break;
+      }
     }
 
-    return state;
+    return { blocks, positions, pointers, highlight };
   }, [steps, stepIndex]);
 
   return (
@@ -99,11 +76,11 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
 
           let rectFill = isHighlighted
             ? highlight.mode === "current"
-              ? "#ef4444"
+              ? COLORS.dangerRed
               : highlight.mode === "found"
-              ? "#22c55e"
-              : "#475569"
-            : "#475569";
+              ? COLORS.successGreen
+              : COLORS.neutralGray
+            : COLORS.neutralGray;
 
           return (
             <motion.g

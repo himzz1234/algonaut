@@ -46,7 +46,7 @@ export function* mostWater(arr: Block[]): Generator<TwoPointerStep> {
         },
       ],
       pointers: { left: a[left].id, right: a[right].id },
-      lines: [1, 2],
+      lines: [1, 2, 3, 4, 5],
     };
 
     yield {
@@ -62,7 +62,7 @@ export function* mostWater(arr: Block[]): Generator<TwoPointerStep> {
         a[left].value < a[right].value
           ? `Left bar ${a[left].value} is smaller, so move left pointer.`
           : `Right bar ${a[right].value} is smaller or equal, so move right pointer.`,
-      lines: a[left].value < a[right].value ? [4, 5] : [6, 7],
+      lines: a[left].value < a[right].value ? [6, 7] : [8, 9],
     };
 
     if (a[left].value < a[right].value) {
@@ -84,6 +84,6 @@ export function* mostWater(arr: Block[]): Generator<TwoPointerStep> {
         label: `max = ${maxArea}`,
       },
     ],
-    lines: [7],
+    lines: [10],
   };
 }

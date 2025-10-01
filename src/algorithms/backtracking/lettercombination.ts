@@ -116,7 +116,7 @@ export function* generateLetterCombinations(
         type: "unpick",
         ids: [currentNodeId],
         parentId,
-        lines: [8],
+        lines: [9],
         explanation: `Remove '${letter}' and try the next letter for digit ${digit}.`,
         pointers: { ...permanentPointers },
       };
@@ -138,7 +138,7 @@ export function* generateLetterCombinations(
   yield {
     type: "done",
     ids: leafNodeIds,
-    lines: [11],
+    lines: [12, 13],
     explanation: "TA-DA! All possible letter combinations have been generated.",
   };
 }

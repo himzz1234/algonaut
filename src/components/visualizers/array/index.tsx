@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import type { ArrayStep, Block } from "../../../algorithms/types";
+import type { ArrayStep, Block, PointerValue } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { makeCurlyBrace } from "../../../utils/paths";
 import { usePlayback } from "../../../context/PlaybackContext";
 import { getBlockDimensions } from "../../../config/visualizerConfig";
+import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: ArrayStep[];
@@ -16,109 +17,8 @@ export default function ArrayVisualizer({ steps }: Props) {
   const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
-  function applyStep(
-    prev: {
-      blocks: Block[];
-      positions: Record<number, number>;
-      depths: Record<number, number>;
-      highlight: { ids: number[]; mode: "key" | "compare" | "swap" | null };
-      pointers: Record<
-        string,
-        number | number[] | { ids: number[]; value: number } | null
-      >;
-    },
-    step: ArrayStep
-  ) {
-    let { blocks, positions, depths, highlight, pointers } = {
-      blocks: [...prev.blocks],
-      positions: { ...prev.positions },
-      depths: { ...prev.depths },
-      highlight: { ...prev.highlight },
-      pointers: { ...prev.pointers },
-    };
-
-    switch (step.type) {
-      case "init":
-        blocks = [];
-        positions = {};
-        depths = {};
-        (step.array ?? []).forEach((b, i) => {
-          blocks[i] = b;
-          positions[b.id] = i;
-          depths[b.id] = 0;
-        });
-        highlight = { ids: [], mode: null };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "highlight":
-        highlight = { ids: step.ids ?? [], mode: "key" };
-
-        if (step.drag && step.depth !== undefined) {
-          (step.ids ?? []).forEach((id) => {
-            depths[id] = step.depth!;
-          });
-        }
-
-        pointers = step.pointers ?? pointers;
-        break;
-
-      case "remove":
-        if (step.id !== undefined) {
-          depths[step.id] = step.depth ?? 1;
-        }
-        break;
-
-      case "insert":
-        highlight = { ids: [step.id], mode: "key" };
-        if (step.id !== undefined && step.targetIndex !== undefined) {
-          positions[step.id] = step.targetIndex;
-          depths[step.id] = step.depth ?? 0;
-        }
-
-        break;
-
-      case "move":
-        if (step.id !== undefined && step.targetIndex !== undefined) {
-          positions[step.id] = step.targetIndex;
-        }
-
-        break;
-
-      case "swap": {
-        const [idA, idB] = step.ids ?? [];
-        highlight = { ids: step.ids ?? [], mode: "swap" };
-
-        if (idA !== undefined && idB !== undefined) {
-          const posA = positions[idA];
-          const posB = positions[idB];
-          positions[idA] = posB;
-          positions[idB] = posA;
-        }
-
-        break;
-      }
-
-      case "overwrite": {
-        if (step.id !== undefined && step.value !== undefined) {
-          if (blocks[step.id]) {
-            blocks[step.id] = { ...blocks[step.id], value: step.value };
-          }
-        }
-        break;
-      }
-
-      case "done":
-        highlight = { ids: [], mode: null };
-        pointers = {};
-        break;
-    }
-
-    return { blocks, positions, depths, highlight, pointers };
-  }
-
   const { blocks, positions, depths, highlight, pointers } = useMemo(() => {
-    let state = {
+    let { blocks, positions, depths, highlight, pointers } = {
       blocks: [] as Block[],
       positions: {} as Record<number, number>,
       depths: {} as Record<number, number>,
@@ -126,17 +26,90 @@ export default function ArrayVisualizer({ steps }: Props) {
         ids: [] as number[],
         mode: null as "key" | "compare" | "swap" | null,
       },
-      pointers: {} as Record<
-        string,
-        number | number[] | { ids: number[]; value: number } | null
-      >,
+      pointers: {} as Record<string, PointerValue>,
     };
 
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      state = applyStep(state, steps[i]);
+      const step = steps[i];
+      switch (step.type) {
+        case "init":
+          blocks = [];
+          positions = {};
+          depths = {};
+          (step.array ?? []).forEach((b, i) => {
+            blocks[i] = b;
+            positions[b.id] = i;
+            depths[b.id] = 0;
+          });
+          highlight = { ids: [], mode: null };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "highlight":
+          highlight = { ids: step.ids ?? [], mode: "key" };
+
+          if (step.drag && step.depth !== undefined) {
+            (step.ids ?? []).forEach((id) => {
+              depths[id] = step.depth!;
+            });
+          }
+
+          pointers = step.pointers ?? pointers;
+          break;
+
+        case "remove":
+          if (step.id !== undefined) {
+            depths[step.id] = step.depth ?? 1;
+          }
+          break;
+
+        case "insert":
+          highlight = { ids: [step.id], mode: "key" };
+          if (step.id !== undefined && step.targetIndex !== undefined) {
+            positions[step.id] = step.targetIndex;
+            depths[step.id] = step.depth ?? 0;
+          }
+
+          break;
+
+        case "move":
+          if (step.id !== undefined && step.targetIndex !== undefined) {
+            positions[step.id] = step.targetIndex;
+          }
+
+          break;
+
+        case "swap": {
+          const [idA, idB] = step.ids ?? [];
+          highlight = { ids: step.ids ?? [], mode: "swap" };
+
+          if (idA !== undefined && idB !== undefined) {
+            const posA = positions[idA];
+            const posB = positions[idB];
+            positions[idA] = posB;
+            positions[idB] = posA;
+          }
+
+          break;
+        }
+
+        case "overwrite": {
+          if (step.id !== undefined && step.value !== undefined) {
+            if (blocks[step.id]) {
+              blocks[step.id] = { ...blocks[step.id], value: step.value };
+            }
+          }
+          break;
+        }
+
+        case "done":
+          highlight = { ids: [], mode: null };
+          pointers = {};
+          break;
+      }
     }
 
-    return state;
+    return { blocks, positions, depths, highlight, pointers };
   }, [steps, stepIndex]);
 
   const stepType = steps[stepIndex]?.type;
@@ -170,13 +143,13 @@ export default function ArrayVisualizer({ steps }: Props) {
           const labelsAtIndex = groupedPointers[block.id];
           const rectFill = isHighlighted
             ? highlight.mode === "key"
-              ? "#ef4444"
+              ? COLORS.dangerRed
               : highlight.mode === "swap"
-              ? "#22c55e"
-              : "#f59e0b"
+              ? COLORS.successGreen
+              : COLORS.accentYellow
             : depths[block.id] > 0
-            ? "#6366f1"
-            : "#475569";
+            ? COLORS.infoIndigo
+            : COLORS.neutralGray;
 
           return (
             <motion.g

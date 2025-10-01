@@ -22,7 +22,7 @@ export function* trapWater(arr: Block[]): Generator<TwoPointerStep> {
     showBars: "full",
     explanation:
       "We want to figure out how much rainwater gets trapped between the bars.",
-    lines: [0],
+    lines: [0, 1, 2, 3],
   };
 
   while (left <= right) {
@@ -37,14 +37,14 @@ export function* trapWater(arr: Block[]): Generator<TwoPointerStep> {
         rtMax: rightMax.id,
       },
       overlays: [...trappedOverlays],
-      lines: [1],
+      lines: [4],
     };
 
     yield {
       type: "compare",
       ids: [leftMax.id, rightMax.id],
       explanation: `Compare leftMax (${leftMax.value}) and rightMax (${rightMax.value}).`,
-      lines: [2],
+      lines: [5],
     };
 
     if (leftMax.value <= rightMax.value) {
@@ -61,7 +61,7 @@ export function* trapWater(arr: Block[]): Generator<TwoPointerStep> {
             ltMax: leftMax.id,
             rtMax: rightMax.id,
           },
-          lines: [3],
+          lines: [6, 7],
         };
       } else {
         const trapped = leftMax.value - a[left].value;
@@ -85,7 +85,7 @@ export function* trapWater(arr: Block[]): Generator<TwoPointerStep> {
             ltMax: leftMax.id,
             rtMax: rightMax.id,
           },
-          lines: [4],
+          lines: [8, 9],
         };
       }
 
@@ -104,7 +104,7 @@ export function* trapWater(arr: Block[]): Generator<TwoPointerStep> {
             ltMax: leftMax.id,
             rtMax: rightMax.id,
           },
-          lines: [5, 6],
+          lines: [12, 13],
         };
       } else {
         const trapped = rightMax.value - a[right].value;
@@ -128,7 +128,7 @@ export function* trapWater(arr: Block[]): Generator<TwoPointerStep> {
             ltMax: leftMax.id,
             rtMax: rightMax.id,
           },
-          lines: [7],
+          lines: [14, 15],
         };
       }
       right--;
@@ -146,6 +146,6 @@ export function* trapWater(arr: Block[]): Generator<TwoPointerStep> {
         label: `total = ${water}`,
       },
     ],
-    lines: [8],
+    lines: [17],
   };
 }

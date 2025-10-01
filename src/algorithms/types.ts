@@ -151,10 +151,6 @@ export type SearchingStep =
       target: number;
     })
   | (Step & {
-      type: "check";
-      id: number;
-    })
-  | (Step & {
       type: "compare";
       id: number;
       relation: string;

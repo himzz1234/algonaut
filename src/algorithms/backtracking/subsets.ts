@@ -122,7 +122,7 @@ export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
   yield {
     type: "done",
     ids: allNodeIds,
-    lines: [8],
+    lines: [8, 9],
     explanation: "TA-DA! All subsets have been generated and returned.",
     pointers: {
       start: { ids: [], value: a.length },

@@ -54,7 +54,7 @@ export function* moveZeroes(arr: Block[]): Generator<TwoPointerStep> {
         ids: [a[i].id],
         relation: "=",
         explanation: `${a[i].value} is zero, leave it in place.`,
-        lines: [6],
+        lines: [6, 7],
       };
     }
   }
@@ -63,6 +63,6 @@ export function* moveZeroes(arr: Block[]): Generator<TwoPointerStep> {
     type: "done",
     explanation:
       "All non-zero elements moved forward, zeroes shifted to the end.",
-    lines: [7],
+    lines: [8],
   };
 }

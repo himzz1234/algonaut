@@ -181,7 +181,7 @@ export default function AlgoRow({ algo }: AlgoRowProps) {
         )}
 
         {hasNote && (
-          <span className="hidden sm:inline-block text-xs md:text-sm text-gray-400 truncate italic max-w-[6rem] md:max-w-[10rem]">
+          <span className="hidden sm:inline-block text-xs md:text-sm text-gray-400 truncate italic max-w-[6rem] md:max-w-[10rem] px-1">
             — {note}
           </span>
         )}

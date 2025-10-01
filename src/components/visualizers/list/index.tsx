@@ -7,6 +7,7 @@ import {
   BASE_CONFIG,
   getBlockDimensions,
 } from "../../../config/visualizerConfig";
+import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: ListStep[];
@@ -20,110 +21,8 @@ export default function LinkedListVisualizer({ steps }: Props) {
     { ...BASE_CONFIG, GAP: 50 }
   );
 
-  function applyStep(
-    prev: {
-      nodes: Node[];
-      positions: Record<number, number>;
-      highlight: {
-        ids: number[];
-        mode:
-          | "current"
-          | "compare"
-          | "create"
-          | "link"
-          | "unlink"
-          | "move"
-          | null;
-      };
-      pointers: Record<string, PointerValue<true>>;
-    },
-    step: ListStep
-  ) {
-    let { nodes, positions, highlight, pointers } = {
-      nodes: prev.nodes.map((n) => ({
-        ...n,
-        next: n.next ? { ...n.next } : null,
-      })),
-      positions: { ...prev.positions },
-      highlight: { ...prev.highlight },
-      pointers: { ...prev.pointers },
-    };
-
-    switch (step.type) {
-      case "init":
-        nodes = [];
-        positions = {};
-        (step.array ?? []).forEach((node, i) => {
-          nodes[i] = node;
-          positions[node.id] = i;
-        });
-
-        highlight = { ids: [], mode: null };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "highlight":
-        highlight = { ids: step.ids ?? [], mode: "current" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "compare_next":
-        highlight = { ids: step.ids, mode: "compare" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "move":
-        highlight = { ids: [step.id], mode: "move" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "create_node":
-        nodes = [...nodes, { id: step.id, value: step.value, next: null }];
-        positions[step.id] = nodes.length - 1;
-        highlight = { ids: [step.id], mode: "create" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "link_next":
-        highlight = { ids: step.ids ?? [], mode: "link" };
-        pointers = step.pointers ?? {};
-
-        if (step.ids && step.ids.length === 2) {
-          const [fromId, toId] = step.ids;
-          const fromNode = nodes.find((n) => n.id === fromId);
-          const toNode = nodes.find((n) => n.id === toId);
-          if (fromNode) fromNode.next = toNode ?? null;
-        } else if (step.ids && step.ids.length === 1) {
-          const [fromId] = step.ids;
-          const fromNode = nodes.find((n) => n.id === fromId);
-          if (fromNode) fromNode.next = null;
-        }
-        break;
-
-      case "unlink_next":
-        highlight = { ids: step.ids ?? [], mode: "unlink" };
-        pointers = step.pointers ?? {};
-
-        if (step.ids && step.ids.length === 2) {
-          const [fromId, toId] = step.ids;
-          const fromNode = nodes.find((n) => n.id === fromId);
-          if (fromNode?.next?.id === toId) {
-            fromNode.next = null;
-          }
-        }
-        break;
-
-      case "done":
-        highlight = { ids: [], mode: null };
-        pointers = step.pointers ?? {};
-        break;
-    }
-
-    return { nodes, positions, highlight, pointers };
-  }
-
   const { nodes, positions, highlight, pointers } = useMemo(() => {
-    let state = {
+    let { nodes, positions, highlight, pointers } = {
       nodes: [] as Node[],
       positions: {} as Record<number, number>,
       highlight: {} as {
@@ -141,29 +40,98 @@ export default function LinkedListVisualizer({ steps }: Props) {
     };
 
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      state = applyStep(state, steps[i]);
+      const step = steps[i];
+      switch (step.type) {
+        case "init":
+          nodes = [];
+          positions = {};
+          (step.array ?? []).forEach((node, i) => {
+            nodes[i] = node;
+            positions[node.id] = i;
+          });
+
+          highlight = { ids: [], mode: null };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "highlight":
+          highlight = { ids: step.ids ?? [], mode: "current" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "compare_next":
+          highlight = { ids: step.ids, mode: "compare" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "move":
+          highlight = { ids: [step.id], mode: "move" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "create_node":
+          nodes = [...nodes, { id: step.id, value: step.value, next: null }];
+          positions[step.id] = nodes.length - 1;
+          highlight = { ids: [step.id], mode: "create" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "link_next":
+          highlight = { ids: step.ids ?? [], mode: "link" };
+          pointers = step.pointers ?? {};
+
+          if (step.ids && step.ids.length === 2) {
+            const [fromId, toId] = step.ids;
+            const fromNode = nodes.find((n) => n.id === fromId);
+            const toNode = nodes.find((n) => n.id === toId);
+            if (fromNode) fromNode.next = toNode ?? null;
+          } else if (step.ids && step.ids.length === 1) {
+            const [fromId] = step.ids;
+            const fromNode = nodes.find((n) => n.id === fromId);
+            if (fromNode) fromNode.next = null;
+          }
+          break;
+
+        case "unlink_next":
+          highlight = { ids: step.ids ?? [], mode: "unlink" };
+          pointers = step.pointers ?? {};
+
+          if (step.ids && step.ids.length === 2) {
+            const [fromId, toId] = step.ids;
+            const fromNode = nodes.find((n) => n.id === fromId);
+            if (fromNode?.next?.id === toId) {
+              fromNode.next = null;
+            }
+          }
+          break;
+
+        case "done":
+          highlight = { ids: [], mode: null };
+          pointers = step.pointers ?? {};
+          break;
+      }
     }
 
-    return state;
+    return { nodes, positions, highlight, pointers };
   }, [steps, stepIndex]);
 
   const colorBlock = (id: number) => {
-    if (!highlight.mode) return "#475569";
-    if (!highlight.ids.includes(id)) return "#475569";
+    if (!highlight.mode) return COLORS.neutralGray;
+    if (!highlight.ids.includes(id)) return COLORS.neutralGray;
 
     switch (highlight.mode) {
       case "current":
-        return "#dc2626";
+        return COLORS.dangerRed;
       case "move":
-        return "#0284c7";
+        return COLORS.infoIndigo;
       case "link":
-        return "#15803d";
+        return COLORS.successGreen;
       case "unlink":
-        return "#c2410c";
+        return COLORS.dangerRed;
       case "compare":
-        return "#f59e0b";
+        return COLORS.accentYellow;
       default:
-        return "#475569";
+        return COLORS.neutralGray;
     }
   };
 
@@ -235,9 +203,9 @@ export default function LinkedListVisualizer({ steps }: Props) {
       >
         <defs>
           {[
-            { id: "arrow", fill: "#4b5563" },
-            { id: "arrow-new", fill: "#00a73e" },
-            { id: "arrow-highlight", fill: "#0284c7" },
+            { id: "arrow", fill: COLORS.neutralGray },
+            { id: "arrow-new", fill: COLORS.successGreen },
+            { id: "arrow-highlight", fill: COLORS.infoIndigo },
           ].map(({ id, fill }) => (
             <marker
               key={id}
@@ -278,7 +246,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
                   <motion.path
                     key={`arrow-${node.id}-${node.next.id}`}
                     d={d}
-                    stroke={isNew ? "#00a73e" : "#4b5563"}
+                    stroke={isNew ? COLORS.successGreen : COLORS.neutralGray}
                     strokeWidth={2}
                     fill="none"
                     markerEnd={isNew ? "url(#arrow-new)" : "url(#arrow)"}
@@ -298,7 +266,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
                   {isHighlighted && (
                     <motion.path
                       d={d}
-                      stroke="#0284c7"
+                      stroke={COLORS.infoIndigo}
                       strokeWidth={2}
                       fill="none"
                       markerEnd="url(#arrow-highlight)"
@@ -414,7 +382,7 @@ export default function LinkedListVisualizer({ steps }: Props) {
                 y={barHeight + 18}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.label}
-                fill="#fff"
+                fill="white"
                 textAnchor="middle"
                 dominantBaseline="middle"
               >

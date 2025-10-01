@@ -9,6 +9,7 @@ import type {
 import { usePlayback } from "../../../context/PlaybackContext";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { getBlockDimensions } from "../../../config/visualizerConfig";
+import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: BacktrackingStep[];
@@ -21,7 +22,7 @@ export default function BacktrackingVisualizer({ steps }: Props) {
     getBlockDimensions(isMobile);
 
   const { blocks, highlight, positions, pointers, treeNodes } = useMemo(() => {
-    let state = {
+    let { blocks, highlight, positions, pointers, treeNodes } = {
       blocks: [] as Block[],
       positions: {} as Record<number, number>,
       highlight: {
@@ -36,26 +37,26 @@ export default function BacktrackingVisualizer({ steps }: Props) {
       const step = steps[i];
       switch (step.type) {
         case "init":
-          state.blocks = [];
-          state.positions = {};
+          blocks = [];
+          positions = {};
           (step.array ?? []).forEach((b, idx) => {
-            state.blocks[idx] = b;
-            state.positions[b.id] = idx;
+            blocks[idx] = b;
+            positions[b.id] = idx;
           });
-          state.highlight = { ids: [], mode: null };
-          state.treeNodes.clear();
+          highlight = { ids: [], mode: null };
+          treeNodes.clear();
           break;
 
         case "highlight":
-          state.highlight = { ids: step.ids ?? [], mode: "current" };
-          state.pointers = step.pointers ?? {};
+          highlight = { ids: step.ids ?? [], mode: "current" };
+          pointers = step.pointers ?? {};
           break;
 
         case "pick":
-          state.highlight = { ids: step.ids ?? [], mode: "pick" };
-          state.pointers = step.pointers ?? {};
+          highlight = { ids: step.ids ?? [], mode: "pick" };
+          pointers = step.pointers ?? {};
           if (step.node) {
-            state.treeNodes.set(step.node.id, {
+            treeNodes.set(step.node.id, {
               ...step.node,
               children: [...(step.node.children ?? [])],
             });
@@ -63,23 +64,23 @@ export default function BacktrackingVisualizer({ steps }: Props) {
           break;
 
         case "unpick":
-          state.highlight = { ids: step.ids ?? [], mode: "unpick" };
-          state.pointers = step.pointers ?? {};
+          highlight = { ids: step.ids ?? [], mode: "unpick" };
+          pointers = step.pointers ?? {};
           break;
 
         case "found":
-          state.highlight = { ids: step.ids ?? [], mode: "found" };
-          state.pointers = step.pointers ?? {};
+          highlight = { ids: step.ids ?? [], mode: "found" };
+          pointers = step.pointers ?? {};
           break;
 
         case "done":
-          state.highlight = { ids: step.ids ?? [], mode: "done" };
-          state.pointers = step.pointers ?? {};
+          highlight = { ids: step.ids ?? [], mode: "done" };
+          pointers = step.pointers ?? {};
           break;
       }
     }
 
-    return state;
+    return { blocks, highlight, positions, pointers, treeNodes };
   }, [steps, stepIndex]);
 
   const moveToCorner = stepIndex > 0;
@@ -175,11 +176,11 @@ export default function BacktrackingVisualizer({ steps }: Props) {
           const isHighlighted = highlight.ids.includes(block.id);
           const rectFill = isHighlighted
             ? highlight.mode === "pick" || highlight.mode === "current"
-              ? "#ca8a04"
+              ? COLORS.accentYellow
               : highlight.mode === "unpick"
-              ? "#dc2626"
-              : "#475569"
-            : "#475569";
+              ? COLORS.dangerRed
+              : COLORS.neutralGray
+            : COLORS.neutralGray;
 
           const labelsAtIndex = groupedPointers[block.id];
           return (
@@ -239,11 +240,11 @@ export default function BacktrackingVisualizer({ steps }: Props) {
           const isHighlighted = highlight.ids.includes(n.id);
           const edgeColor = isHighlighted
             ? highlight.mode === "pick"
-              ? "#ca8a04"
+              ? COLORS.accentYellow
               : highlight.mode === "unpick"
-              ? "#dc2626"
-              : "#475569"
-            : "#475569";
+              ? COLORS.dangerRed
+              : COLORS.neutralGray
+            : COLORS.neutralGray;
 
           return (
             <motion.line
@@ -265,13 +266,13 @@ export default function BacktrackingVisualizer({ steps }: Props) {
           const isHighlighted = highlight.ids.includes(n.id);
           const nodeFill = isHighlighted
             ? highlight.mode === "pick" || highlight.mode === "current"
-              ? "#ca8a04"
+              ? COLORS.accentYellow
               : highlight.mode === "unpick"
-              ? "#dc2626"
+              ? COLORS.dangerRed
               : highlight.mode === "found" || highlight.mode === "done"
-              ? "#15803d"
-              : "#475569"
-            : "#475569";
+              ? COLORS.successGreen
+              : COLORS.neutralGray
+            : COLORS.neutralGray;
 
           return (
             <motion.g key={n.id}>

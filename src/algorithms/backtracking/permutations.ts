@@ -120,7 +120,7 @@ export function* generatePermutations(
   yield {
     type: "done",
     ids: leafNodeIds,
-    lines: [11],
+    lines: [11, 12],
     explanation: "TA-DA! All permutations have been generated.",
   };
 }

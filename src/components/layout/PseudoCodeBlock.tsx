@@ -58,7 +58,7 @@ export function PseudoCodeBlock<TStep extends Step>({
   return (
     <div className="flex-1 h-full rounded-lg text-sm leading-relaxed">
       <div className="relative">
-        <h3 className="font-medium text-sm sm:text-lg p-4">
+        <h3 className="font-medium text-sm sm:text-lg pt-4 pb-2 px-4">
           Pseudocode for analysis
         </h3>
 

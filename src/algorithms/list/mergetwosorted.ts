@@ -21,7 +21,7 @@ export function* mergeTwoSorted(
     yield {
       type: "done",
       explanation: "List A is empty, so the merged list is simply List B.",
-      lines: [18],
+      lines: [1],
     };
     return;
   }
@@ -30,7 +30,7 @@ export function* mergeTwoSorted(
     yield {
       type: "done",
       explanation: "List B is empty, so the merged list is simply List A.",
-      lines: [18],
+      lines: [2],
     };
     return;
   }
@@ -49,7 +49,7 @@ export function* mergeTwoSorted(
       curr2: curr2.id,
       prev1: null,
     },
-    lines: [1, 2],
+    lines: [3],
     explanation:
       "We set curr1 at the head of List A, curr2 at the head of List B, and prev1 to null.",
   };
@@ -64,7 +64,7 @@ export function* mergeTwoSorted(
         prev1: prev1 ? prev1.id : null,
       },
       explanation: `Compare the current values: ${curr1.value} and ${curr2.value}.`,
-      lines: [3],
+      lines: [4, 5],
     };
 
     if (curr1.value <= curr2.value) {
@@ -78,7 +78,7 @@ export function* mergeTwoSorted(
           prev1: prev1.id,
         },
         explanation: `${curr1.value} is smaller, so we keep it in place and update prev1 to this node.`,
-        lines: [5],
+        lines: [6],
       };
 
       curr1 = curr1.next;
@@ -93,7 +93,7 @@ export function* mergeTwoSorted(
             prev1: prev1.id,
           },
           explanation: `Move curr1 forward to the next node, which is ${curr1.value}.`,
-          lines: [6],
+          lines: [7],
         };
       } else {
         yield {
@@ -103,7 +103,7 @@ export function* mergeTwoSorted(
             prev1: prev1.id,
           },
           explanation: `${prev1.value} was the last node in List A. curr1 is now null.`,
-          lines: [6],
+          lines: [7],
         };
       }
     } else {
@@ -116,7 +116,7 @@ export function* mergeTwoSorted(
           ...(prev1 ? { prev1: prev1.id } : {}),
         },
         explanation: `${curr2.value} is smaller, so we will insert it before ${curr1.value}. First, adjust the previous link.`,
-        lines: [7],
+        lines: [8, 9],
       };
 
       if (prev1) {
@@ -130,7 +130,7 @@ export function* mergeTwoSorted(
             prev1: prev1.id,
           },
           explanation: `Link ${prev1.value} to ${curr2.value}. This moves ${curr2.value} from List B into the merged list.`,
-          lines: [8, 9],
+          lines: [9],
         };
       } else {
         head1 = curr2;
@@ -143,7 +143,7 @@ export function* mergeTwoSorted(
             curr2: curr2.id,
           },
           explanation: `${curr2.value} is smaller than the head of List A, so it becomes the new head of the merged list.`,
-          lines: [10, 11],
+          lines: [10],
         };
       }
 
@@ -159,7 +159,7 @@ export function* mergeTwoSorted(
             next2: next2.id,
           },
           explanation: `Save the next node of List B, which is ${next2.value}, in a temporary variable.`,
-          lines: [12],
+          lines: [11],
         };
       } else {
         yield {
@@ -171,7 +171,7 @@ export function* mergeTwoSorted(
             ...(prev1 ? { prev1: prev1.id } : {}),
           },
           explanation: `${curr2.value} was the last node in List B. There are no more nodes after it.`,
-          lines: [12],
+          lines: [11],
         };
       }
 
@@ -186,7 +186,7 @@ export function* mergeTwoSorted(
           ...(next2 ? { next2: next2.id } : {}),
         },
         explanation: `Link ${curr2.value} to ${curr1.value}.`,
-        lines: [13],
+        lines: [12],
       };
 
       prev1 = curr2;
@@ -200,7 +200,7 @@ export function* mergeTwoSorted(
           ...(next2 ? { next2: next2.id } : {}),
         },
         explanation: `Update prev1 to ${prev1.value}, the node we just inserted.`,
-        lines: [14],
+        lines: [13],
       };
 
       curr2 = next2;
@@ -215,7 +215,7 @@ export function* mergeTwoSorted(
             prev1: prev1.id,
           },
           explanation: `Move curr2 forward to the next node, which is ${curr2.value}.`,
-          lines: [15],
+          lines: [14],
         };
       } else {
         yield {
@@ -226,7 +226,7 @@ export function* mergeTwoSorted(
             ...(prev1 ? { prev1: prev1.id } : {}),
           },
           explanation: "List B is now empty. curr2 is null.",
-          lines: [15],
+          lines: [14],
         };
       }
     }
@@ -244,7 +244,7 @@ export function* mergeTwoSorted(
       explanation: `Attach the remaining part of List B, starting from ${
         curr2.value
       }, after ${prev1!.value}.`,
-      lines: [16, 17],
+      lines: [15, 16],
     };
   } else {
     yield {
@@ -254,13 +254,13 @@ export function* mergeTwoSorted(
         head1: head1.id,
       },
       explanation: "There are no remaining nodes in List B.",
-      lines: [16],
+      lines: [15],
     };
   }
 
   yield {
     type: "done",
     explanation: "The two sorted lists have been merged into one list.",
-    lines: [18],
+    lines: [17],
   };
 }

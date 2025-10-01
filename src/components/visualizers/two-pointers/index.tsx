@@ -18,82 +18,8 @@ export default function TwoPointersVisualizer({ steps }: Props) {
   const unit = isMobile ? 15 : 25;
   const showBars = steps[0]?.type === "init" && steps[0].showBars;
 
-  function applyStep(
-    prev: {
-      blocks: Block[];
-      positions: Record<number, number>;
-      highlight: {
-        ids: number[];
-        mode: "compare" | "current" | "found" | "swap" | null;
-      };
-      pointers: Record<
-        string,
-        number | number[] | { ids: number[]; value: number } | null
-      >;
-      overlays: Overlay[];
-    },
-    step: TwoPointerStep
-  ) {
-    let { blocks, positions, highlight, pointers, overlays } = {
-      blocks: [...prev.blocks],
-      positions: { ...prev.positions },
-      highlight: { ...prev.highlight },
-      pointers: { ...prev.pointers },
-      overlays: step.overlays ?? prev.overlays,
-    };
-
-    switch (step.type) {
-      case "init":
-        blocks = step.array ?? [];
-        positions = {};
-        (step.array ?? []).forEach((b, i) => {
-          positions[b.id] = i;
-        });
-        highlight = { ids: [], mode: null };
-        pointers = step.pointers ?? {};
-        overlays = step.overlays ?? [];
-        break;
-
-      case "highlight":
-        highlight = { ids: step.ids, mode: "current" };
-        pointers = step.pointers ?? pointers;
-        break;
-
-      case "compare":
-        highlight = { ids: step.ids, mode: "compare" };
-        pointers = step.pointers ?? pointers;
-        break;
-
-      case "swap": {
-        const [idA, idB] = step.ids ?? [];
-        highlight = { ids: step.ids ?? [], mode: "swap" };
-
-        if (idA !== undefined && idB !== undefined) {
-          const posA = positions[idA];
-          const posB = positions[idB];
-          positions[idA] = posB;
-          positions[idB] = posA;
-        }
-
-        break;
-      }
-
-      case "found":
-        highlight = { ids: step.ids ?? [], mode: "found" };
-        pointers = step.pointers ?? pointers;
-        break;
-
-      case "done":
-        highlight = { ids: [], mode: null };
-        pointers = {};
-        break;
-    }
-
-    return { blocks, positions, highlight, pointers, overlays };
-  }
-
   const { blocks, positions, highlight, pointers, overlays } = useMemo(() => {
-    let state = {
+    let { blocks, positions, highlight, pointers, overlays } = {
       blocks: [] as Block[],
       positions: {} as Record<number, number>,
       highlight: {
@@ -108,10 +34,60 @@ export default function TwoPointersVisualizer({ steps }: Props) {
     };
 
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      state = applyStep(state, steps[i]);
+      const step = steps[i];
+      switch (step.type) {
+        case "init":
+          blocks = step.array ?? [];
+          positions = {};
+          (step.array ?? []).forEach((b, i) => {
+            positions[b.id] = i;
+          });
+          highlight = { ids: [], mode: null };
+          pointers = step.pointers ?? {};
+          overlays = step.overlays ?? [];
+          break;
+
+        case "highlight":
+          highlight = { ids: step.ids, mode: "current" };
+          pointers = step.pointers ?? pointers;
+          overlays = step.overlays ?? overlays;
+          break;
+
+        case "compare":
+          highlight = { ids: step.ids, mode: "compare" };
+          pointers = step.pointers ?? pointers;
+          overlays = step.overlays ?? overlays;
+          break;
+
+        case "swap": {
+          const [idA, idB] = step.ids ?? [];
+          highlight = { ids: step.ids ?? [], mode: "swap" };
+
+          if (idA !== undefined && idB !== undefined) {
+            const posA = positions[idA];
+            const posB = positions[idB];
+            positions[idA] = posB;
+            positions[idB] = posA;
+          }
+
+          break;
+        }
+
+        case "found":
+          highlight = { ids: step.ids ?? [], mode: "found" };
+          pointers = step.pointers ?? pointers;
+          overlays = step.overlays ?? overlays;
+          break;
+
+        case "done":
+          highlight = { ids: [], mode: null };
+          overlays = step.overlays ?? overlays;
+          pointers = {};
+          break;
+      }
     }
 
-    return state;
+    return { blocks, positions, highlight, pointers, overlays };
   }, [steps, stepIndex]);
 
   let groupedPointers: Record<number, string[]> = {};

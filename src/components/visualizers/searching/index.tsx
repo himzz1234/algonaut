@@ -8,6 +8,7 @@ import type {
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
 import { getBlockDimensions } from "../../../config/visualizerConfig";
+import { COLORS } from "../../../config/visualizerColors";
 type Props = {
   steps: SearchingStep[];
 };
@@ -18,61 +19,12 @@ export default function SearchingVisualizer({ steps }: Props) {
   const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
-  function applyStep(
-    prev: {
-      blocks: Block[];
-      highlight: { ids: number[]; mode: "check" | "found" | null };
-      target: number | null;
-      range: { low: number | null; high: number | null };
-      pointers: Record<string, PointerValue>;
-    },
-    step: SearchingStep
-  ) {
-    let { blocks, highlight, target, range, pointers } = {
-      blocks: [...prev.blocks],
-      highlight: { ...prev.highlight },
-      target: prev.target,
-      range: { ...prev.range },
-      pointers: { ...prev.pointers },
-    };
-
-    switch (step.type) {
-      case "init":
-        blocks = [];
-        (step.array ?? []).forEach((b, i) => {
-          blocks[i] = b;
-        });
-        highlight = { ids: [], mode: null };
-        target = step.target;
-        range = { low: null, high: null };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "set-range":
-        range = { low: step.low, high: step.high };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "check":
-        highlight = { ids: [step.id], mode: "check" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "found":
-        highlight = { ids: [step.id], mode: "found" };
-        pointers = step.pointers ?? {};
-        break;
-    }
-
-    return { blocks, highlight, target, range, pointers };
-  }
-
   const { blocks, highlight, target, range, pointers } = useMemo(() => {
-    let state = {
+    let { blocks, highlight, target, range, pointers } = {
       blocks: [] as Block[],
       highlight: {
         ids: [] as number[],
-        mode: null as "check" | "found" | null,
+        mode: null as "compare" | "found" | null,
       },
       target: null as number | null,
       range: { low: null as number | null, high: null as number | null },
@@ -80,9 +32,37 @@ export default function SearchingVisualizer({ steps }: Props) {
     };
 
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      state = applyStep(state, steps[i]);
+      const step = steps[i];
+      switch (step.type) {
+        case "init":
+          blocks = [];
+          (step.array ?? []).forEach((b, i) => {
+            blocks[i] = b;
+          });
+          highlight = { ids: [], mode: null };
+          target = step.target;
+          range = { low: null, high: null };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "set-range":
+          range = { low: step.low, high: step.high };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "compare":
+          highlight = { ids: [step.id], mode: "compare" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "found":
+          highlight = { ids: [step.id], mode: "found" };
+          pointers = step.pointers ?? {};
+          break;
+      }
     }
-    return state;
+
+    return { blocks, highlight, target, range, pointers };
   }, [steps, stepIndex]);
 
   let groupedPointers: Record<number, string[]> = {};
@@ -114,9 +94,9 @@ export default function SearchingVisualizer({ steps }: Props) {
           const labelsAtIndex = groupedPointers[block.id];
           const rectFill = isHighlighted
             ? highlight.mode === "found"
-              ? "#22c55e"
-              : "#f59e0b"
-            : "#475569";
+              ? COLORS.successGreen
+              : COLORS.accentYellow
+            : COLORS.neutralGray;
 
           return (
             <motion.g
@@ -170,11 +150,11 @@ export default function SearchingVisualizer({ steps }: Props) {
             height={barHeight}
             animate={{
               fill:
-                steps[stepIndex]?.type === "check"
-                  ? "#f59e0b"
+                steps[stepIndex]?.type === "compare"
+                  ? COLORS.accentYellow
                   : steps[stepIndex]?.type === "found"
-                  ? "#00a73e"
-                  : "#475569",
+                  ? COLORS.successGreen
+                  : COLORS.neutralGray,
             }}
             transition={{ duration: 0.3 }}
           />

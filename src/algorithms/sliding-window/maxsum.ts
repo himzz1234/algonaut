@@ -18,10 +18,10 @@ export function* maxSumSubarrayK(
       .join(", ")}].`,
   };
 
-  let windowSum = 0;
-  for (let i = 0; i < k; i++) windowSum += a[i].value;
+  let sum = 0;
+  for (let i = 0; i < k; i++) sum += a[i].value;
 
-  let maxSum = windowSum;
+  let maxSum = sum;
   let bestRange: [number, number] = [0, k - 1];
 
   yield {
@@ -30,20 +30,20 @@ export function* maxSumSubarrayK(
     pointers: {
       sum: {
         ids: a.slice(0, k).map((b) => b.id),
-        value: windowSum,
+        value: sum,
         pos: "top",
       },
-      maxi: {
+      maxSum: {
         ids: a.slice(0, k).map((b) => b.id),
         value: maxSum,
         pos: "bottom",
       },
     },
-    lines: [0, 1],
+    lines: [1, 2],
     explanation: `First window: [${a
       .slice(0, k)
       .map((b) => b.value)
-      .join(", ")}], sum = ${windowSum}.`,
+      .join(", ")}], sum = ${sum}.`,
   };
 
   for (let right = k; right < a.length; right++) {
@@ -51,7 +51,7 @@ export function* maxSumSubarrayK(
     const exiting = a[left].value;
     const entering = a[right].value;
 
-    windowSum = windowSum - exiting + entering;
+    sum = sum - exiting + entering;
 
     yield {
       type: "highlight",
@@ -59,21 +59,21 @@ export function* maxSumSubarrayK(
       pointers: {
         sum: {
           ids: a.slice(left + 1, right + 1).map((b) => b.id),
-          value: windowSum,
+          value: sum,
           pos: "top",
         },
-        maxi: {
+        maxSum: {
           ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
           value: maxSum,
           pos: "bottom",
         },
       },
-      lines: [2, 3],
-      explanation: `Move window → drop ${exiting}, add ${entering}, new sum = ${windowSum}.`,
+      lines: [3, 4],
+      explanation: `Move window → drop ${exiting}, add ${entering}, new sum = ${sum}.`,
     };
 
-    if (windowSum > maxSum) {
-      maxSum = windowSum;
+    if (sum > maxSum) {
+      maxSum = sum;
       bestRange = [left + 1, right];
 
       yield {
@@ -82,16 +82,16 @@ export function* maxSumSubarrayK(
         pointers: {
           sum: {
             ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
-            value: windowSum,
+            value: sum,
             pos: "top",
           },
-          maxi: {
+          maxSum: {
             ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
             value: maxSum,
             pos: "bottom",
           },
         },
-        lines: [4],
+        lines: [5, 6],
         explanation: `Found bigger sum = ${maxSum} at window [${a
           .slice(bestRange[0], bestRange[1] + 1)
           .map((b) => b.value)
@@ -104,13 +104,13 @@ export function* maxSumSubarrayK(
     type: "found",
     ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
     pointers: {
-      maxi: {
+      maxSum: {
         ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
         value: maxSum,
         pos: "bottom",
       },
     },
-    lines: [5],
+    lines: [7],
     explanation: `Done. Max sum = ${maxSum} from window [${a
       .slice(bestRange[0], bestRange[1] + 1)
       .map((b) => b.value)

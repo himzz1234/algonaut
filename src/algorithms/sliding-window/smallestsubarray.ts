@@ -40,7 +40,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
             }
           : {}),
       },
-      lines: [1, 2],
+      lines: [2, 3],
       explanation: `Expand → add ${a[end].value}, sum=${currSum}.`,
     };
 
@@ -62,7 +62,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
               : {}),
             minLen: { ids: currentWindowIds, value: minLen, pos: "bottom" },
           },
-          lines: [4],
+          lines: [5],
           explanation: `New smaller window found → len=${minLen}, sum=${currSum}.`,
         };
       }
@@ -96,7 +96,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
               }
             : {}),
         },
-        lines: [5, 6],
+        lines: [6, 7],
         explanation: newWindowIds.length
           ? `Shrink → remove ${a[start - 1].value}, sum=${currSum}.`
           : `Window empty → sum=0.`,
@@ -117,7 +117,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
         pos: "bottom",
       },
     },
-    lines: [7],
+    lines: [8],
     explanation:
       minLen === Infinity
         ? `No subarray with sum > ${k}.`
