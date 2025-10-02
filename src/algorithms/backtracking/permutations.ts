@@ -24,7 +24,8 @@ export function* generatePermutations(
 
   yield {
     type: "pick",
-    ids: [rootId],
+    ids: [],
+    nodeIds: [rootId],
     parentId: -1,
     lines: [1],
     node: {
@@ -41,12 +42,17 @@ export function* generatePermutations(
     if (path.length === a.length) {
       yield {
         type: "found",
-        ids: [parentId],
+        ids: [...path.map((b) => b.id)],
+        nodeIds: [parentId],
         lines: [1, 2, 3],
         explanation: `A new permutation is formed: {${path
           .map((b) => b.label ?? b.value)
           .join(", ")}}`,
+        pointers: {
+          idx: path.length > 0 ? path[path.length - 1].id : -1,
+        },
       };
+
       leafNodeIds.push(parentId);
       return;
     }
@@ -70,7 +76,8 @@ export function* generatePermutations(
 
       yield {
         type: "pick",
-        ids: [...path.map((b) => b.id), currentNodeId],
+        ids: [...path.map((b) => b.id)],
+        nodeIds: [currentNodeId],
         parentId,
         node,
         lines: [6, 7],
@@ -89,28 +96,36 @@ export function* generatePermutations(
 
       yield* backtrack(currentNodeId);
 
+      const idxId = block.id;
+
       path.pop();
       used[i] = false;
 
       yield {
         type: "unpick",
-        ids: [currentNodeId],
+        ids: [idxId],
+        nodeIds: [currentNodeId],
         parentId,
         lines: [8],
         explanation: `Remove ${
           block.label ?? block.value
         } and try a different choice for this position.`,
+        pointers: {
+          idx: idxId,
+        },
       };
 
-      const last = path[path.length - 1];
       yield {
         type: "highlight",
-        ids: [...path.map((b) => b.id), parentId],
+        ids: [...path.map((b) => b.id)],
+        nodeIds: [parentId],
         lines: [4],
         explanation: `Back at {${path
           .map((b) => b.label ?? b.value)
           .join(", ")}}, trying the next unused element.`,
-        pointers: { idx: last ? last.id : -1 },
+        pointers: {
+          idx: path[path.length - 1] ? path[path.length - 1].id : -1,
+        },
       };
     }
   }
@@ -119,7 +134,8 @@ export function* generatePermutations(
 
   yield {
     type: "done",
-    ids: leafNodeIds,
+    ids: [],
+    nodeIds: leafNodeIds,
     lines: [11, 12],
     explanation: "TA-DA! All permutations have been generated.",
   };

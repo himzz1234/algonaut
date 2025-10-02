@@ -45,7 +45,8 @@ export function* generateLetterCombinations(
   const rootId = ++nodeId;
   yield {
     type: "pick",
-    ids: [rootId],
+    ids: [],
+    nodeIds: [rootId],
     parentId: -1,
     lines: [0],
     node: {
@@ -66,10 +67,14 @@ export function* generateLetterCombinations(
     if (index === digits.length) {
       yield {
         type: "found",
-        ids: [parentId],
+        ids: [...path.map((_, j) => arr[j].id)],
+        nodeIds: [parentId],
         lines: [1, 2, 3],
         explanation: `A new combination is formed: "${path.join("")}".`,
-        pointers: { ...permanentPointers },
+        pointers: {
+          ...permanentPointers,
+          idx: arr[index - 1]?.id,
+        },
       };
 
       leafNodeIds.push(parentId);
@@ -91,11 +96,10 @@ export function* generateLetterCombinations(
         depth: path.length,
       };
 
-      const digitBlock = arr[index];
-
       yield {
         type: "pick",
-        ids: [...path.map((_, j) => arr[j].id), currentNodeId],
+        ids: [...path.map((_, j) => arr[j].id)],
+        nodeIds: [currentNodeId],
         parentId,
         node,
         lines: [4, 5, 6],
@@ -105,25 +109,28 @@ export function* generateLetterCombinations(
             : `Add letter '${letter}' for digit ${digit}, current path: "${path.join(
                 ""
               )}".`,
-        pointers: { ...permanentPointers, idx: digitBlock.id },
+        pointers: { ...permanentPointers, idx: arr[index].id },
       };
 
       yield* backtrack(index + 1, currentNodeId);
+      const idxId = arr[index].id;
 
       path.pop();
 
       yield {
         type: "unpick",
-        ids: [currentNodeId],
+        ids: [idxId],
+        nodeIds: [currentNodeId],
         parentId,
         lines: [9],
         explanation: `Remove '${letter}' and try the next letter for digit ${digit}.`,
-        pointers: { ...permanentPointers },
+        pointers: { ...permanentPointers, idx: idxId },
       };
 
       yield {
         type: "highlight",
-        ids: [...path.map((_, j) => arr[j].id), parentId],
+        ids: [...path.map((_, j) => arr[j].id)],
+        nodeIds: [parentId],
         lines: [5],
         explanation: `Back at prefix "${path.join(
           ""
@@ -137,7 +144,8 @@ export function* generateLetterCombinations(
 
   yield {
     type: "done",
-    ids: leafNodeIds,
+    ids: [],
+    nodeIds: leafNodeIds,
     lines: [12, 13],
     explanation: "TA-DA! All possible letter combinations have been generated.",
   };

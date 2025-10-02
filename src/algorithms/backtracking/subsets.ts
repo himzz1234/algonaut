@@ -22,7 +22,8 @@ export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
 
   yield {
     type: "pick",
-    ids: [rootId],
+    ids: [],
+    nodeIds: [rootId],
     parentId: -1,
     lines: [0],
     node: {
@@ -41,11 +42,16 @@ export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
   ): Generator<BacktrackingStep> {
     yield {
       type: "found",
-      ids: [parentId],
+      ids: [...path.map((b) => b.id)],
+      nodeIds: [parentId],
       lines: [1],
       explanation: `We add the current subset {${
         path.map((b) => b.label ?? b.value).join(", ") || " "
       }} to the result list.`,
+      pointers: {
+        start: path.length > 0 ? path[0].id : -1,
+        idx: path.length > 0 ? path[path.length - 1].id : -1,
+      },
     };
 
     for (let i = start; i < a.length; i++) {
@@ -65,7 +71,8 @@ export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
 
       yield {
         type: "pick",
-        ids: [...path.map((b) => b.id), currentNodeId],
+        ids: [...path.map((b) => b.id)],
+        nodeIds: [currentNodeId],
         parentId,
         node,
         lines: [3, 4],
@@ -77,16 +84,19 @@ export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
               } to the current subset, now we have {${path
                 .map((b) => b.label ?? b.value)
                 .join(", ")}}.`,
-        pointers: { idx: block.id, start: path[0].id },
+        pointers: { start: path[0].id, idx: block.id },
       };
 
       yield* backtrack(i + 1, currentNodeId);
+
+      const idxId = block.id;
 
       path.pop();
 
       yield {
         type: "unpick",
-        ids: [currentNodeId],
+        ids: [idxId],
+        nodeIds: [currentNodeId],
         parentId,
         lines: [5],
         explanation:
@@ -101,18 +111,24 @@ export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
               }, backtrack to {${path
                 .map((b) => b.label ?? b.value)
                 .join(", ")}}.`,
+        pointers: {
+          start: path.length > 0 ? path[0].id : -1,
+          idx: idxId,
+        },
       };
 
-      const first = path[0];
-      const last = path[path.length - 1];
       yield {
         type: "highlight",
-        ids: [...path.map((b) => b.id), parentId],
+        ids: [...path.map((b) => b.id)],
+        nodeIds: [parentId],
         lines: [4],
         explanation: `Back at {${path
           .map((b) => b.label ?? b.value)
           .join(", ")}}, try the next element from here.`,
-        pointers: { idx: last ? last.id : -1, start: first ? first.id : -1 },
+        pointers: {
+          start: path[0] ? path[0].id : -1,
+          idx: path[path.length - 1] ? path[path.length - 1].id : -1,
+        },
       };
     }
   }
@@ -121,7 +137,8 @@ export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
 
   yield {
     type: "done",
-    ids: allNodeIds,
+    ids: [],
+    nodeIds: allNodeIds,
     lines: [8, 9],
     explanation: "TA-DA! All subsets have been generated and returned.",
     pointers: {

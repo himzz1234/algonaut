@@ -312,25 +312,30 @@ export type BacktrackingStep =
   | (Step & {
       type: "highlight";
       ids: number[];
+      nodeIds: number[];
     })
   | (Step & {
       type: "pick";
       ids: number[];
+      nodeIds: number[];
       parentId: number;
       node: TreeNode;
     })
   | (Step & {
       type: "unpick";
       ids: number[];
+      nodeIds: number[];
       parentId: number;
     })
   | (Step & {
       type: "found";
       ids: number[];
+      nodeIds: number[];
     })
   | (Step & {
       type: "done";
       ids: number[];
+      nodeIds: number[];
     });
 
 export type PathfindingStep =

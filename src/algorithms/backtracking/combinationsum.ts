@@ -24,7 +24,8 @@ export function* generateCombinationSum(
   const rootId = ++nodeId;
   yield {
     type: "pick",
-    ids: [rootId],
+    ids: [],
+    nodeIds: [rootId],
     parentId: -1,
     lines: [0],
     node: {
@@ -45,11 +46,16 @@ export function* generateCombinationSum(
     if (remaining === 0) {
       yield {
         type: "found",
-        ids: [parentId],
+        ids: [...path.map((b) => b.id)],
+        nodeIds: [parentId],
         lines: [1, 2, 3],
         explanation: `We found a valid combination: {${path
           .map((b) => b.label ?? b.value)
           .join(", ")}}, since it sums exactly to ${target}.`,
+        pointers: {
+          start: path.length > 0 ? path[0].id : -1,
+          idx: path.length > 0 ? path[path.length - 1].id : -1,
+        },
       };
       validNodeIds.push(parentId);
       return;
@@ -60,11 +66,16 @@ export function* generateCombinationSum(
       if ((block.value ?? 0) > remaining) {
         yield {
           type: "highlight",
-          ids: [parentId],
+          ids: [...path.map((b) => b.id)],
+          nodeIds: [parentId],
           lines: [5],
           explanation: `Since ${
             block.label ?? block.value
           } is greater than the remaining sum ${remaining}, we stop exploring further.`,
+          pointers: {
+            start: path[0] ? path[0].id : -1,
+            idx: path[path.length - 1] ? path[path.length - 1].id : -1,
+          },
         };
 
         break;
@@ -83,27 +94,37 @@ export function* generateCombinationSum(
 
       yield {
         type: "pick",
-        ids: [...path.map((b) => b.id), currentNodeId],
+        ids: [...path.map((b) => b.id)],
+        nodeIds: [currentNodeId],
         parentId,
         node,
         lines: [6, 7],
         explanation: `Choose ${
           block.label ?? block.value
         }, remaining sum becomes ${remaining - (block.value ?? 0)}.`,
-        pointers: { idx: block.id },
+        pointers: { start: path[0].id, idx: block.id },
       };
 
       yield* backtrack(i, remaining - (block.value ?? 0), currentNodeId);
 
+      const startId = path.length > 0 ? path[0].id : -1;
+      const idxId = block.id;
+
       path.pop();
+
       yield {
         type: "unpick",
-        ids: [currentNodeId],
+        ids: [block.id],
+        nodeIds: [currentNodeId],
         parentId,
         lines: [8],
         explanation: `Backtrack: remove ${
           block.label ?? block.value
         } and try the next option.`,
+        pointers: {
+          start: startId,
+          idx: idxId,
+        },
       };
     }
   }
@@ -112,7 +133,8 @@ export function* generateCombinationSum(
 
   yield {
     type: "done",
-    ids: validNodeIds,
+    ids: [],
+    nodeIds: validNodeIds,
     lines: [12],
     explanation: "TA-DA! All valid combinations have been generated.",
   };
