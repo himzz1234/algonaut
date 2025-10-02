@@ -83,10 +83,10 @@ export function* generatePermutations(
         lines: [6, 7],
         explanation:
           path.length === 1
-            ? `Choose ${
+            ? `Pick ${
                 block.label ?? block.value
               } as the first element of this permutation.`
-            : `Choose ${
+            : `Pick ${
                 block.label ?? block.value
               }, building permutation so far: {${path
                 .map((b) => b.label ?? b.value)
@@ -99,7 +99,6 @@ export function* generatePermutations(
       const idxId = block.id;
 
       path.pop();
-      used[i] = false;
 
       yield {
         type: "unpick",
@@ -107,7 +106,7 @@ export function* generatePermutations(
         nodeIds: [currentNodeId],
         parentId,
         lines: [8],
-        explanation: `Remove ${
+        explanation: `Undo last pick ${
           block.label ?? block.value
         } and try a different choice for this position.`,
         pointers: {
@@ -115,18 +114,25 @@ export function* generatePermutations(
         },
       };
 
+      const hasNext = used.some((u) => !u);
       yield {
         type: "highlight",
         ids: [...path.map((b) => b.id)],
         nodeIds: [parentId],
         lines: [4],
-        explanation: `Back at {${path
-          .map((b) => b.label ?? b.value)
-          .join(", ")}}, trying the next unused element.`,
+        explanation: hasNext
+          ? `Backtracked to {${path
+              .map((b) => b.label ?? b.value)
+              .join(", ")}}. Trying the next unused element.`
+          : `Backtracked to {${path
+              .map((b) => b.label ?? b.value)
+              .join(", ")}}. No unused elements left, this branch is done.`,
         pointers: {
           idx: path[path.length - 1] ? path[path.length - 1].id : -1,
         },
       };
+
+      used[i] = false;
     }
   }
 
