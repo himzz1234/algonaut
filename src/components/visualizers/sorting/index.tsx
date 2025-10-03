@@ -12,14 +12,21 @@ import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: SortingStep[];
+  fromIndex?: number;
+  toIndex?: number;
 };
 
-export default function SortingVisualizer({ steps }: Props) {
+export default function SortingVisualizer({
+  steps,
+  fromIndex = 0,
+  toIndex,
+}: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
   const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
+  const endIndex = toIndex ?? stepIndex;
   const laneOffset = barHeight + 30;
 
   const { blocks, positions, depths, sorted, highlight, pointers } =
@@ -36,7 +43,7 @@ export default function SortingVisualizer({ steps }: Props) {
         pointers: {} as Record<string, PointerValue>,
       };
 
-      for (let i = 0; i <= stepIndex && i < steps.length; i++) {
+      for (let i = fromIndex; i <= endIndex && i < steps.length; i++) {
         const step = steps[i];
         switch (step.type) {
           case "init":
@@ -118,7 +125,7 @@ export default function SortingVisualizer({ steps }: Props) {
       }
 
       return { blocks, positions, depths, sorted, highlight, pointers };
-    }, [steps, stepIndex]);
+    }, [steps, fromIndex, endIndex]);
 
   const stepType = steps[stepIndex]?.type;
   const isReset = stepType === "init" || stepType === "done";

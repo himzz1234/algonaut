@@ -52,6 +52,34 @@ export default function AlgorithmInfo({
             ))}
           </div>
         )}
+
+        <div className="mt-6">
+          <h3 className="text-white font-medium text-lg sm:text-xl md:text-2xl mb-2">
+            Intuition
+          </h3>
+          <div className="p-4 mt-2">
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed">
+              Bubble Sort repeatedly compares adjacent elements and swaps them
+              if they’re in the wrong order. With each pass, the largest element
+              “bubbles up” to the end of the array, just like bubbles rising to
+              the surface. Repeating this gradually leaves the array sorted.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="text-white font-medium text-lg sm:text-xl md:text-2xl mb-2">
+            Detailed Breakdown
+          </h3>
+          <div className="p-4 mt-2">
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed">
+              Bubble Sort repeatedly compares adjacent elements and swaps them
+              if they’re in the wrong order. With each pass, the largest element
+              “bubbles up” to the end of the array, just like bubbles rising to
+              the surface. Repeating this gradually leaves the array sorted.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="h-fit col-span-12 lg:col-span-4 bg-[#000] border border-gray-700/60 rounded-lg p-3 sm:p-4 backdrop-blur-sm shadow-lg mt-4 lg:mt-0">
