@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { motion } from "motion/react";
+import { startRazorpayPayment } from "../../utils/payments";
 
 function BillingToggle({
   value = "monthly",
@@ -172,7 +173,6 @@ export default function Pricing() {
           </div>
         </div>
 
-        {/* Pricing Cards */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-3xl mx-auto">
           {tiers.map((tier) => {
             const price =
@@ -242,6 +242,17 @@ export default function Pricing() {
 
                 <footer className="mt-6 w-full">
                   <button
+                    onClick={() => {
+                      if (tier.id === "pro") {
+                        const price =
+                          billing === "monthly"
+                            ? tier.priceMonthly
+                            : tier.priceYearly;
+                        startRazorpayPayment(price);
+                      } else {
+                        alert("You are already on the free plan!");
+                      }
+                    }}
                     className={`w-full py-3 rounded-lg font-medium text-sm sm:text-base transition-transform duration-150 ${
                       tier.recommended
                         ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-[0_10px_30px_rgba(16,185,129,0.12)] hover:translate-y-[-2px]"

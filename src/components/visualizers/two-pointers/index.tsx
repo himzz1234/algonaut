@@ -4,6 +4,7 @@ import type { Block, Overlay, TwoPointerStep } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
 import { getBlockDimensions } from "../../../config/visualizerConfig";
+import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: TwoPointerStep[];
@@ -260,14 +261,14 @@ export default function TwoPointersVisualizer({ steps }: Props) {
           const isHighlighted = highlight.ids.includes(block.id);
           const labelsAtIndex = groupedPointers[block.id];
 
-          let rectFill = "#475569";
+          let rectFill = COLORS.neutralGray;
           if (isHighlighted) {
             if (highlight.mode === "found" || highlight.mode === "swap") {
-              rectFill = "#22c55e";
+              rectFill = COLORS.successGreen;
             } else if (highlight.mode === "compare") {
-              rectFill = "#f59e0b";
+              rectFill = COLORS.accentYellow;
             } else {
-              rectFill = "#ef4444";
+              rectFill = COLORS.dangerRed;
             }
           }
 
