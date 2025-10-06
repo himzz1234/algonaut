@@ -17,10 +17,10 @@ type Props = {
 export default function SortingVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
+  const { blockWidth, blockHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
-  const laneOffset = barHeight + 30;
+  const laneOffset = blockHeight + 30;
 
   const { blocks, positions, depths, sorted, highlight, pointers } =
     useMemo(() => {
@@ -143,7 +143,7 @@ export default function SortingVisualizer({ steps }: Props) {
         animate={{ y: svgY, translateY: svgTranslateY }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         width={Object.keys(blocks).length * spacing}
-        height={barHeight}
+        height={blockHeight}
         style={{ overflow: "visible", translateY: "-50%" }}
       >
         {blocks.map((block) => {
@@ -174,14 +174,14 @@ export default function SortingVisualizer({ steps }: Props) {
             >
               <motion.rect
                 rx={radius}
-                width={barWidth}
-                height={barHeight}
+                width={blockWidth}
+                height={blockHeight}
                 fill={rectFill}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
               <text
-                x={barWidth / 2}
-                y={barHeight / 2}
+                x={blockWidth / 2}
+                y={blockHeight / 2}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.block}
                 fill="white"
@@ -192,8 +192,8 @@ export default function SortingVisualizer({ steps }: Props) {
               </text>
               {labelsAtIndex && (
                 <text
-                  x={barWidth / 2}
-                  y={barHeight + 15}
+                  x={blockWidth / 2}
+                  y={blockHeight + 15}
                   fontFamily="Satoshi"
                   fontSize={FONT_SIZE.label}
                   fill="white"

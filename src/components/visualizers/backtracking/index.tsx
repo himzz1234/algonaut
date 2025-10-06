@@ -18,7 +18,7 @@ type Props = {
 export default function BacktrackingVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
+  const { blockWidth, blockHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
   const { blocks, highlight, positions, pointers, treeNodes } = useMemo(() => {
@@ -108,8 +108,8 @@ export default function BacktrackingVisualizer({ steps }: Props) {
 
   const nodes = Array.from(treeNodes.values());
   const maxDepth = Math.max(0, ...nodes.map((n) => n.depth));
-  const verticalSpacing = barHeight * 1.2;
-  const treeWidth = Math.pow(2, Math.min(2, maxDepth)) * barWidth;
+  const verticalSpacing = blockHeight * 1.2;
+  const treeWidth = Math.pow(2, Math.min(2, maxDepth)) * blockWidth;
 
   function computeLayout() {
     const result: { [id: number]: { x: number; y: number } } = {};
@@ -130,7 +130,7 @@ export default function BacktrackingVisualizer({ steps }: Props) {
     ) {
       result[node.id] = {
         x,
-        y: depth * verticalSpacing + barHeight * (isMobile ? 0.2 : 1),
+        y: depth * verticalSpacing + blockHeight * (isMobile ? 0.2 : 1),
       };
 
       const children = nodes.filter((n) => n.parentId === node.id);
@@ -189,7 +189,7 @@ export default function BacktrackingVisualizer({ steps }: Props) {
         }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         width={blocks.length * spacing}
-        height={barHeight}
+        height={blockHeight}
         className="absolute overflow-visible"
       >
         {blocks.map((block) => {
@@ -214,15 +214,15 @@ export default function BacktrackingVisualizer({ steps }: Props) {
             >
               <motion.rect
                 rx={radius}
-                width={barWidth}
-                height={barHeight}
+                width={blockWidth}
+                height={blockHeight}
                 fill={rectFill}
                 animate={{ scale: isHighlighted ? 1.05 : 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
               <text
-                x={barWidth / 2}
-                y={barHeight / 2}
+                x={blockWidth / 2}
+                y={blockHeight / 2}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.block}
                 fill="white"
@@ -234,8 +234,8 @@ export default function BacktrackingVisualizer({ steps }: Props) {
 
               {labelsAtIndex && (
                 <text
-                  x={barWidth / 2}
-                  y={barHeight + 15}
+                  x={blockWidth / 2}
+                  y={blockHeight + 15}
                   fontFamily="Satoshi"
                   fontSize={FONT_SIZE.label}
                   fill="white"
@@ -252,7 +252,7 @@ export default function BacktrackingVisualizer({ steps }: Props) {
 
       <motion.svg
         width={treeWidth}
-        height={maxDepth * verticalSpacing + barHeight * 3}
+        height={maxDepth * verticalSpacing + blockHeight * 3}
         className="absolute left-1/2 top-10 -translate-x-1/2 overflow-visible"
       >
         {layout.map((n) => {
@@ -300,11 +300,11 @@ export default function BacktrackingVisualizer({ steps }: Props) {
           return (
             <motion.g key={n.id}>
               <motion.rect
-                x={n.x - (barWidth * 0.95) / 2}
-                y={n.y - (barHeight * 0.95) / 2}
+                x={n.x - (blockWidth * 0.95) / 2}
+                y={n.y - (blockHeight * 0.95) / 2}
                 rx={999}
-                width={barWidth * 0.95}
-                height={barHeight * 0.95}
+                width={blockWidth * 0.95}
+                height={blockHeight * 0.95}
                 fill={nodeFill}
               />
               <text
