@@ -119,7 +119,7 @@ export default function EditProfilePage() {
           <div className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden group relative">
             <img
               src={formData.profilePic || "/images/default.jpg"}
-              alt="Profile"
+              alt="profile"
               className="w-full h-full object-cover"
             />
 

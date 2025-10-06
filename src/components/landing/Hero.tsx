@@ -105,6 +105,7 @@ export default function Hero() {
             <img
               src="/images/demo-screenshot.png"
               className="w-full h-auto shadow-2xl"
+              alt="demo-screenshot"
             />{" "}
           </div>
         </div>

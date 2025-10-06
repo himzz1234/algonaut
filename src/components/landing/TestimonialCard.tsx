@@ -23,6 +23,7 @@ export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
         <img
           src="/images/testimonial_1.jpg"
           className="w-12 h-12 object-top rounded-full object-cover"
+          alt="testimonial-profile"
         />
         <div>
           <h4 className="text-white font-semibold text-sm sm:text-base">
