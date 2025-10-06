@@ -27,7 +27,11 @@ function ProfileCard() {
           />
         ) : (
           <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 text-lg font-semibold text-emerald-400 border-2 border-emerald-500/40 rounded-full flex items-center justify-center">
-            {user?.displayName?.[0]?.toUpperCase() ?? "?"}
+            <img
+              src="/images/default.jpg"
+              alt="profile"
+              className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover"
+            />
           </div>
         )}
         <div className="flex-1">

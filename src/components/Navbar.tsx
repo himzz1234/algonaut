@@ -47,7 +47,15 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {!loading && (
+        {loading && !user?.photoURL ? (
+          <div className="flex items-center gap-4">
+            <img
+              src="/images/default.jpg"
+              alt="profile"
+              className="w-10 h-10 shrink-0 rounded-full object-cover"
+            />
+          </div>
+        ) : (
           <div className="flex items-center gap-4">
             {!user ? (
               <button
