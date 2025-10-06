@@ -15,7 +15,7 @@ type Props = {
 export default function SlidingWindowVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
+  const { blockWidth, blockHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
   const { blocks, positions, pointers, highlight } = useMemo(() => {
@@ -67,7 +67,7 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
     <motion.div className="w-full h-full flex py-16 justify-center items-center relative">
       <motion.svg
         width={Object.keys(blocks).length * spacing}
-        height={barHeight}
+        height={blockHeight}
         style={{ overflow: "visible", translateY: "-50%" }}
       >
         {blocks.map((block) => {
@@ -90,15 +90,15 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
             >
               <motion.rect
                 rx={radius}
-                width={barWidth}
-                height={barHeight}
+                width={blockWidth}
+                height={blockHeight}
                 fill={rectFill}
                 animate={{ scale: isHighlighted ? 1.05 : 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
               <text
-                x={barWidth / 2}
-                y={barHeight / 2}
+                x={blockWidth / 2}
+                y={blockHeight / 2}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.block}
                 fill="white"
@@ -119,14 +119,14 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
           const pointerValue = Array.isArray(value) ? null : value.value;
           const isAbove = Array.isArray(value) ? null : value.pos === "top";
 
-          const xs = ids.map((id) => positions[id] * spacing + barWidth / 2);
+          const xs = ids.map((id) => positions[id] * spacing + blockWidth / 2);
 
-          const minX = Math.min(...xs) - barWidth / 2;
-          const maxX = Math.max(...xs) + barWidth / 2;
+          const minX = Math.min(...xs) - blockWidth / 2;
+          const maxX = Math.max(...xs) + blockWidth / 2;
           const midX = (minX + maxX) / 2;
 
           const braceHeight = 10;
-          const yBase = isAbove ? -10 : barHeight + 10;
+          const yBase = isAbove ? -10 : blockHeight + 10;
 
           const bracePath = makeCurlyBrace(
             minX,

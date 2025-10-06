@@ -16,7 +16,7 @@ type Props = {
 export default function LinkedListVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const { barWidth, barHeight, spacing, FONT_SIZE } = getBlockDimensions(
+  const { blockWidth, blockHeight, spacing, FONT_SIZE } = getBlockDimensions(
     isMobile,
     { ...BASE_CONFIG, GAP: 50 }
   );
@@ -136,10 +136,10 @@ export default function LinkedListVisualizer({ steps }: Props) {
   };
 
   const arrowPath = (xpos1: number, xpos2: number) => {
-    const r = barWidth / 2;
+    const r = blockWidth / 2;
     const center1x = xpos1 * spacing;
     const center2x = xpos2 * spacing;
-    const centerY = barHeight / 2;
+    const centerY = blockHeight / 2;
 
     if (Math.abs(xpos1 - xpos2) === 1) {
       const startX = center1x + (center1x < center2x ? 2 * r : 0);
@@ -154,8 +154,8 @@ export default function LinkedListVisualizer({ steps }: Props) {
     const endX = center2x + r;
     const gap = Math.abs(endX - startX);
 
-    const startY = up ? 0 : barHeight;
-    const endY = up ? 0 : barHeight;
+    const startY = up ? 0 : blockHeight;
+    const endY = up ? 0 : blockHeight;
 
     const base = 40;
     const archHeight = Math.min(160, base + gap * 0.18);
@@ -192,13 +192,13 @@ export default function LinkedListVisualizer({ steps }: Props) {
   const nullExists = nullPointerLabels.length > 0;
   const firstNodePos = nodes.length ? positions[nodes[0].id] ?? 0 : 0;
   const nullX = firstNodePos * spacing;
-  const nullY = -2 * barHeight;
+  const nullY = -2 * blockHeight;
 
   return (
     <motion.div className="w-full h-full flex py-16 justify-center items-center relative">
       <motion.svg
-        width={Math.max(1, nodes.length - 1) * spacing + barWidth}
-        height={barHeight}
+        width={Math.max(1, nodes.length - 1) * spacing + blockWidth}
+        height={blockHeight}
         style={{ overflow: "visible", translateY: "-50%" }}
       >
         <defs>
@@ -304,8 +304,8 @@ export default function LinkedListVisualizer({ steps }: Props) {
             >
               <motion.rect
                 rx={999}
-                width={barWidth}
-                height={barHeight}
+                width={blockWidth}
+                height={blockHeight}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{
                   opacity: 1,
@@ -316,8 +316,8 @@ export default function LinkedListVisualizer({ steps }: Props) {
                 transition={{ type: "spring", stiffness: 280, damping: 18 }}
               />
               <text
-                x={barWidth / 2}
-                y={barHeight / 2}
+                x={blockWidth / 2}
+                y={blockHeight / 2}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.block}
                 fill="white"
@@ -328,8 +328,8 @@ export default function LinkedListVisualizer({ steps }: Props) {
               </text>
               {labelsAtIndex && (
                 <text
-                  x={barWidth / 2}
-                  y={barHeight + 20}
+                  x={blockWidth / 2}
+                  y={blockHeight + 20}
                   fontFamily="Satoshi"
                   fontSize={FONT_SIZE.label}
                   fill="white"
@@ -360,15 +360,15 @@ export default function LinkedListVisualizer({ steps }: Props) {
                 x={0}
                 y={0}
                 rx={999}
-                width={barWidth}
-                height={barHeight}
+                width={blockWidth}
+                height={blockHeight}
                 fill="#0b1220"
                 stroke="#374151"
                 strokeWidth={1}
               />
               <text
-                x={barWidth / 2}
-                y={barHeight / 2}
+                x={blockWidth / 2}
+                y={blockHeight / 2}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.block}
                 fill="#9ca3af"
@@ -378,8 +378,8 @@ export default function LinkedListVisualizer({ steps }: Props) {
                 null
               </text>
               <text
-                x={barWidth / 2}
-                y={barHeight + 18}
+                x={blockWidth / 2}
+                y={blockHeight + 18}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.label}
                 fill="white"

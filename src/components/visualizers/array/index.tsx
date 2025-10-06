@@ -14,7 +14,7 @@ type Props = {
 export default function ArrayVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
+  const { blockWidth, blockHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
   const { blocks, positions, depths, highlight, pointers } = useMemo(() => {
@@ -132,7 +132,7 @@ export default function ArrayVisualizer({ steps }: Props) {
         animate={{ y: svgY, translateY: svgTranslateY }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         width={Object.keys(blocks).length * spacing}
-        height={barHeight}
+        height={blockHeight}
         style={{ overflow: "visible", translateY: "-50%" }}
       >
         {blocks.map((block) => {
@@ -156,14 +156,14 @@ export default function ArrayVisualizer({ steps }: Props) {
               key={block.id}
               animate={{
                 x: pos * spacing,
-                y: depth * (barHeight + 30),
+                y: depth * (blockHeight + 30),
               }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >
               <motion.rect
                 rx={radius}
-                width={barWidth}
-                height={barHeight}
+                width={blockWidth}
+                height={blockHeight}
                 fill={rectFill}
                 animate={{
                   scale: isHighlighted ? 1.05 : 1,
@@ -171,8 +171,8 @@ export default function ArrayVisualizer({ steps }: Props) {
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
               <text
-                x={barWidth / 2}
-                y={barHeight / 2}
+                x={blockWidth / 2}
+                y={blockHeight / 2}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.block}
                 fill="white"
@@ -184,8 +184,8 @@ export default function ArrayVisualizer({ steps }: Props) {
 
               {labelsAtIndex && (
                 <text
-                  x={barWidth / 2}
-                  y={barHeight + 15}
+                  x={blockWidth / 2}
+                  y={blockHeight + 15}
                   fontFamily="Satoshi"
                   fontSize={FONT_SIZE.label}
                   fill="white"
@@ -206,12 +206,12 @@ export default function ArrayVisualizer({ steps }: Props) {
           const ids = Array.isArray(value) ? value : value.ids;
           const pointerValue = Array.isArray(value) ? null : value.value;
 
-          const xs = ids.map((id) => positions[id] * spacing + barWidth / 2);
+          const xs = ids.map((id) => positions[id] * spacing + blockWidth / 2);
           const depthsForBlocks = ids.map((id) => depths[id] ?? 0);
           const depth = Math.max(...depthsForBlocks);
 
-          const minX = Math.min(...xs) - barWidth / 2;
-          const maxX = Math.max(...xs) + barWidth / 2;
+          const minX = Math.min(...xs) - blockWidth / 2;
+          const maxX = Math.max(...xs) + blockWidth / 2;
           const midX = (minX + maxX) / 2;
 
           const braceHeight = 10;
@@ -219,9 +219,9 @@ export default function ArrayVisualizer({ steps }: Props) {
           const isAbove = idx % 2 === 0;
 
           const yBase = isAbove
-            ? depth * (barHeight + 30) - 10
-            : depth * (barHeight + 30) +
-              barHeight +
+            ? depth * (blockHeight + 30) - 10
+            : depth * (blockHeight + 30) +
+              blockHeight +
               10 +
               Math.floor(idx / 2) * 50;
 
