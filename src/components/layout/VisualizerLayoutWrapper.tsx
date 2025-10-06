@@ -1,6 +1,7 @@
 import VisualizerLayout from "./VisualizerLayout";
 import type { Step } from "../../algorithms/types";
 import { PlaybackProvider } from "../../context/PlaybackContext";
+import AlgorithmSEO from "../AlgorithmSEO";
 
 type VisualizerLayoutWrapperProps<TStep extends Step<any>> = {
   type?: "demo" | "learn";
@@ -20,15 +21,18 @@ export default function VisualizerLayoutWrapper<TStep extends Step<any>>({
   repeat = false,
 }: VisualizerLayoutWrapperProps<TStep>) {
   return (
-    <PlaybackProvider
-      key={algorithmKey}
-      repeat={repeat}
-      autoplay={autoplay}
-      stepsLength={steps.length}
-    >
-      <VisualizerLayout type={type} steps={steps} algorithmKey={algorithmKey}>
-        {renderVisualizer(steps)}
-      </VisualizerLayout>
-    </PlaybackProvider>
+    <>
+      <AlgorithmSEO />
+      <PlaybackProvider
+        key={algorithmKey}
+        repeat={repeat}
+        autoplay={autoplay}
+        stepsLength={steps.length}
+      >
+        <VisualizerLayout type={type} steps={steps} algorithmKey={algorithmKey}>
+          {renderVisualizer(steps)}
+        </VisualizerLayout>
+      </PlaybackProvider>
+    </>
   );
 }

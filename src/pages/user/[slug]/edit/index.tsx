@@ -6,6 +6,7 @@ import imageCompression from "browser-image-compression";
 import { getAuth, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../lib/firebase";
+import { Helmet } from "react-helmet";
 
 export default function EditProfilePage() {
   const { user, setUser } = useAuth();
@@ -102,6 +103,14 @@ export default function EditProfilePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <Helmet>
+        <title>Edit Profile - Algonaut</title>
+        <meta name="description" content="Edit your Algonaut profile" />
+        <meta property="og:title" content="Edit Profile - Algonaut" />
+        <meta property="og:description" content="Edit your Algonaut profile" />
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content={window.location.href} />
+      </Helmet>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-[#000] border border-gray-700/60 rounded-lg p-6 sm:p-10"

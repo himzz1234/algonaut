@@ -5,6 +5,7 @@ import { RiGraduationCapLine } from "react-icons/ri";
 import { useProgress } from "../../../context/ProgressContext";
 import { algorithms } from "../../../data/algorithms";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 function ProfileCard() {
   const { user } = useAuth();
@@ -68,6 +69,7 @@ function ProfileCard() {
 }
 
 export default function ProfilePage() {
+  const { user } = useAuth();
   const { progressMap, loading } = useProgress();
 
   const topicCounts: Record<string, number> = {};
@@ -79,9 +81,23 @@ export default function ProfilePage() {
     }
   });
 
+  const title = user
+    ? `${user.displayName || "User"}'s - Algonaut Profile`
+    : "Profile | Algonaut";
+  const description =
+    "View your algorithm learning progress, topics covered, and quiz completions on Algonaut.";
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 grid grid-cols-1 lg:grid-cols-12 gap-6">
-      {/* Sidebar stacks on mobile, fixed on larger screens */}
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content={window.location.href} />
+      </Helmet>
+
       <aside className="lg:col-span-3 space-y-6">
         <ProfileCard />
       </aside>

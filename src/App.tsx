@@ -36,7 +36,7 @@ function App() {
                 <Route path="/learn/sorting" element={<SortingPage />} />
                 <Route path="/learn/searching" element={<SearchingPage />} />
                 <Route path="/learn/recursion" element={<RecursionPage />} />
-                <Route path="/learn/list" element={<ListPage />} />
+                <Route path="/learn/linkedlist" element={<ListPage />} />
                 <Route path="/learn/bitmask" element={<BitmaskPage />} />
                 <Route
                   path="/learn/two-pointers"

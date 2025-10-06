@@ -31,7 +31,7 @@ export default function AuthPanel() {
   };
 
   return (
-    <div className="rounded-xl bg-[#000] border border-gray-700/60 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
+    <div className="rounded-xl bg-[#141414] border border-gray-700/60 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
       <div className="p-6 space-y-5">
         <div className="flex items-center justify-center p-2">
           <img src="/logo.png" width={160} alt="logo" />
@@ -97,7 +97,6 @@ export default function AuthPanel() {
               className="rounded-lg py-2.5 font-medium
                 bg-green-600
                 shadow-[0_0_0_0_rgba(16,185,129,0.0)]
-                hover:shadow-[0_0_24px_4px_rgba(16,185,129,0.35)]
                 active:scale-[0.99]
                 disabled:opacity-60 disabled:cursor-not-allowed transition"
             >
@@ -132,7 +131,6 @@ export default function AuthPanel() {
               className="rounded-lg py-2.5 font-medium
                 bg-green-600
                 shadow-[0_0_0_0_rgba(16,185,129,0.0)]
-                hover:shadow-[0_0_24px_4px_rgba(16,185,129,0.35)]
                 active:scale-[0.99]
                 disabled:opacity-60 disabled:cursor-not-allowed transition"
             >

@@ -3,6 +3,7 @@ import { modules } from "../../data/modules";
 import type { Variants } from "motion";
 import { motion } from "motion/react";
 import StatsGrid from "../../components/StatsGrid";
+import { Helmet } from "react-helmet";
 
 export default function LearnPage() {
   const beginner = modules.filter((m) => m.level === "beginner");
@@ -39,6 +40,20 @@ export default function LearnPage() {
           "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(226, 232, 240, 0.15), transparent 70%), #000000",
       }}
     >
+      <Helmet>
+        <title>Learn Algorithms - Algonaut</title>
+        <meta
+          name="description"
+          content="Follow structured learning paths to master algorithms from beginner fundamentals to advanced interview preparation. Learn step-by-step with visualizations and quizzes."
+        />
+        <meta property="og:title" content="Learn Algorithms | Algonaut" />
+        <meta
+          property="og:description"
+          content="Explore guided learning paths for algorithms, covering sorting, recursion, graphs, and interview prep topics. Visual and interactive learning at its best."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+      </Helmet>
       <header>
         <div className="flex flex-col items-center justify-center lg:max-w-7xl lg:mx-auto px-4 sm:px-6 lg:px-0 py-16">
           <motion.div
