@@ -372,7 +372,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   factorial: [
     {
       id: 1,
@@ -382,6 +381,19 @@ export const quizzes: Record<string, Question[]> = {
     },
     {
       id: 2,
+      question:
+        "True or False: factorial(0) = 1 because it represents an empty product.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question: "What will be the output of factorial(4)?",
+      options: ["24", "12", "16", "Error"],
+      answer: 0,
+    },
+    {
+      id: 4,
       question: "What is the space complexity of recursive factorial?",
       options: ["O(1)", "O(N)", "O(N²)"],
       answer: 1,
@@ -400,6 +412,19 @@ export const quizzes: Record<string, Question[]> = {
       options: ["F(0)=0, F(1)=1", "F(1)=1, F(2)=2", "F(0)=1, F(1)=1"],
       answer: 0,
     },
+    {
+      id: 3,
+      question:
+        "True or False: Memoization reduces Fibonacci recursion to O(N).",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question: "What will be the output of fibonacci(5)?",
+      options: ["3", "5", "8", "None"],
+      answer: 1,
+    },
   ],
   "sum-n": [
     {
@@ -412,6 +437,19 @@ export const quizzes: Record<string, Question[]> = {
       id: 2,
       question: "Base case of sumN recursion is:",
       options: ["n==0 returns 0", "n==1 returns 0", "n==2 returns 2"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question: "What will be the output of sumN(4)?",
+      options: ["10", "6", "4", "None"],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question:
+        "True or False: sumN recursion reduces the problem size by 1 each call.",
+      options: ["True", "False"],
       answer: 0,
     },
   ],

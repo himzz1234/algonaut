@@ -18,7 +18,7 @@ export function* sumOfN(n: number): Generator<RecursionStep> {
     yield {
       type: "push",
       frame,
-      explanation: `Call sum(${k}).`,
+      explanation: `Entering sum(${k}). A new stack frame is added.`,
       lines: [0],
     };
 
@@ -26,7 +26,7 @@ export function* sumOfN(n: number): Generator<RecursionStep> {
       yield {
         type: "resolve",
         id: id,
-        explanation: `Base case reached → return ${k}.`,
+        explanation: `Base case reached since k is ${k}. The function returns ${k}.`,
         lines: [1, 2],
       };
 
@@ -34,7 +34,7 @@ export function* sumOfN(n: number): Generator<RecursionStep> {
         type: "pop",
         id,
         value: k,
-        explanation: `Return ${k} from sum(${k}).`,
+        explanation: `Exiting sum(${k}) with result ${k}.`,
         lines: [2],
       };
 
@@ -48,7 +48,9 @@ export function* sumOfN(n: number): Generator<RecursionStep> {
       type: "resolve",
       id: id,
       label: `${result}`,
-      explanation: `Compute ${k} + ${sub} = ${result}.`,
+      explanation: `The result of sum(${
+        k - 1
+      }) is ${sub}. Add ${k} to get ${result}.`,
       lines: [4],
     };
 
@@ -56,7 +58,7 @@ export function* sumOfN(n: number): Generator<RecursionStep> {
       type: "pop",
       id,
       value: result,
-      explanation: `Return ${result} from sum(${k}).`,
+      explanation: `Returning ${result} from sum(${k}).`,
       lines: [5],
     };
 
@@ -70,13 +72,15 @@ export function* sumOfN(n: number): Generator<RecursionStep> {
     type: "resolve",
     id: rootFrame.id,
     label: `${result}`,
-    explanation: `Compute ${n} + ${sub} = ${result}.`,
+    explanation: `The result of sum(${
+      n - 1
+    }) is ${sub}. Add ${n} to get ${result}.`,
     lines: [4],
   };
 
   yield {
     type: "done",
-    explanation: `Done! sum(${n}) = ${result}.`,
+    explanation: `Recursion complete. sum(${n}) equals ${result}.`,
     lines: [5],
   };
 }

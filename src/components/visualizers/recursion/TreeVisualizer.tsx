@@ -13,7 +13,7 @@ type Props = {
 export default function TreeVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const { barWidth, barHeight, FONT_SIZE } = getBlockDimensions(isMobile);
+  const { blockWidth, blockHeight, FONT_SIZE } = getBlockDimensions(isMobile);
 
   const { treeNodes, highlight } = useMemo(() => {
     let { highlight, treeNodes } = {
@@ -81,8 +81,8 @@ export default function TreeVisualizer({ steps }: Props) {
 
   const nodes = Array.from(treeNodes.values());
   const maxDepth = Math.max(0, ...nodes.map((n) => n.depth));
-  const verticalSpacing = barHeight * 1.2;
-  const treeWidth = Math.pow(2, Math.min(2, maxDepth)) * barWidth;
+  const verticalSpacing = blockHeight * 1.2;
+  const treeWidth = Math.pow(2, Math.min(2, maxDepth)) * blockWidth;
 
   function computeLayout() {
     const result: { [id: number]: { x: number; y: number } } = {};
@@ -103,7 +103,7 @@ export default function TreeVisualizer({ steps }: Props) {
     ) {
       result[node.id] = {
         x,
-        y: depth * verticalSpacing + barHeight * (isMobile ? 0.2 : 1),
+        y: depth * verticalSpacing + blockHeight * (isMobile ? 0.2 : 1),
       };
 
       const children = nodes.filter((n) => n.parentId === node.id);
@@ -137,11 +137,11 @@ export default function TreeVisualizer({ steps }: Props) {
     y: layoutPositions[node.id]?.y ?? 0,
   }));
   return (
-    <motion.div className="w-full h-full flex justify-center relative">
+    <motion.div className="w-full h-full flex justify-center items-center relative">
       <motion.svg
         width={treeWidth}
-        height={maxDepth * verticalSpacing + barHeight * 3}
-        className="overflow-visible"
+        height={maxDepth * verticalSpacing + blockHeight * 3}
+        style={{ overflow: "visible" }}
       >
         {layout.map((node) => {
           if (node.parentId === -1) return null;
@@ -186,11 +186,11 @@ export default function TreeVisualizer({ steps }: Props) {
           return (
             <motion.g key={node.id}>
               <motion.rect
-                x={node.x - (barWidth * 0.95) / 2}
-                y={node.y - (barHeight * 0.95) / 2}
+                x={node.x - (blockWidth * 0.95) / 2}
+                y={node.y - (blockHeight * 0.95) / 2}
                 rx={999}
-                width={barWidth * 0.95}
-                height={barHeight * 0.95}
+                width={blockWidth * 0.95}
+                height={blockHeight * 0.95}
                 fill={nodeFill}
               />
               <text

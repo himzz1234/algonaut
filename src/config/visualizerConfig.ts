@@ -42,7 +42,7 @@ export function getBlockDimensions(
   const blockWidth = isMobile ? 50 : config.BLOCK_WIDTH;
   const blockHeight = isMobile ? 50 : config.BLOCK_HEIGHT;
   const barWidth = isMobile ? 100 : config.BAR_WIDTH;
-  const barHeight = isMobile ? 25 : config.BAR_HEIGHT;
+  const barHeight = isMobile ? 35 : config.BAR_HEIGHT;
   const spacing = blockWidth + config.GAP;
   const radius = isMobile ? 3 : config.RADIUS;
 
@@ -55,8 +55,8 @@ export function getBlockDimensions(
   return {
     blockWidth,
     blockHeight,
-    barHeight,
     barWidth,
+    barHeight,
     spacing,
     radius,
     FONT_SIZE,

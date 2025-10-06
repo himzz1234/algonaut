@@ -18,7 +18,7 @@ export function* factorial(n: number): Generator<RecursionStep> {
     yield {
       type: "push",
       frame,
-      explanation: `Call factorial(${k}).`,
+      explanation: `Entering factorial(${k}). A new stack frame is added.`,
       lines: [0],
     };
 
@@ -27,7 +27,7 @@ export function* factorial(n: number): Generator<RecursionStep> {
         type: "resolve",
         id: id,
         label: "1",
-        explanation: `Base case reached → return 1.`,
+        explanation: `Base case reached since k is ${k}. The function returns 1.`,
         lines: [1, 2],
       };
 
@@ -35,7 +35,7 @@ export function* factorial(n: number): Generator<RecursionStep> {
         type: "pop",
         id,
         value: 1,
-        explanation: `Return 1 from factorial(${k}).`,
+        explanation: `Exiting factorial(${k}) with result 1.`,
         lines: [2],
       };
       return 1;
@@ -48,7 +48,9 @@ export function* factorial(n: number): Generator<RecursionStep> {
       type: "resolve",
       id: id,
       label: `${result}`,
-      explanation: `Compute ${k} × ${sub} = ${result}.`,
+      explanation: `The result of factorial(${
+        k - 1
+      }) is ${sub}. Multiply by ${k} to get ${result}.`,
       lines: [4],
     };
 
@@ -56,7 +58,7 @@ export function* factorial(n: number): Generator<RecursionStep> {
       type: "pop",
       id,
       value: result,
-      explanation: `Return ${result} from factorial(${k}).`,
+      explanation: `Returning ${result} from factorial(${k}).`,
       lines: [5],
     };
 
@@ -70,13 +72,15 @@ export function* factorial(n: number): Generator<RecursionStep> {
     type: "resolve",
     id: rootFrame.id,
     label: `${result}`,
-    explanation: `Compute ${n} × ${sub} = ${result}.`,
+    explanation: `The result of factorial(${
+      n - 1
+    }) is ${sub}. Multiply by ${n} to get ${result}.`,
     lines: [4],
   };
 
   yield {
     type: "done",
-    explanation: `Done! factorial(${n}) = ${result}.`,
+    explanation: `Recursion complete. factorial(${n}) equals ${result}.`,
     lines: [5],
   };
 }

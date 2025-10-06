@@ -37,7 +37,7 @@ export function* fibonacci(n: number): Generator<RecursionTreeStep> {
       type: "expand",
       parentId,
       node: current,
-      explanation: `Call fib(${k}).`,
+      explanation: `Entering fib(${k}). A new node is created in the recursion tree.`,
       lines: [0],
     };
 
@@ -47,7 +47,7 @@ export function* fibonacci(n: number): Generator<RecursionTreeStep> {
         id: current.id,
         label: `${k}`,
         value: k,
-        explanation: `Base case reached → fib(${k}) = ${k}.`,
+        explanation: `Base case reached since k is ${k}. The function returns ${k}.`,
         lines: [1, 2],
       };
 
@@ -64,16 +64,16 @@ export function* fibonacci(n: number): Generator<RecursionTreeStep> {
       id: current.id,
       label: `${result}`,
       value: result,
-      explanation: `Combine results: fib(${k - 1}) + fib(${
+      explanation: `fib(${k - 1}) returned ${leftValue} and fib(${
         k - 2
-      }) = ${leftValue} + ${rightValue} = ${result}.`,
+      }) returned ${rightValue}. Their sum is ${result}.`,
       lines: [3],
     };
 
     yield {
       type: "collapse",
       id: current.id,
-      explanation: `Return ${result} from fib(${k}).`,
+      explanation: `Exiting fib(${k}) with result ${result}.`,
       lines: [4],
     };
 
@@ -84,18 +84,21 @@ export function* fibonacci(n: number): Generator<RecursionTreeStep> {
   const rightValue = yield* recurse(n - 2, 1, root.id);
 
   const result = leftValue + rightValue;
+
   yield {
     type: "resolve",
     id: root.id,
     label: `${result}`,
     value: result,
-    explanation: `Final result: fib(${n}) = ${result}.`,
+    explanation: `The final result of fib(${n - 1}) is ${leftValue} and fib(${
+      n - 2
+    }) is ${rightValue}. Adding them gives ${result}.`,
     lines: [3],
   };
 
   yield {
     type: "done",
-    explanation: `All recursive calls complete! fib(${n}) = ${result}.`,
+    explanation: `Recursion complete. fib(${n}) equals ${result}.`,
     lines: [4],
   };
 }
