@@ -19,6 +19,7 @@ import EditProfilePage from "./pages/user/[slug]/edit";
 import TwoPointersPage from "./pages/learn/two-pointers";
 import SlidingWindowPage from "./pages/learn/sliding-window";
 import BacktrackingPage from "./pages/learn/backtracking";
+import RecursionPage from "./pages/learn/recursion";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/learn/array" element={<ArrayPage />} />
                 <Route path="/learn/sorting" element={<SortingPage />} />
                 <Route path="/learn/searching" element={<SearchingPage />} />
+                <Route path="/learn/recursion" element={<RecursionPage />} />
                 <Route path="/learn/list" element={<ListPage />} />
                 <Route path="/learn/bitmask" element={<BitmaskPage />} />
                 <Route
