@@ -338,6 +338,61 @@ export type BacktrackingStep =
       nodeIds: number[];
     });
 
+export type RecursionStep =
+  | (Step & {
+      type: "init";
+      stack: Block[];
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "push";
+      frame: Block;
+    })
+  | (Step & {
+      type: "pop";
+      id: number;
+      value: number;
+    })
+  | (Step & {
+      type: "resolve";
+      id: number;
+      label?: string;
+    })
+  | (Step & {
+      type: "done";
+    });
+
+export type RecursionTreeStep =
+  | (Step & {
+      type: "init";
+      root: TreeNode;
+    })
+  | (Step & {
+      type: "expand";
+      parentId: number;
+      node: TreeNode;
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "resolve";
+      id: number;
+      label?: string;
+      value?: number;
+    })
+  | (Step & {
+      type: "collapse";
+      id: number;
+    })
+  | (Step & {
+      type: "done";
+    });
+
 export type PathfindingStep =
   | {
       type: "init";

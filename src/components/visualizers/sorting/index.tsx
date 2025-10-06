@@ -20,8 +20,6 @@ export default function SortingVisualizer({ steps }: Props) {
   const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
-  const laneOffset = barHeight + 30;
-
   const { blocks, positions, depths, sorted, highlight, pointers } =
     useMemo(() => {
       let { blocks, positions, depths, sorted, highlight, pointers } = {
@@ -168,7 +166,7 @@ export default function SortingVisualizer({ steps }: Props) {
               key={block.id}
               animate={{
                 x: pos * spacing,
-                y: depth * laneOffset,
+                y: depth * barHeight + 30,
               }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >

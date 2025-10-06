@@ -1,4 +1,3 @@
-// visualizerConfig.ts
 export type VisualizerConfig = {
   GAP: number;
   BAR_WIDTH: number;

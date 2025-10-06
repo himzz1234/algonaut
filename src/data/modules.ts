@@ -43,13 +43,7 @@ export const modules: Module[] = [
     description:
       "Understand recursion and the call stack through simple, classic problems.",
     level: "beginner",
-    algos: [
-      "factorial",
-      "fibonacci",
-      "sum-n",
-      "tower-of-hanoi",
-      "reverse-string",
-    ],
+    algos: ["factorial", "fibonacci", "sum-n"],
   },
   {
     id: "m-bits",
