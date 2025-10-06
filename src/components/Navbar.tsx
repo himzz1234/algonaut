@@ -18,11 +18,17 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto h-full flex items-center px-6">
         <div className="flex items-center flex-1 gap-2">
           <Link to="/" className="block">
-            <img
-              src="/logo.png"
-              alt="logo"
-              className="w-36 h-auto sm:w-40 md:w-40"
-            />
+            <picture>
+              <source srcSet="/logo.avif" type="image/avif" />
+              <img
+                src="/logo.png"
+                width="144"
+                height="42"
+                alt="Algonaut logo"
+                loading="lazy"
+                className="h-10 md:h-12 w-auto"
+              />
+            </picture>
           </Link>
         </div>
 
@@ -47,15 +53,7 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {loading && !user?.photoURL ? (
-          <div className="flex items-center gap-4">
-            <img
-              src="/images/default.jpg"
-              alt="profile"
-              className="w-10 h-10 shrink-0 rounded-full object-cover"
-            />
-          </div>
-        ) : (
+        {!loading && (
           <div className="flex items-center gap-4">
             {!user ? (
               <button

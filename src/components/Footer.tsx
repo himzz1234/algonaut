@@ -7,11 +7,17 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
         <div className="col-span-2">
           <Link to="/" className="block">
-            <img
-              src="/logo.png"
-              alt="logo"
-              className="w-36 h-auto sm:w-40 md:w-40"
-            />
+            <picture>
+              <source srcSet="/logo.avif" type="image/avif" />
+              <img
+                src="/logo.png"
+                width="144"
+                height="42"
+                alt="Algonaut logo"
+                loading="lazy"
+                className="h-10 md:h-12 w-auto"
+              />
+            </picture>
           </Link>
           <p className="mt-3 text-gray-400 text-base sm:text-base max-w-xs">
             Visualize and understand algorithms with clean animations.
