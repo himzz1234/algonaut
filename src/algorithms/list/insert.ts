@@ -22,7 +22,7 @@ export function* insertAtEnd(
     ids: [nodes[currIndex].id],
     pointers: { head: nodes[currIndex].id, curr: nodes[currIndex].id },
     explanation: "Assign curr to head",
-    lines: [4],
+    lines: [2],
   };
 
   while (nodes[currIndex].next) {
@@ -43,7 +43,7 @@ export function* insertAtEnd(
       explanation: `curr.next is not null → advance curr from ${
         nodes.find((n) => n.id === fromId)?.value
       } to node ${nodes[currIndex].value}.`,
-      lines: [5, 6],
+      lines: [3, 4],
     };
   }
 
@@ -60,7 +60,7 @@ export function* insertAtEnd(
       newnode: newNode.id,
     },
     explanation: `Create new node with value ${value}.`,
-    lines: [7],
+    lines: [5],
   };
 
   nodes[currIndex].next = newNode;
@@ -74,12 +74,12 @@ export function* insertAtEnd(
       newnode: newNode.id,
     },
     explanation: `Link curr.next to the new node.`,
-    lines: [8],
+    lines: [6],
   };
 
   yield {
     type: "done",
     explanation: `New node with value ${newNode.value} has been inserted.`,
-    lines: [9],
+    lines: [7],
   };
 }

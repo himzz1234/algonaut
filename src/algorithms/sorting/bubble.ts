@@ -27,9 +27,9 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
         relation,
         pointers: { i: a[j].id, "i + 1": a[j + 1].id },
         lines: [2, 3],
-        explanation: `Compare ${a[j].value} and ${a[j + 1].value} → ${
-          a[j].value
-        } ${relation} ${a[j + 1].value}.`,
+        explanation: `On comparing ${a[j].value} and ${
+          a[j + 1].value
+        } we know ${a[j].value} ${relation} ${a[j + 1].value}.`,
       };
 
       if (relation === ">") {
@@ -47,14 +47,14 @@ export function* bubbleSort(arr: Block[]): Generator<SortingStep> {
     yield {
       type: "mark_sorted",
       ids: [a[n - i - 1].id],
-      lines: [5],
+      lines: [3, 4],
       explanation: `${a[n - i - 1].value} is now in its sorted position.`,
     };
   }
 
   yield {
     type: "done",
-    lines: [6],
+    lines: [5],
     explanation: `Bubble Sort complete.`,
   };
 }

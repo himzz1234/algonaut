@@ -17,7 +17,9 @@ import ExplorePage from "./pages/explore";
 import ProfilePage from "./pages/user/[slug]";
 import EditProfilePage from "./pages/user/[slug]/edit";
 import TwoPointersPage from "./pages/learn/two-pointers";
-import IntervalsPage from "./pages/learn/intervals";
+import SlidingWindowPage from "./pages/learn/sliding-window";
+import BacktrackingPage from "./pages/learn/backtracking";
+import RecursionPage from "./pages/learn/recursion";
 
 function App() {
   return (
@@ -33,13 +35,21 @@ function App() {
                 <Route path="/learn/array" element={<ArrayPage />} />
                 <Route path="/learn/sorting" element={<SortingPage />} />
                 <Route path="/learn/searching" element={<SearchingPage />} />
-                <Route path="/learn/list" element={<ListPage />} />
+                <Route path="/learn/recursion" element={<RecursionPage />} />
+                <Route path="/learn/linkedlist" element={<ListPage />} />
                 <Route path="/learn/bitmask" element={<BitmaskPage />} />
                 <Route
                   path="/learn/two-pointers"
                   element={<TwoPointersPage />}
                 />
-                <Route path="/learn/intervals" element={<IntervalsPage />} />
+                <Route
+                  path="/learn/sliding-window"
+                  element={<SlidingWindowPage />}
+                />
+                <Route
+                  path="/learn/backtracking"
+                  element={<BacktrackingPage />}
+                />
                 <Route path="/explore" element={<ExplorePage />} />
                 <Route path="/user/:id" element={<ProfilePage />} />
                 <Route path="/user/:id/edit" element={<EditProfilePage />} />

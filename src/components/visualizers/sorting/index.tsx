@@ -8,6 +8,7 @@ import type {
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
 import { getBlockDimensions } from "../../../config/visualizerConfig";
+import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: SortingStep[];
@@ -16,115 +17,12 @@ type Props = {
 export default function SortingVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const { barWidth, barHeight, spacing, radius, FONT_SIZE } =
+  const { blockWidth, blockHeight, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
-
-  const laneOffset = barHeight + 30;
-
-  function applyStep(
-    prev: {
-      blocks: Block[];
-      positions: Record<number, number>;
-      depths: Record<number, number>;
-      sorted: number[];
-      highlight: { ids: number[]; mode: "key" | "compare" | "swap" | null };
-      pointers: Record<string, PointerValue>;
-    },
-    step: SortingStep
-  ) {
-    let { blocks, positions, depths, sorted, highlight, pointers } = {
-      blocks: [...prev.blocks],
-      positions: { ...prev.positions },
-      depths: { ...prev.depths },
-      sorted: [...prev.sorted],
-      highlight: { ...prev.highlight },
-      pointers: { ...prev.pointers },
-    };
-
-    switch (step.type) {
-      case "init":
-        blocks = [];
-        positions = {};
-        depths = {};
-        (step.array ?? []).forEach((b, i) => {
-          blocks[i] = b;
-          positions[b.id] = i;
-          depths[b.id] = 0;
-        });
-        sorted = [];
-        highlight = { ids: [], mode: null };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "highlight":
-        highlight = { ids: step.ids ?? [], mode: "key" };
-        if (step.drag && step.depth !== undefined) {
-          (step.ids ?? []).forEach((id) => {
-            depths[id] = step.depth!;
-          });
-        }
-
-        pointers = step.pointers ?? {};
-        break;
-
-      case "compare":
-        highlight = { ids: step.ids ?? [], mode: "compare" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "swap": {
-        const [idA, idB] = step.ids ?? [];
-        highlight = { ids: step.ids ?? [], mode: "swap" };
-        if (idA !== undefined && idB !== undefined) {
-          const posA = positions[idA];
-          const posB = positions[idB];
-          positions[idA] = posB;
-          positions[idB] = posA;
-        }
-
-        pointers = step.pointers ?? {};
-        break;
-      }
-
-      case "stage_move": {
-        highlight = { ids: step.ids ?? [], mode: "key" };
-        (step.ids ?? []).forEach((id) => {
-          positions[id] = step.toIndex!;
-          depths[id] = step.depth ?? 1;
-        });
-
-        pointers = step.pointers ?? {};
-        break;
-      }
-
-      case "stage_commit": {
-        highlight = { ids: step.ids ?? [], mode: "key" };
-        (step.ids ?? []).forEach((id) => {
-          depths[id] = step.depth ?? 0;
-        });
-
-        pointers = step.pointers ?? {};
-        break;
-      }
-
-      case "mark_sorted":
-        sorted = [...new Set([...sorted, ...(step.ids ?? [])])];
-        pointers = step.pointers ?? {};
-        break;
-
-      case "done":
-        highlight = { ids: [], mode: null };
-        depths = {};
-        pointers = {};
-        break;
-    }
-
-    return { blocks, positions, depths, sorted, highlight, pointers };
-  }
 
   const { blocks, positions, depths, sorted, highlight, pointers } =
     useMemo(() => {
-      let state = {
+      let { blocks, positions, depths, sorted, highlight, pointers } = {
         blocks: [] as Block[],
         positions: {} as Record<number, number>,
         depths: {} as Record<number, number>,
@@ -137,9 +35,87 @@ export default function SortingVisualizer({ steps }: Props) {
       };
 
       for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-        state = applyStep(state, steps[i]);
+        const step = steps[i];
+        switch (step.type) {
+          case "init":
+            blocks = [];
+            positions = {};
+            depths = {};
+            (step.array ?? []).forEach((b, i) => {
+              blocks[i] = b;
+              positions[b.id] = i;
+              depths[b.id] = 0;
+            });
+            sorted = [];
+            highlight = { ids: [], mode: null };
+            pointers = step.pointers ?? {};
+            break;
+
+          case "highlight":
+            highlight = { ids: step.ids ?? [], mode: "key" };
+            if (step.drag && step.depth !== undefined) {
+              (step.ids ?? []).forEach((id) => {
+                depths[id] = step.depth!;
+              });
+            }
+
+            pointers = step.pointers ?? {};
+            break;
+
+          case "compare":
+            highlight = { ids: step.ids ?? [], mode: "compare" };
+            pointers = step.pointers ?? {};
+            break;
+
+          case "swap": {
+            const [idA, idB] = step.ids ?? [];
+            highlight = { ids: step.ids ?? [], mode: "swap" };
+            if (idA !== undefined && idB !== undefined) {
+              const posA = positions[idA];
+              const posB = positions[idB];
+              positions[idA] = posB;
+              positions[idB] = posA;
+            }
+
+            pointers = step.pointers ?? {};
+            break;
+          }
+
+          case "stage_move": {
+            highlight = { ids: step.ids ?? [], mode: "key" };
+            (step.ids ?? []).forEach((id) => {
+              positions[id] = step.toIndex!;
+              depths[id] = step.depth ?? 1;
+            });
+
+            pointers = step.pointers ?? {};
+            break;
+          }
+
+          case "stage_commit": {
+            highlight = { ids: step.ids ?? [], mode: "key" };
+            (step.ids ?? []).forEach((id) => {
+              depths[id] = step.depth ?? 0;
+            });
+
+            pointers = step.pointers ?? {};
+            break;
+          }
+
+          case "mark_sorted":
+            sorted = [...new Set([...sorted, ...(step.ids ?? [])])];
+            pointers = step.pointers ?? {};
+            break;
+
+          case "done":
+            highlight = { ids: [], mode: null };
+            depths = {};
+            pointers = {};
+            break;
+        }
       }
-      return state;
+
+      return { blocks, positions, depths, sorted, highlight, pointers };
     }, [steps, stepIndex]);
 
   const stepType = steps[stepIndex]?.type;
@@ -165,7 +141,7 @@ export default function SortingVisualizer({ steps }: Props) {
         animate={{ y: svgY, translateY: svgTranslateY }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         width={Object.keys(blocks).length * spacing}
-        height={barHeight}
+        height={blockHeight}
         style={{ overflow: "visible", translateY: "-50%" }}
       >
         {blocks.map((block) => {
@@ -175,13 +151,13 @@ export default function SortingVisualizer({ steps }: Props) {
 
           const rectFill = isHighlighted
             ? highlight.mode === "key"
-              ? "#ef4444"
+              ? COLORS.dangerRed
               : highlight.mode === "swap"
-              ? "#22c55e"
-              : "#f59e0b"
+              ? COLORS.successGreen
+              : COLORS.accentYellow
             : sorted.includes(block.id)
-            ? "#22c55e"
-            : "#475569";
+            ? COLORS.successGreen
+            : COLORS.neutralGray;
 
           const labelsAtIndex = groupedPointers[block.id];
 
@@ -190,20 +166,20 @@ export default function SortingVisualizer({ steps }: Props) {
               key={block.id}
               animate={{
                 x: pos * spacing,
-                y: depth * laneOffset,
+                y: depth * blockHeight + 30,
               }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >
               <motion.rect
                 rx={radius}
-                width={barWidth}
-                height={barHeight}
+                width={blockWidth}
+                height={blockHeight}
                 fill={rectFill}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
               <text
-                x={barWidth / 2}
-                y={barHeight / 2}
+                x={blockWidth / 2}
+                y={blockHeight / 2}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.block}
                 fill="white"
@@ -214,8 +190,8 @@ export default function SortingVisualizer({ steps }: Props) {
               </text>
               {labelsAtIndex && (
                 <text
-                  x={barWidth / 2}
-                  y={barHeight + 15}
+                  x={blockWidth / 2}
+                  y={blockHeight + 15}
                   fontFamily="Satoshi"
                   fontSize={FONT_SIZE.label}
                   fill="white"

@@ -4,6 +4,7 @@ import type { BitmaskStep, Block } from "../../../algorithms/types";
 import { useOrientation } from "../../../hooks/useOrientation";
 import { usePlayback } from "../../../context/PlaybackContext";
 import { getGridDimensions } from "../../../config/visualizerConfig";
+import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: BitmaskStep[];
@@ -14,173 +15,151 @@ export default function BitmaskVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { cellSize, spacing, radius, FONT_SIZE } = getGridDimensions(isMobile);
 
-  function applyStep(
-    prev: {
-      initialNum: number;
-      bits: Block[];
-      mask: Block[];
-      result: Block[];
-      highlight: { ids: number[]; mode: "check" | "found" | "updated" | null };
-      positions: Record<number, number>;
-      op: string | null;
-    },
-    step: BitmaskStep
-  ) {
-    let { initialNum, bits, mask, result, highlight, op, positions } = {
-      ...prev,
-      bits: [...prev.bits],
-      mask: [...prev.mask],
-      result: [...prev.result],
-      positions: { ...prev.positions },
-    };
-
-    switch (step.type) {
-      case "init":
-        bits = step.bits ?? [];
-        mask = step.mask ?? [];
-        result = step.result ?? [];
-        initialNum = step.initialNum;
-        highlight = { ids: [], mode: null };
-        op = null;
-        positions = {};
-
-        const rows = [bits, mask, result];
-        rows.forEach((row) => {
-          row.forEach((block, i) => {
-            positions[block.id] = i;
-          });
-        });
-
-        break;
-
-      case "highlight":
-        highlight = { ids: step.ids, mode: step.mode };
-        break;
-
-      case "operation": {
-        if (step.op === "SHL" || step.op === "SHR" || step.op === "NOT") {
-          const target = step.target ?? "bits";
-
-          if (target === "bits") {
-            highlight = { ids: [...bits.map((b) => b.id)], mode: "check" };
-            const newBits = bits.map((b) => ({ ...b }));
-
-            if (step.op === "SHL") {
-              for (let i = 0; i < newBits.length - 1; i++) {
-                newBits[i].value = newBits[i + 1].value;
-              }
-              newBits[newBits.length - 1].value = 0;
-              bits = newBits;
-              initialNum = initialNum << 1;
-            } else if (step.op === "SHR") {
-              for (let i = newBits.length - 1; i > 0; i--) {
-                newBits[i].value = newBits[i - 1].value;
-              }
-
-              newBits[0].value = 0;
-              bits = newBits;
-              initialNum = initialNum >> 1;
-            } else if (step.op === "NOT") {
-              newBits.forEach((b) => (b.value = b.value === 1 ? 0 : 1));
-              bits = newBits;
-              initialNum = ~initialNum;
-            }
-          } else if (target === "mask") {
-            highlight = { ids: [...mask.map((m) => m.id)], mode: "check" };
-            const newMask = mask.map((m) => ({ ...m }));
-
-            if (step.op === "SHL") {
-              for (let i = 0; i < newMask.length - 1; i++) {
-                newMask[i].value = newMask[i + 1].value;
-              }
-              newMask[newMask.length - 1].value = 0;
-              mask = newMask;
-            } else if (step.op === "SHR") {
-              for (let i = newMask.length - 1; i > 0; i--) {
-                newMask[i].value = newMask[i - 1].value;
-              }
-
-              newMask[0].value = 0;
-              mask = newMask;
-            } else if (step.op === "NOT") {
-              newMask.forEach((m) => (m.value = m.value === 1 ? 0 : 1));
-              mask = newMask;
-            }
-          }
-        } else if (["AND", "OR", "XOR"].includes(step.op)) {
-          highlight = {
-            ids: [...bits.map((b) => b.id), ...mask.map((m) => m.id)],
-            mode: "check",
-          };
-        }
-
-        op = step.op;
-        break;
-      }
-
-      case "overwrite":
-        op = null;
-        if (typeof step.id === "number") {
-          result = result.map((block) =>
-            block.id === step.id ? { ...block, value: step.value } : block
-          );
-
-          highlight = { ids: [step.id], mode: "found" };
-        } else {
-          highlight = { ids: [], mode: null };
-        }
-
-        break;
-
-      case "update":
-        op = null;
-        highlight = { ids: [], mode: null };
-
-        if (step.bits) {
-          bits = [...step.bits];
-        }
-
-        if (step.mask) {
-          mask = [...step.mask];
-        }
-
-        if (step.result) {
-          result = [...step.result];
-          highlight = {
-            ids: result.map((r) => r.id),
-            mode: "updated",
-          };
-        }
-
-        break;
-
-      case "done":
-        highlight = { ids: [], mode: null };
-        op = null;
-        break;
-    }
-
-    return { initialNum, bits, mask, result, highlight, op, positions };
-  }
-
   const { initialNum, bits, mask, result, highlight, op, positions } =
     useMemo(() => {
-      let state = {
+      let { initialNum, bits, mask, result, highlight, op, positions } = {
         initialNum: {} as number,
         bits: [] as Block[],
         mask: [] as Block[],
         result: [] as Block[],
         highlight: {
           ids: [] as number[],
-          mode: null as "check" | "found" | "updated" | null,
+          mode: null as "check" | "found" | "update" | null,
         },
         op: null as string | null,
         positions: {} as Record<number, number>,
       };
+
       for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-        state = applyStep(state, steps[i]);
+        const step = steps[i];
+        switch (step.type) {
+          case "init":
+            bits = step.bits ?? [];
+            mask = step.mask ?? [];
+            result = step.result ?? [];
+            initialNum = step.initialNum;
+            highlight = { ids: [], mode: null };
+            op = null;
+            positions = {};
+
+            const rows = [bits, mask, result];
+            rows.forEach((row) => {
+              row.forEach((block, i) => {
+                positions[block.id] = i;
+              });
+            });
+
+            break;
+
+          case "highlight":
+            highlight = { ids: step.ids, mode: step.mode };
+            break;
+
+          case "operation": {
+            if (step.op === "SHL" || step.op === "SHR" || step.op === "NOT") {
+              const target = step.target ?? "bits";
+
+              if (target === "bits") {
+                highlight = { ids: [...bits.map((b) => b.id)], mode: "check" };
+                const newBits = bits.map((b) => ({ ...b }));
+
+                if (step.op === "SHL") {
+                  for (let i = 0; i < newBits.length - 1; i++) {
+                    newBits[i].value = newBits[i + 1].value;
+                  }
+                  newBits[newBits.length - 1].value = 0;
+                  bits = newBits;
+                  initialNum = initialNum << 1;
+                } else if (step.op === "SHR") {
+                  for (let i = newBits.length - 1; i > 0; i--) {
+                    newBits[i].value = newBits[i - 1].value;
+                  }
+
+                  newBits[0].value = 0;
+                  bits = newBits;
+                  initialNum = initialNum >> 1;
+                } else if (step.op === "NOT") {
+                  newBits.forEach((b) => (b.value = b.value === 1 ? 0 : 1));
+                  bits = newBits;
+                  initialNum = ~initialNum;
+                }
+              } else if (target === "mask") {
+                highlight = { ids: [...mask.map((m) => m.id)], mode: "check" };
+                const newMask = mask.map((m) => ({ ...m }));
+
+                if (step.op === "SHL") {
+                  for (let i = 0; i < newMask.length - 1; i++) {
+                    newMask[i].value = newMask[i + 1].value;
+                  }
+                  newMask[newMask.length - 1].value = 0;
+                  mask = newMask;
+                } else if (step.op === "SHR") {
+                  for (let i = newMask.length - 1; i > 0; i--) {
+                    newMask[i].value = newMask[i - 1].value;
+                  }
+
+                  newMask[0].value = 0;
+                  mask = newMask;
+                } else if (step.op === "NOT") {
+                  newMask.forEach((m) => (m.value = m.value === 1 ? 0 : 1));
+                  mask = newMask;
+                }
+              }
+            } else if (["AND", "OR", "XOR"].includes(step.op)) {
+              highlight = {
+                ids: [...bits.map((b) => b.id), ...mask.map((m) => m.id)],
+                mode: "check",
+              };
+            }
+
+            op = step.op;
+            break;
+          }
+
+          case "overwrite":
+            op = null;
+            if (typeof step.id === "number") {
+              result = result.map((block) =>
+                block.id === step.id ? { ...block, value: step.value } : block
+              );
+
+              highlight = { ids: [step.id], mode: "found" };
+            } else {
+              highlight = { ids: [], mode: null };
+            }
+
+            break;
+
+          case "update":
+            op = null;
+            highlight = { ids: [], mode: null };
+
+            if (step.bits) {
+              bits = [...step.bits];
+            }
+
+            if (step.mask) {
+              mask = [...step.mask];
+            }
+
+            if (step.result) {
+              result = [...step.result];
+              highlight = {
+                ids: result.map((r) => r.id),
+                mode: "update",
+              };
+            }
+
+            break;
+
+          case "done":
+            highlight = { ids: [], mode: null };
+            op = null;
+            break;
+        }
       }
-      return state;
+
+      return { initialNum, bits, mask, result, highlight, op, positions };
     }, [steps, stepIndex]);
 
   const n = bits.length || 8;
@@ -195,33 +174,6 @@ export default function BitmaskVisualizer({ steps }: Props) {
   ];
 
   const step = steps[stepIndex];
-
-  function getColors(
-    block: Block,
-    isHighlighted: boolean,
-    mode: "check" | "found" | "updated" | null
-  ) {
-    if (!isHighlighted) {
-      return {
-        rectFill: "#475569",
-        textFill: block.value === 1 ? "#a7f3d0" : "#e2e8f0",
-      };
-    }
-
-    switch (mode) {
-      case "check":
-        return { rectFill: "#fbbf24", textFill: "#111827" };
-      case "found":
-        return { rectFill: "#22c55e", textFill: "#f1f5f9" };
-      case "updated":
-        return { rectFill: "#3b82f6", textFill: "#f1f5f9" };
-      default:
-        return {
-          rectFill: "#475569",
-          textFill: block.value === 1 ? "#a7f3d0" : "#e2e8f0",
-        };
-    }
-  }
 
   function shouldRenderOpLabel(step: BitmaskStep, rowLabel: string): boolean {
     if (step.type !== "operation") return false;
@@ -255,11 +207,15 @@ export default function BitmaskVisualizer({ steps }: Props) {
 
                 const isHighlighted = highlight.ids.includes(block.id);
 
-                const { rectFill, textFill } = getColors(
-                  block,
-                  isHighlighted,
-                  highlight.mode
-                );
+                const rectFill = isHighlighted
+                  ? highlight.mode === "check"
+                    ? COLORS.accentYellow
+                    : highlight.mode === "found"
+                    ? COLORS.successGreen
+                    : highlight.mode === "update"
+                    ? COLORS.infoIndigo
+                    : COLORS.neutralGray
+                  : COLORS.neutralGray;
 
                 return (
                   <motion.g key={block.id} transform={`translate(${x}, 0)`}>
@@ -292,7 +248,7 @@ export default function BitmaskVisualizer({ steps }: Props) {
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fontSize={FONT_SIZE.cell}
-                      fill={textFill}
+                      fill="white"
                       initial={{ rotateY: 90, opacity: 0 }}
                       animate={{ rotateY: 0, opacity: 1 }}
                       transition={{ duration: 0.4, ease: "easeOut" }}

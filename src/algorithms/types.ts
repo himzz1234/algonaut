@@ -1,6 +1,7 @@
 export type Block = {
   id: number;
   value: number;
+  label?: string;
 };
 
 export type VariableBlock = Block & {
@@ -10,6 +11,14 @@ export type VariableBlock = Block & {
 export type Node = Block & {
   next: Node | null;
   prev?: Node | null;
+};
+
+export type TreeNode = {
+  id: number;
+  label: string | number;
+  children: TreeNode[];
+  depth: number;
+  parentId: number;
 };
 
 export type Cell = {
@@ -49,7 +58,7 @@ export type Overlay =
 export type PointerValue<AllowNull extends boolean = false> =
   | (AllowNull extends true ? number | null : number)
   | (AllowNull extends true ? (number | null)[] : number[])
-  | { ids: number[]; value: number };
+  | { ids: number[]; value: number; pos?: "top" | "bottom" };
 
 export type Step<AllowNull extends boolean = false> = {
   pointers?: Record<string, PointerValue<AllowNull>>;
@@ -147,10 +156,6 @@ export type SearchingStep =
       type: "init";
       array: Block[];
       target: number;
-    })
-  | (Step & {
-      type: "check";
-      id: number;
     })
   | (Step & {
       type: "compare";
@@ -279,47 +284,120 @@ export type TwoPointerStep =
       overlays?: Overlay[];
     });
 
-export type IntervalStep =
+export type SlidingWindowStep =
   | (Step & {
       type: "init";
-      intervals: Interval[];
-      pointers?: Record<string, PointerValue>;
+      array: Block[];
+      k?: number;
     })
   | (Step & {
       type: "highlight";
       ids: number[];
     })
   | (Step & {
-      type: "compare";
-      ids: [number, number];
+      type: "update";
+      value: number;
     })
   | (Step & {
-      type: "merge";
-      ids: [number, number];
-      newInterval: Interval;
-      mergeAtAxis: boolean;
+      type: "check";
+      condition: string;
+      result: boolean;
     })
   | (Step & {
-      type: "append";
-      interval: Interval;
-    })
-  | (Step & {
-      type: "remove";
-      id: number;
-    })
-  | (Step & {
-      type: "sweep";
-      position: number;
-      activeCount: number;
-    })
-  | (Step & {
-      type: "gap";
-      interval: Interval;
-      style?: "discovered" | "final";
+      type: "found";
+      ids: number[];
     })
   | (Step & {
       type: "done";
-      result?: Interval[];
+    });
+
+export type BacktrackingStep =
+  | (Step & {
+      type: "init";
+      array: Block[];
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+      nodeIds: number[];
+    })
+  | (Step & {
+      type: "pick";
+      ids: number[];
+      nodeIds: number[];
+      parentId: number;
+      node: TreeNode;
+    })
+  | (Step & {
+      type: "unpick";
+      ids: number[];
+      nodeIds: number[];
+      parentId: number;
+    })
+  | (Step & {
+      type: "found";
+      ids: number[];
+      nodeIds: number[];
+    })
+  | (Step & {
+      type: "done";
+      ids: number[];
+      nodeIds: number[];
+    });
+
+export type RecursionStep =
+  | (Step & {
+      type: "init";
+      stack: Block[];
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "push";
+      frame: Block;
+    })
+  | (Step & {
+      type: "pop";
+      id: number;
+      value: number;
+    })
+  | (Step & {
+      type: "resolve";
+      id: number;
+      label?: string;
+    })
+  | (Step & {
+      type: "done";
+    });
+
+export type RecursionTreeStep =
+  | (Step & {
+      type: "init";
+      root: TreeNode;
+    })
+  | (Step & {
+      type: "expand";
+      parentId: number;
+      node: TreeNode;
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "resolve";
+      id: number;
+      label?: string;
+      value?: number;
+    })
+  | (Step & {
+      type: "collapse";
+      id: number;
+    })
+  | (Step & {
+      type: "done";
     });
 
 export type PathfindingStep =

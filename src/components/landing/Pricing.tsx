@@ -15,7 +15,7 @@ function BillingToggle({
     onChange(isMonthly ? "yearly" : "monthly");
   }
 
-  function handleKey(e: { key: string; preventDefault: () => void }) {
+  function handleKey(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       toggle();
@@ -26,9 +26,6 @@ function BillingToggle({
     }
   }
 
-  const TRACK_W = 88;
-  const TRACK_H = 32;
-
   return (
     <div
       ref={ref}
@@ -37,14 +34,17 @@ function BillingToggle({
       tabIndex={0}
       onKeyDown={handleKey}
       onClick={toggle}
-      className="inline-flex items-center justify-center p-1"
-      style={{ outline: "none" }}
+      className="inline-flex items-center justify-center focus:outline-none"
     >
       <div
-        className="relative rounded-full border border-gray-700/60"
+        className="
+          relative rounded-full border border-gray-700/60
+          w-14 h-6 
+          sm:w-16 sm:h-7
+          md:w-20 md:h-8
+          lg:w-24 lg:h-9
+        "
         style={{
-          width: TRACK_W,
-          height: TRACK_H,
           background:
             "linear-gradient(180deg, rgba(6,10,12,0.9), rgba(10,14,16,0.95))",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
@@ -54,22 +54,22 @@ function BillingToggle({
         <motion.div
           initial={false}
           animate={{
-            left: isMonthly ? 2 : TRACK_W / 2 + 4,
-            width: TRACK_W / 2 - 11,
+            left: isMonthly ? "0.2rem" : "53%",
+            width: "calc(50% - 0.4rem)",
           }}
           transition={{ type: "spring", stiffness: 500, damping: 35 }}
           className="absolute top-1/2 -translate-y-1/2 rounded-full"
           style={{
-            height: TRACK_H - 8,
+            height: "calc(100% - 0.4rem)",
             background: isMonthly
-              ? "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1))"
+              ? "linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.12))"
               : "linear-gradient(180deg,#00c77b,#00c77b)",
             boxShadow: isMonthly
               ? "inset 0 1px 0 rgba(255,255,255,0.02)"
-              : "0 8px 30px rgba(16,185,129,0.12)",
+              : "0 6px 18px rgba(16,185,129,0.15)",
             border: isMonthly
-              ? "1px solid rgba(255,255,255,0.02)"
-              : "1px solid rgba(16,185,129,0.08)",
+              ? "1px solid rgba(255,255,255,0.05)"
+              : "1px solid rgba(16,185,129,0.12)",
           }}
         />
       </div>
@@ -127,25 +127,26 @@ export default function Pricing() {
   );
 
   return (
-    <section className="max-w-6xl mx-auto py-16 flex flex-col justify-center px-4 sm:px-6 lg:px-8">
+    <section className="max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto text-center">
         <h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 
-               bg-clip-text text-transparent leading-snug"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight 
+                     bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 
+                     bg-clip-text text-transparent leading-snug"
         >
           Pricing built for{" "}
           <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
             learners
           </span>
         </h2>
-        <p className="mt-3 text-base sm:text-lg md:text-xl text-gray-400 text-center">
+        <p className="mt-3 text-sm sm:text-base md:text-lg lg:text-xl text-gray-400">
           Flexible plans for individuals and teams.
         </p>
 
-        <div className="mt-8 flex items-center justify-center gap-2">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
           <button
             onClick={() => setBilling("monthly")}
-            className={`uppercase text-sm px-3 py-1 rounded-full transition ${
+            className={`uppercase text-xs sm:text-sm px-3 py-1 rounded-full transition ${
               billing === "monthly" ? "text-white" : "text-gray-500"
             }`}
           >
@@ -154,33 +155,36 @@ export default function Pricing() {
 
           <BillingToggle value={billing} onChange={setBilling} />
 
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setBilling("yearly")}
-              className={`uppercase text-sm px-3 py-1 rounded-full transition ${
+              className={`uppercase text-xs sm:text-sm px-3 py-1 rounded-full transition ${
                 billing === "yearly" ? "text-white" : "text-gray-500"
               }`}
             >
               Yearly
             </button>
             {savingsPercent > 0 && (
-              <span className="px-3 py-1.5 text-xs rounded-full bg-green-600/20 text-green-400">
+              <span className="px-3 py-1 text-xs sm:text-sm rounded-full bg-green-600/20 text-green-400">
                 Save {savingsPercent}%
               </span>
             )}
           </div>
         </div>
 
-        <div className="mt-10 max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Pricing Cards */}
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-3xl mx-auto">
           {tiers.map((tier) => {
             const price =
               billing === "monthly" ? tier.priceMonthly : tier.priceYearly;
             return (
               <article
                 key={tier.id}
-                className={`overflow-visible relative flex flex-col items-start rounded-xl bg-[#0f1014] border border-gray-700/60 p-6 md:p-8 shadow-xl backdrop-blur-md ${
-                  tier.recommended ? "border border-green-500" : ""
-                }`}
+                className={`relative flex flex-col items-start rounded-xl bg-[#0f1014] 
+                            border border-gray-700/60 p-6 sm:p-8 shadow-xl backdrop-blur-md
+                            ${
+                              tier.recommended ? "border border-green-500" : ""
+                            }`}
               >
                 {tier.recommended && (
                   <div className="absolute -top-4 right-4 transform rotate-2">
@@ -191,27 +195,29 @@ export default function Pricing() {
                 )}
 
                 <header className="pb-4">
-                  <h3 className="text-sm font-medium text-white border border-gray-700/60 rounded-full px-6 py-2">
+                  <h3 className="text-xs sm:text-sm font-medium text-white border border-gray-700/60 rounded-full px-4 py-1.5">
                     {tier.name}
                   </h3>
                 </header>
 
-                <div className="flex-1">
-                  <div className="flex flex-col items-start text-left mt-4">
+                <div className="flex-1 w-full">
+                  <div className="flex flex-col items-start text-left mt-3 sm:mt-4">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl lg:text-5xl font-medium text-white">
+                      <span className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white">
                         {formatPrice(price)}
                       </span>
                       {tier.id !== "free" && (
-                        <span className="text-slate-400">
+                        <span className="text-slate-400 text-sm sm:text-base">
                           per {billing === "monthly" ? "month" : "year"}
                         </span>
                       )}
                     </div>
-                    <p className="mt-4 text-gray-400">{tier.subtitle}</p>
+                    <p className="mt-3 sm:mt-4 text-gray-400 text-sm sm:text-base">
+                      {tier.subtitle}
+                    </p>
                   </div>
 
-                  <ul className="space-y-3 h-48 mt-4 flex flex-col justify-center text-white">
+                  <ul className="space-y-3 mt-4 sm:mt-6 text-white text-sm sm:text-base">
                     {tier.features.map((f, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-800/40">
@@ -234,9 +240,9 @@ export default function Pricing() {
                   </ul>
                 </div>
 
-                <footer className="mt-6">
+                <footer className="mt-6 w-full">
                   <button
-                    className={`w-full py-3 rounded-lg font-medium transition-transform duration-150 ${
+                    className={`w-full py-3 rounded-lg font-medium text-sm sm:text-base transition-transform duration-150 ${
                       tier.recommended
                         ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-[0_10px_30px_rgba(16,185,129,0.12)] hover:translate-y-[-2px]"
                         : "bg-gray-800/30 text-slate-100 border border-gray-700/50 hover:brightness-105"
@@ -246,7 +252,7 @@ export default function Pricing() {
                     {tier.cta}
                   </button>
 
-                  <p className="mt-4 text-xs text-slate-500">
+                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-slate-500">
                     Cancel anytime. Secure payments. Educational discounts
                     available for teams.
                   </p>
@@ -256,7 +262,7 @@ export default function Pricing() {
           })}
         </div>
 
-        <p className="mt-6 text-sm text-slate-500">
+        <p className="mt-6 text-xs sm:text-sm md:text-base text-slate-500">
           Prices in USD. Taxes may apply. All plans include updates and
           improvements.
         </p>

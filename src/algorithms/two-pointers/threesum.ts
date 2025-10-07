@@ -54,14 +54,14 @@ export function* threeSum(
           ids: [a[i].id, a[left].id, a[right].id],
           relation: "=",
           explanation: `Nice! ${sum} equals ${target}.`,
-          lines: [5],
+          lines: [5, 6],
         };
 
         return yield {
           type: "found",
           ids: [a[i].id, a[left].id, a[right].id],
           explanation: `Found triplet: ${a[i].value}, ${a[left].value}, ${a[right].value}.`,
-          lines: [5],
+          lines: [5, 6],
         };
       } else if (sum < target) {
         yield {
@@ -69,7 +69,7 @@ export function* threeSum(
           ids: [a[i].id, a[left].id, a[right].id],
           relation: "<",
           explanation: `${sum} is too small. Let's move the left pointer right.`,
-          lines: [6, 7],
+          lines: [7, 8],
         };
         left++;
       } else {
@@ -78,7 +78,7 @@ export function* threeSum(
           ids: [a[i].id, a[left].id, a[right].id],
           relation: ">",
           explanation: `${sum} is too big. Let's move the right pointer left.`,
-          lines: [8, 9],
+          lines: [9, 10],
         };
 
         right--;
@@ -89,6 +89,6 @@ export function* threeSum(
   yield {
     type: "not-found",
     explanation: `We checked everything. No triplet adds up to ${target}.`,
-    lines: [10],
+    lines: [11],
   };
 }

@@ -70,14 +70,14 @@ export function* insertionSort(arr: Block[]): Generator<SortingStep> {
     yield {
       type: "mark_sorted",
       ids: a.slice(0, i + 1).map((b) => b.id),
-      lines: [7],
+      lines: [6],
       explanation: `First ${i + 1} elements are now in their sorted positions.`,
     };
   }
 
   yield {
     type: "done",
-    lines: [8],
+    lines: [7],
     explanation: `Insertion Sort complete.`,
   };
 }

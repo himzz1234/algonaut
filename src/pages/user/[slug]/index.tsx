@@ -5,6 +5,7 @@ import { RiGraduationCapLine } from "react-icons/ri";
 import { useProgress } from "../../../context/ProgressContext";
 import { algorithms } from "../../../data/algorithms";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 function ProfileCard() {
   const { user } = useAuth();
@@ -23,15 +24,19 @@ function ProfileCard() {
           <img
             src={user.photoURL}
             alt="profile"
-            className="w-16 h-16 rounded-full object-cover"
+            className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover"
           />
         ) : (
-          <div className="w-16 h-16 shrink-0 text-lg font-semibold text-emerald-400 border-2 border-emerald-500/40 rounded-full flex items-center justify-center">
-            {user?.displayName?.[0]?.toUpperCase() ?? "?"}
+          <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 text-lg font-semibold text-emerald-400 border-2 border-emerald-500/40 rounded-full flex items-center justify-center">
+            <img
+              src="/images/default.jpg"
+              alt="profile"
+              className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover"
+            />
           </div>
         )}
         <div className="flex-1">
-          <h3 className="text-sm md:text-xl text-gray-300 font-semibold">
+          <h3 className="text-base md:text-xl text-gray-300 font-semibold">
             {user?.displayName}
           </h3>
           <p className="text-gray-500 text-sm mt-0.5">{user?.email}</p>
@@ -39,7 +44,7 @@ function ProfileCard() {
       </div>
 
       <div className="mt-4 space-y-3 text-white border-t border-gray-700/60 pt-4">
-        <h5>Personal Information</h5>
+        <h5 className="text-sm md:text-base">Personal Information</h5>
 
         <p className="flex items-center gap-3 text-lg text-gray-400">
           <RiGraduationCapLine />
@@ -64,6 +69,7 @@ function ProfileCard() {
 }
 
 export default function ProfilePage() {
+  const { user } = useAuth();
   const { progressMap, loading } = useProgress();
 
   const topicCounts: Record<string, number> = {};
@@ -75,17 +81,34 @@ export default function ProfilePage() {
     }
   });
 
+  const title = user
+    ? `${user.displayName || "User"}'s - Algonaut Profile`
+    : "Profile | Algonaut";
+  const description =
+    "View your algorithm learning progress, topics covered, and quiz completions on Algonaut.";
+
   return (
-    <main className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-12 gap-4">
-      <aside className="col-span-3 space-y-6">
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content={window.location.href} />
+      </Helmet>
+
+      <aside className="lg:col-span-3 space-y-6">
         <ProfileCard />
       </aside>
 
-      <section className="col-span-9 space-y-4">
+      <section className="lg:col-span-9 space-y-4">
         <StatsGrid />
 
         <div className="rounded-lg bg-[#000] border border-gray-700/60 p-4 space-y-4">
-          <h2 className="text-lg font-semibold text-white">Topics Covered</h2>
+          <h2 className="text-base sm:text-lg font-semibold text-white">
+            Topics Covered
+          </h2>
 
           {loading ? (
             <p className="text-gray-400">Loading progress…</p>

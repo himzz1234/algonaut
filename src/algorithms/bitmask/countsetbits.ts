@@ -15,7 +15,7 @@ export function* countSetBits(num: number, width = 8): Generator<BitmaskStep> {
     result: [...toBits(0, width, bits.length + mask.length)],
     initialNum: num,
     explanation: `We want to count the number of set bits (1's) in ${num}.`,
-    lines: [0],
+    lines: [0, 1],
   };
 
   while (n > 0) {
@@ -36,7 +36,7 @@ export function* countSetBits(num: number, width = 8): Generator<BitmaskStep> {
       type: "operation",
       op: "AND",
       explanation: `Perform N & 1 to see if the LSB is set.`,
-      lines: [4],
+      lines: [3],
     };
 
     yield {
@@ -46,7 +46,7 @@ export function* countSetBits(num: number, width = 8): Generator<BitmaskStep> {
         lsb === 1
           ? `N & 1 = 1 → increment count (count = ${++count}).`
           : `N & 1 = 0 → no change in count (count = ${count}).`,
-      lines: [4, lsb === 1 ? 5 : undefined].filter(Boolean) as number[],
+      lines: [3, lsb === 1 ? 4 : undefined].filter(Boolean) as number[],
     };
 
     n = n >> 1;
@@ -56,13 +56,13 @@ export function* countSetBits(num: number, width = 8): Generator<BitmaskStep> {
       op: "SHR",
       target: "bits",
       explanation: `Shift the number right by 1 to check the next bit.`,
-      lines: [6],
+      lines: [5],
     };
   }
 
   yield {
     type: "done",
     explanation: `Final count = ${count} set bits in ${num}.`,
-    lines: [7],
+    lines: [6],
   };
 }

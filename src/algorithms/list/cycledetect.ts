@@ -112,6 +112,6 @@ export function* cycleDetect(head: Node | null): Generator<ListStep> {
   yield {
     type: "done",
     explanation: "No cycle detected. Fast pointer reached the end.",
-    lines: [9],
+    lines: [8],
   };
 }

@@ -25,7 +25,7 @@ export function* quickSort(
     ids: [pivot.id],
     drag: true,
     pointers: { pivot: pivot.id },
-    lines: [1],
+    lines: [0],
     explanation: `Choose ${pivot.value} (rightmost element) as the pivot.`,
   };
 
@@ -39,7 +39,7 @@ export function* quickSort(
       ids: [arr[j].id, pivot.id],
       relation,
       pointers: { i: arr[i].id, j: arr[j].id, pivot: arr[right].id },
-      lines: [2, 3],
+      lines: [2],
       explanation: `Compare ${arr[j].value} with pivot ${pivot.value}.`,
     };
 
@@ -51,7 +51,7 @@ export function* quickSort(
           type: "swap",
           ids: [arr[i].id, arr[j].id],
           pointers: { i: arr[i].id, j: arr[j].id, pivot: arr[right].id },
-          lines: [2, 3],
+          lines: [2],
           explanation: `Swap ${arr[i].value} and ${arr[j].value} (smaller than pivot).`,
         };
       }
@@ -72,7 +72,7 @@ export function* quickSort(
       ids: [arr[i].id, arr[right].id],
       relation,
       pointers: { i: arr[i].id, pivot: arr[right].id },
-      lines: [2, 3],
+      lines: [2],
       explanation: `Place pivot ${pivot.value} into the correct position.`,
     };
 
@@ -82,7 +82,7 @@ export function* quickSort(
       type: "swap",
       ids: [arr[i].id, arr[right].id],
       pointers: { i: arr[i].id, pivot: arr[right].id },
-      lines: [2, 3],
+      lines: [2],
       explanation: `Swap pivot ${pivot.value} with ${arr[i].value}.`,
     };
   }
@@ -90,7 +90,7 @@ export function* quickSort(
   yield {
     type: "mark_sorted",
     ids: [arr[i].id],
-    lines: [4],
+    lines: [2],
     explanation: `${arr[i].value} is now in sorted position.`,
   };
 
@@ -103,7 +103,7 @@ export function* quickSort(
       drag: true,
       depth: depth + 1,
       pointers: { left: arr[left].id, right: arr[i - 1].id },
-      lines: [5],
+      lines: [3],
       explanation: `Let's focus on the left side of the pivot [${leftSlice
         .map((b) => b.value)
         .join(", ")}].`,
@@ -114,6 +114,7 @@ export function* quickSort(
     yield {
       type: "mark_sorted",
       ids: leftSlice.map((b) => b.id),
+      lines: [2],
       explanation: `Left side is now sorted.`,
     };
 
@@ -136,7 +137,7 @@ export function* quickSort(
       drag: true,
       depth: depth + 1,
       pointers: { left: arr[i + 1].id, right: arr[right].id },
-      lines: [6],
+      lines: [4],
       explanation: `Let's focus on the right side of the pivot [${rightSlice
         .map((b) => b.value)
         .join(", ")}].`,
@@ -147,6 +148,7 @@ export function* quickSort(
     yield {
       type: "mark_sorted",
       ids: rightSlice.map((b) => b.id),
+      lines: [2],
       explanation: `Right side is now sorted.`,
     };
 
@@ -166,6 +168,7 @@ export function* quickSort(
       ids: arr.map((x) => x.id),
       explanation: `Quick Sort complete.`,
     };
-    yield { type: "done", lines: [7], explanation: `Quick Sort finished.` };
+
+    yield { type: "done", lines: [5], explanation: `Quick Sort finished.` };
   }
 }

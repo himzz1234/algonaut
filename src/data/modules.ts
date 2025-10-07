@@ -43,13 +43,7 @@ export const modules: Module[] = [
     description:
       "Understand recursion and the call stack through simple, classic problems.",
     level: "beginner",
-    algos: [
-      "factorial",
-      "fibonacci",
-      "sum-n",
-      "tower-of-hanoi",
-      "reverse-string",
-    ],
+    algos: ["factorial", "fibonacci", "sum-n"],
   },
   {
     id: "m-bits",
@@ -82,9 +76,8 @@ export const modules: Module[] = [
       "container-most-water",
       "trap-rain-water",
       "max-sum-subarray-k",
+      "smallest-subarray-with-sum-greater-than-k",
       "longest-substring-without-repeat",
-      "min-window-substring",
-      "sliding-window-median",
     ],
   },
   {
@@ -101,6 +94,19 @@ export const modules: Module[] = [
       "ll-cycle-detect-floyd",
       "ll-remove-cycle",
       "ll-merge-two-sorted",
+    ],
+  },
+  {
+    id: "m-backtracking",
+    title: "Backtracking",
+    description:
+      "Explore search spaces with recursion and pruning to efficiently generate combinations, permutations, and solutions to constraint problems.",
+    level: "intermediate",
+    algos: [
+      "subsets",
+      "permutations",
+      "combination-sum",
+      "letter-combinations-phone",
     ],
   },
   {
@@ -408,37 +414,6 @@ export const modules: Module[] = [
 //     ],
 //   },
 //   {
-//     id: "m-backtracking",
-//     title: "Backtracking",
-//     description: "Explore search spaces with pruning.",
-//     level: "intermediate",
-//     algos: [
-//       {
-//         id: "subsets",
-//         label: "Subsets (Power Set)",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//       {
-//         id: "permutations",
-//         label: "Permutations",
-//         difficulty: "Medium",
-//         effort: "Medium–High",
-//       },
-//       {
-//         id: "n-queens",
-//         label: "N-Queens",
-//         difficulty: "Medium",
-//         effort: "High",
-//       },
-//       {
-//         id: "combination-sum",
-//         label: "Combination Sum",
-//         difficulty: "Medium",
-//         effort: "Medium",
-//       },
-//     ],
-//   },
 //   {
 //     id: "m-dp-basics",
 //     title: "Dynamic Programming (Basics)",

@@ -27,7 +27,7 @@ export function* twoSum(
         right: a[right].id,
       },
       explanation: `Check ${a[left].value} + ${a[right].value} = ${sum}.`,
-      lines: [1, 2],
+      lines: [2, 3],
     };
 
     if (sum === target) {
@@ -36,14 +36,14 @@ export function* twoSum(
         ids: [a[left].id, a[right].id],
         relation: "=",
         explanation: `Nice! ${sum} equals ${target}.`,
-        lines: [3, 4],
+        lines: [4, 5],
       };
 
       return yield {
         type: "found",
         ids: [a[left].id, a[right].id],
         explanation: `Found the pair: ${a[left].value} and ${a[right].value}.`,
-        lines: [3, 4],
+        lines: [4, 5],
       };
     } else if (sum < target) {
       yield {
@@ -51,7 +51,7 @@ export function* twoSum(
         ids: [a[left].id, a[right].id],
         relation: "<",
         explanation: `${sum} is too small. Let's move the left pointer right.`,
-        lines: [5, 6],
+        lines: [6, 7],
       };
 
       left++;
@@ -61,7 +61,7 @@ export function* twoSum(
         ids: [a[left].id, a[right].id],
         relation: ">",
         explanation: `${sum} is too big. Let's move the right pointer left.`,
-        lines: [7, 8],
+        lines: [8, 9],
       };
 
       right--;
@@ -71,6 +71,6 @@ export function* twoSum(
   yield {
     type: "not-found",
     explanation: `We checked everything. No pair adds up to ${target}.`,
-    lines: [9],
+    lines: [10],
   };
 }

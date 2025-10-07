@@ -33,6 +33,6 @@ export function* powerOfTwo(num: number, width = 8): Generator<BitmaskStep> {
     explanation: isPowerOfTwo
       ? `${num} & ${num - 1} = 0 → ${num} is a power of two.`
       : `${num} & ${num - 1} ≠ 0 → ${num} is NOT a power of two.`,
-    lines: isPowerOfTwo ? [2] : [3],
+    lines: isPowerOfTwo ? [2] : [3, 4],
   };
 }

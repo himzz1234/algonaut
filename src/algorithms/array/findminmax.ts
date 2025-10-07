@@ -37,26 +37,44 @@ export function* findMinMax(arr: Block[]): Generator<ArrayStep> {
       min = value;
       minId = a[i].id;
       explanation = `Update min to ${min}, since ${value} is smaller than the previous min.`;
+      yield {
+        type: "highlight",
+        ids: [a[i].id],
+        role: "current",
+        lines: [3],
+        drag: false,
+        pointers: { i: a[i].id, min: minId, max: maxId },
+        explanation,
+      };
     } else if (value > max) {
       max = value;
       maxId = a[i].id;
       explanation = `Update max to ${max}, since ${value} is larger than the previous max.`;
+      yield {
+        type: "highlight",
+        ids: [a[i].id],
+        role: "current",
+        lines: [4],
+        drag: false,
+        pointers: { i: a[i].id, min: minId, max: maxId },
+        explanation,
+      };
+    } else {
+      yield {
+        type: "highlight",
+        ids: [a[i].id],
+        role: "current",
+        lines: [2, 3, 4],
+        drag: false,
+        pointers: { i: a[i].id, min: minId, max: maxId },
+        explanation: `Compare element ${value} with current min (${min}) and max (${max}).`,
+      };
     }
-
-    yield {
-      type: "highlight",
-      ids: [a[i].id],
-      role: "current",
-      lines: [2, 3, 4],
-      drag: false,
-      pointers: { i: a[i].id, min: minId, max: maxId },
-      explanation,
-    };
   }
 
   yield {
     type: "done",
-    lines: [5, 6],
+    lines: [5],
     pointers: { min: minId, max: maxId },
     explanation: `Done! The minimum element is ${min} and the maximum element is ${max}.`,
   };

@@ -69,14 +69,14 @@ export function* selectionSort(arr: Block[]): Generator<SortingStep> {
     yield {
       type: "mark_sorted",
       ids: [a[i].id],
-      lines: [7],
+      lines: [6],
       explanation: `${a[i].value} is now in its sorted position.`,
     };
   }
 
   yield {
     type: "done",
-    lines: [8],
+    lines: [7],
     explanation: `Selection Sort complete.`,
   };
 }

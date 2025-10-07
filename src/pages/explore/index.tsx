@@ -4,6 +4,7 @@ import { algorithms } from "../../data/algorithms";
 import { motion, AnimatePresence, type Variants } from "motion/react";
 import Select from "../../components/ui/Select";
 import AlgoCard from "../../components/AlgoCard";
+import { Helmet } from "react-helmet";
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -79,6 +80,20 @@ export default function ExplorePage() {
           "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(226, 232, 240, 0.15), transparent 70%), #000000",
       }}
     >
+      <Helmet>
+        <title>Explore Algorithms - Algonaut</title>
+        <meta
+          name="description"
+          content="Explore algorithms by category, difficulty, and name. Find, search, and visualize algorithms like sorting, recursion, and graph traversal in one place."
+        />
+        <meta property="og:title" content="Explore Algorithms | Algonaut" />
+        <meta
+          property="og:description"
+          content="Discover and visualize algorithms interactively from sorting to graphs, all in one library."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+      </Helmet>
       <header>
         <div className="flex flex-col items-center justify-center lg:max-w-6xl lg:mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.div

@@ -18,11 +18,17 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto h-full flex items-center px-6">
         <div className="flex items-center flex-1 gap-2">
           <Link to="/" className="block">
-            <img
-              src="/logo.png"
-              alt="logo"
-              className="w-36 h-auto sm:w-40 md:w-40"
-            />
+            <picture>
+              <source srcSet="/logo.avif" type="image/avif" />
+              <img
+                src="/logo.png"
+                width="144"
+                height="42"
+                alt="Algonaut logo"
+                loading="lazy"
+                className="h-10 md:h-12 w-auto"
+              />
+            </picture>
           </Link>
         </div>
 
@@ -66,7 +72,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden ml-5 text-gray-400 hover:text-green-400 text-xl focus:outline-none"
+          className="md:hidden ml-4 text-gray-400 hover:text-green-400 text-xl w-6 h-6 focus:outline-none"
         >
           {menuOpen ? "✕" : "☰"}
         </button>

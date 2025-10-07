@@ -12,88 +12,14 @@ type Props = {
 export default function TwoPointersVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
   const { isMobile } = useOrientation();
-  const { barHeight, barWidth, spacing, radius, FONT_SIZE } =
+  const { blockHeight, blockWidth, spacing, radius, FONT_SIZE } =
     getBlockDimensions(isMobile);
 
   const unit = isMobile ? 15 : 25;
   const showBars = steps[0]?.type === "init" && steps[0].showBars;
 
-  function applyStep(
-    prev: {
-      blocks: Block[];
-      positions: Record<number, number>;
-      highlight: {
-        ids: number[];
-        mode: "compare" | "current" | "found" | "swap" | null;
-      };
-      pointers: Record<
-        string,
-        number | number[] | { ids: number[]; value: number } | null
-      >;
-      overlays: Overlay[];
-    },
-    step: TwoPointerStep
-  ) {
-    let { blocks, positions, highlight, pointers, overlays } = {
-      blocks: [...prev.blocks],
-      positions: { ...prev.positions },
-      highlight: { ...prev.highlight },
-      pointers: { ...prev.pointers },
-      overlays: step.overlays ?? prev.overlays,
-    };
-
-    switch (step.type) {
-      case "init":
-        blocks = step.array ?? [];
-        positions = {};
-        (step.array ?? []).forEach((b, i) => {
-          positions[b.id] = i;
-        });
-        highlight = { ids: [], mode: null };
-        pointers = step.pointers ?? {};
-        overlays = step.overlays ?? [];
-        break;
-
-      case "highlight":
-        highlight = { ids: step.ids, mode: "current" };
-        pointers = step.pointers ?? pointers;
-        break;
-
-      case "compare":
-        highlight = { ids: step.ids, mode: "compare" };
-        pointers = step.pointers ?? pointers;
-        break;
-
-      case "swap": {
-        const [idA, idB] = step.ids ?? [];
-        highlight = { ids: step.ids ?? [], mode: "swap" };
-
-        if (idA !== undefined && idB !== undefined) {
-          const posA = positions[idA];
-          const posB = positions[idB];
-          positions[idA] = posB;
-          positions[idB] = posA;
-        }
-
-        break;
-      }
-
-      case "found":
-        highlight = { ids: step.ids ?? [], mode: "found" };
-        pointers = step.pointers ?? pointers;
-        break;
-
-      case "done":
-        highlight = { ids: [], mode: null };
-        pointers = {};
-        break;
-    }
-
-    return { blocks, positions, highlight, pointers, overlays };
-  }
-
   const { blocks, positions, highlight, pointers, overlays } = useMemo(() => {
-    let state = {
+    let { blocks, positions, highlight, pointers, overlays } = {
       blocks: [] as Block[],
       positions: {} as Record<number, number>,
       highlight: {
@@ -108,10 +34,60 @@ export default function TwoPointersVisualizer({ steps }: Props) {
     };
 
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      state = applyStep(state, steps[i]);
+      const step = steps[i];
+      switch (step.type) {
+        case "init":
+          blocks = step.array ?? [];
+          positions = {};
+          (step.array ?? []).forEach((b, i) => {
+            positions[b.id] = i;
+          });
+          highlight = { ids: [], mode: null };
+          pointers = step.pointers ?? {};
+          overlays = step.overlays ?? [];
+          break;
+
+        case "highlight":
+          highlight = { ids: step.ids, mode: "current" };
+          pointers = step.pointers ?? pointers;
+          overlays = step.overlays ?? overlays;
+          break;
+
+        case "compare":
+          highlight = { ids: step.ids, mode: "compare" };
+          pointers = step.pointers ?? pointers;
+          overlays = step.overlays ?? overlays;
+          break;
+
+        case "swap": {
+          const [idA, idB] = step.ids ?? [];
+          highlight = { ids: step.ids ?? [], mode: "swap" };
+
+          if (idA !== undefined && idB !== undefined) {
+            const posA = positions[idA];
+            const posB = positions[idB];
+            positions[idA] = posB;
+            positions[idB] = posA;
+          }
+
+          break;
+        }
+
+        case "found":
+          highlight = { ids: step.ids ?? [], mode: "found" };
+          pointers = step.pointers ?? pointers;
+          overlays = step.overlays ?? overlays;
+          break;
+
+        case "done":
+          highlight = { ids: [], mode: null };
+          overlays = step.overlays ?? overlays;
+          pointers = {};
+          break;
+      }
     }
 
-    return state;
+    return { blocks, positions, highlight, pointers, overlays };
   }, [steps, stepIndex]);
 
   let groupedPointers: Record<number, string[]> = {};
@@ -140,7 +116,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
       <motion.svg
         transition={{ duration: 0.6, ease: "easeInOut" }}
         width={blocks.length * spacing}
-        height={barHeight}
+        height={blockHeight}
         style={{ overflow: "visible", translateY: !showBars ? "-50%" : "0%" }}
       >
         {Object.entries(groupedRanges ?? {}).map(([_, group], idx) => {
@@ -151,8 +127,8 @@ export default function TwoPointersVisualizer({ steps }: Props) {
           const leftPos = (positions[leftId] ?? 0) * spacing;
           const rightPos = (positions[rightId] ?? 0) * spacing;
 
-          const minX = leftPos + (barWidth + barWidth / 2) / 2;
-          const maxX = rightPos + (barWidth - barWidth / 2) / 2;
+          const minX = leftPos + (blockWidth + blockWidth / 2) / 2;
+          const maxX = rightPos + (blockWidth - blockWidth / 2) / 2;
 
           const minHeight = Math.min(
             ...first.ids.map(
@@ -160,8 +136,8 @@ export default function TwoPointersVisualizer({ steps }: Props) {
             )
           );
 
-          const rectHeight = minHeight * unit + barHeight - 10;
-          const yTop = -rectHeight + barHeight;
+          const rectHeight = minHeight * unit + blockHeight - 10;
+          const yTop = -rectHeight + blockHeight;
 
           const mergedLabel = group
             .map((o) => o.label)
@@ -242,14 +218,14 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                   animate={{ height: waterHeight, y: targetY }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   x={pos + 2.5}
-                  width={barWidth - 5}
+                  width={blockWidth - 5}
                   fill="rgba(59,130,246,0.25)"
                   rx={2}
                 />
 
                 <motion.line
                   x1={pos + 2.5}
-                  x2={pos + 2.5 + barWidth - 5}
+                  x2={pos + 2.5 + blockWidth - 5}
                   initial={{ y1: baselineY, y2: baselineY }}
                   animate={{ y1: targetY, y2: targetY }}
                   transition={{
@@ -265,7 +241,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                     initial={{ opacity: 0, y: baselineY - 10 }}
                     animate={{ opacity: 1, y: targetY - 10 }}
                     transition={{ duration: 0.3 }}
-                    x={pos + barWidth / 2}
+                    x={pos + blockWidth / 2}
                     fill="white"
                     textAnchor="middle"
                     dominantBaseline="baseline"
@@ -308,11 +284,13 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                 <motion.rect
                   x={
                     showBars === "centered"
-                      ? (barWidth - barWidth / 2) / 2
+                      ? (blockWidth - blockWidth / 2) / 2
                       : 2.5
                   }
                   y={-block.value * unit + 10}
-                  width={showBars === "centered" ? barWidth / 2 : barWidth - 5}
+                  width={
+                    showBars === "centered" ? blockWidth / 2 : blockWidth - 5
+                  }
                   height={block.value * unit}
                   stroke="rgba(148,163,184,0.5)"
                   strokeWidth={1}
@@ -323,15 +301,15 @@ export default function TwoPointersVisualizer({ steps }: Props) {
               )}
               <motion.rect
                 rx={radius}
-                width={barWidth}
-                height={barHeight}
+                width={blockWidth}
+                height={blockHeight}
                 fill={rectFill}
                 animate={{ scale: isHighlighted ? 1.05 : 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               />
               <text
-                x={barWidth / 2}
-                y={barHeight / 2}
+                x={blockWidth / 2}
+                y={blockHeight / 2}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.block}
                 fill="white"
@@ -342,8 +320,8 @@ export default function TwoPointersVisualizer({ steps }: Props) {
               </text>
               {labelsAtIndex && (
                 <text
-                  x={barWidth / 2}
-                  y={barHeight + 20}
+                  x={blockWidth / 2}
+                  y={blockHeight + 20}
                   fontFamily="Satoshi"
                   fontSize={FONT_SIZE.label}
                   fill="white"
@@ -365,7 +343,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
           const pointerValue = Array.isArray(value) ? null : value.value;
 
           const xs = ids.map(
-            (id) => (positions[id] ?? 0) * spacing + barWidth / 2
+            (id) => (positions[id] ?? 0) * spacing + blockWidth / 2
           );
 
           const minX = Math.min(...xs);
@@ -375,7 +353,7 @@ export default function TwoPointersVisualizer({ steps }: Props) {
           const isAbove = idx % 2 === 0;
           const yBase = isAbove
             ? -10
-            : +barHeight + 10 + Math.floor(idx / 2) * 50;
+            : +blockHeight + 10 + Math.floor(idx / 2) * 50;
 
           const height = 15;
 

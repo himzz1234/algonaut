@@ -38,6 +38,6 @@ export function* checkOddEven(num: number, width = 8): Generator<BitmaskStep> {
     explanation: isOdd
       ? `${num} & 1 = 1 → ${num} is odd.`
       : `${num} & 1 = 0 → ${num} is even.`,
-    lines: isOdd ? [3] : [4],
+    lines: isOdd ? [3] : [4, 5],
   };
 }

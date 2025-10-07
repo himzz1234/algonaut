@@ -1,13 +1,26 @@
 import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import NewsletterSignup from "./NewsletterSignup";
+import { useModal } from "../context/ModalContext";
 
 export default function Footer() {
+  const { openModal } = useModal();
   return (
     <footer className="relative border-t border-gray-800 bg-[#0a0a0a]">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
         <div className="col-span-2">
-          <Link to="/">
-            <img src="/logo.png" width={160} height={160} alt="logo" />
+          <Link to="/" className="block">
+            <picture>
+              <source srcSet="/logo.avif" type="image/avif" />
+              <img
+                src="/logo.png"
+                width="144"
+                height="42"
+                alt="Algonaut logo"
+                loading="lazy"
+                className="h-10 md:h-12 w-auto"
+              />
+            </picture>
           </Link>
           <p className="mt-3 text-gray-400 text-base sm:text-base max-w-xs">
             Visualize and understand algorithms with clean animations.
@@ -100,7 +113,13 @@ export default function Footer() {
               Stay Updated
             </h3>
             <form>
-              <button className="whitespace-nowrap underline uppercase font-medium text-green-400 transition-colors">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  openModal(<NewsletterSignup />);
+                }}
+                className="text-sm md:text-base whitespace-nowrap underline uppercase font-medium text-green-400 transition-colors"
+              >
                 Sign up for our newsletter →
               </button>
             </form>

@@ -55,6 +55,6 @@ export function* getIthBit(
     explanation: isSet
       ? `N & mask ≠ 0 → the ${i}-th bit is set.`
       : `N & mask = 0 → the ${i}-th bit is not set.`,
-    lines: isSet ? [3] : [4],
+    lines: isSet ? [3] : [4, 5],
   };
 }

@@ -21,14 +21,14 @@ export default function ReadySection() {
             </span>
           </motion.h2>
 
-          <motion.p className="mt-1 text-base sm:text-lg md:text-xl text-gray-400 text-balance">
+          <motion.p className="mt-2 text-base sm:text-lg md:text-xl text-gray-400 text-balance">
             Join thousands of others and learn smarter, faster with Algonaut.
           </motion.p>
 
           <motion.div className="mt-8 sm:mt-10">
             <Link to="/learn/sorting?algorithm=bubble-sort">
               <button
-                className="px-6 sm:px-8 py-3 text-base sm:text-lg rounded-lg font-medium text-white 
+                className="px-6 sm:px-8 py-3 text-sm sm:text-lg rounded-lg font-medium text-white 
                   bg-gradient-to-r from-green-500 to-emerald-600 hover:shadow-[0_0_12px_rgba(16,185,129,0.6)] 
                   transition-colors duration-300 shadow-lg"
               >

@@ -45,7 +45,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
         drag: false,
         role: "current",
         pointers: { temp: element.id, current: a[j].id },
-        lines: [3],
+        lines: [3, 4],
         explanation: `Shift ${a[j].value} left by one position.`,
       };
 
@@ -54,7 +54,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
         id: a[j].id,
         targetIndex: j - 1,
         pointers: { temp: element.id, current: a[j].id },
-        lines: [3],
+        lines: [3, 4],
         explanation: `${a[j].value} moved to index ${j - 1}.`,
       };
     }
@@ -64,7 +64,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
       id: element.id,
       targetIndex: n - 1,
       depth: 0,
-      lines: [4],
+      lines: [5],
       explanation: `Place ${element.value} at the end.`,
     };
 
@@ -74,7 +74,7 @@ export function* rotation(arr: Block[], k: number): Generator<ArrayStep> {
 
   yield {
     type: "done",
-    lines: [5],
+    lines: [6],
     explanation: `Rotation complete → [${a.map((b) => b.value).join(", ")}].`,
   };
 }

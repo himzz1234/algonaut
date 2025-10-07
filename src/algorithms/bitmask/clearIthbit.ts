@@ -7,7 +7,7 @@ export function* clearIthBit(
   width = 8
 ): Generator<BitmaskStep> {
   const bits = [...toBits(n, width)];
-  let mask = [...toBits(1, width, bits.length)]; // start with 1
+  let mask = [...toBits(1, width, bits.length)];
   const result = [...toBits(0, width, bits.length + mask.length)];
   const newN = n & ~(1 << i);
 

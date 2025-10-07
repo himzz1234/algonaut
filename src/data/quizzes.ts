@@ -354,7 +354,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "find-min-max": [
     {
       id: 1,
@@ -373,7 +372,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   factorial: [
     {
       id: 1,
@@ -383,12 +381,24 @@ export const quizzes: Record<string, Question[]> = {
     },
     {
       id: 2,
+      question:
+        "True or False: factorial(0) = 1 because it represents an empty product.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question: "What will be the output of factorial(4)?",
+      options: ["24", "12", "16", "Error"],
+      answer: 0,
+    },
+    {
+      id: 4,
       question: "What is the space complexity of recursive factorial?",
       options: ["O(1)", "O(N)", "O(N²)"],
       answer: 1,
     },
   ],
-
   fibonacci: [
     {
       id: 1,
@@ -402,8 +412,20 @@ export const quizzes: Record<string, Question[]> = {
       options: ["F(0)=0, F(1)=1", "F(1)=1, F(2)=2", "F(0)=1, F(1)=1"],
       answer: 0,
     },
+    {
+      id: 3,
+      question:
+        "True or False: Memoization reduces Fibonacci recursion to O(N).",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question: "What will be the output of fibonacci(5)?",
+      options: ["3", "5", "8", "None"],
+      answer: 1,
+    },
   ],
-
   "sum-n": [
     {
       id: 1,
@@ -417,8 +439,20 @@ export const quizzes: Record<string, Question[]> = {
       options: ["n==0 returns 0", "n==1 returns 0", "n==2 returns 2"],
       answer: 0,
     },
+    {
+      id: 3,
+      question: "What will be the output of sumN(4)?",
+      options: ["10", "6", "4", "None"],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question:
+        "True or False: sumN recursion reduces the problem size by 1 each call.",
+      options: ["True", "False"],
+      answer: 0,
+    },
   ],
-
   "tower-of-hanoi": [
     {
       id: 1,
@@ -752,7 +786,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "three-sum": [
     {
       id: 1,
@@ -792,7 +825,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 1,
     },
   ],
-
   "container-most-water": [
     {
       id: 1,
@@ -854,46 +886,199 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "max-sum-subarray-k": [
     {
       id: 1,
-      question: "Max sum subarray of size K uses:",
-      options: ["Sliding window", "Sorting", "Binary search"],
+      question:
+        "What is the time complexity of finding the maximum sum subarray of size k using the sliding window approach?",
+      options: ["O(n)", "O(n * k)", "O(log n)", "O(k)"],
       answer: 0,
     },
+    {
+      id: 2,
+      question:
+        "If the array is [2, 1, 5, 1, 3, 2] and k = 3, what is the maximum sum?",
+      options: ["9", "10", "8", "7"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "True or False: The sliding window sum must be recomputed from scratch for every window.",
+      options: ["True", "False"],
+      answer: 1,
+    },
   ],
-
+  "smallest-subarray-with-sum-greater-than-k": [
+    {
+      id: 1,
+      question: "Which of the following patterns does this problem introduce?",
+      options: [
+        "Fixed-size sliding window",
+        "Two pointers (expanding + shrinking)",
+        "Binary search",
+      ],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question:
+        "Array: [2, 3, 1, 2, 4, 3], k = 7 → What is the smallest subarray length with sum ≥ k?",
+      options: ["2", "3", "No such subarray"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "True or False: We shrink the window only when the sum becomes strictly greater than k.",
+      options: ["True", "False"],
+      answer: 1,
+    },
+  ],
   "longest-substring-without-repeat": [
     {
       id: 1,
-      question: "Longest substring without repeats uses:",
+      question:
+        "Which data structure is commonly used to store the last seen indices of characters?",
+      options: ["Stack", "Queue", "HashMap or Dictionary", "Heap"],
+      answer: 2,
+    },
+    {
+      id: 2,
+      question:
+        "Input: 'abcabcbb' → What is the length of the longest substring without repeating characters?",
+      options: ["2", "3", "4", "5"],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question:
+        "True or False: If we find a duplicate character inside the current window, we always move start to duplicate's last seen index + 1.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+  ],
+  subsets: [
+    {
+      id: 1,
+      question:
+        "Given an array [2, 3], which of the following represents the correct power set?",
       options: [
-        "Sliding window with set/map",
-        "Binary search",
-        "Divide and conquer",
+        "[[], [2], [3], [2, 3]]",
+        "[[2], [3], [2, 3]]",
+        "[[], [2], [3]]",
+      ],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question:
+        "In backtracking for subsets, why do we usually use an index parameter during recursion?",
+      options: [
+        "To ensure we don't reuse elements and avoid duplicates",
+        "To make the recursion faster by skipping even numbers",
+        "To prevent stack overflow by limiting depth",
+      ],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "For an array of length n, how many subsets (including empty set) are there?",
+      options: ["2^n", "n^2", "2n"],
+      answer: 0,
+    },
+  ],
+  permutations: [
+    {
+      id: 1,
+      question:
+        "When generating permutations via backtracking, what is the usual base case?",
+      options: [
+        "When the array is sorted in ascending order",
+        "When we find a duplicate element",
+        "When all elements have been used & we have a permutation of length n",
+      ],
+      answer: 2,
+    },
+    {
+      id: 2,
+      question: "For input [1, 2, 3], how many permutations are possible?",
+      options: ["3", "6", "8"],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question:
+        "Why do we typically use a 'visited' or 'used' array in permutation backtracking?",
+      options: [
+        "To avoid choosing the same element multiple times in one permutation",
+        "To increase time complexity for practice",
+        "To reduce memory usage",
       ],
       answer: 0,
     },
   ],
-
-  "min-window-substring": [
+  "combination-sum": [
     {
       id: 1,
-      question: "Minimum window substring is solved by:",
+      question:
+        "In combination sum, why do we usually pass the current index into recursion?",
       options: [
-        "Sliding window with frequency map",
-        "Sorting substrings",
-        "Greedy skipping",
+        "To generate permutations instead of combinations",
+        "To allow reuse of the same number multiple times (or control when not to reuse)",
+        "To skip the largest number always",
+      ],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question:
+        "If candidates = [2,3,6,7] and target = 7, which combinations are valid?",
+      options: ["[[7], [3,2,2], [6,1]]", "[[7], [2,2,3]]", "[[2,2,2,1], [7]]"],
+      answer: 1,
+    },
+    {
+      id: 3,
+      question:
+        "Which pruning condition is commonly used in combination sum backtracking?",
+      options: [
+        "Stop recursion when sum is divisible by 2",
+        "Stop recursion when we encounter duplicates",
+        "Stop recursion when current sum exceeds target",
+      ],
+      answer: 2,
+    },
+  ],
+  "letter-combinations-phone": [
+    {
+      id: 1,
+      question: "Why do we stop exploring further when index == digits.length?",
+      options: [
+        "Because we have formed a complete combination",
+        "Because no more digits can be processed",
+        "Both of the above",
+      ],
+      answer: 2,
+    },
+    {
+      id: 2,
+      question: "What does each recursive call to backtrack represent?",
+      options: [
+        "Choosing a letter for the current digit",
+        "Completing one valid combination",
+        "Mapping all digits at once",
       ],
       answer: 0,
     },
-  ],
-  "sliding-window-median": [
     {
-      id: 1,
-      question: "Sliding window median uses:",
-      options: ["Two heaps (max + min)", "Two pointers", "Hash maps"],
+      id: 3,
+      question: "For input '23', why are there 9 possible combinations?",
+      options: [
+        "Because each digit maps to 3 letters (3 × 3 = 9)",
+        "Because there are 9 digits in total",
+        "Because recursion repeats 9 times by default",
+      ],
       answer: 0,
     },
   ],

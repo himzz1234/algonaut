@@ -49,21 +49,31 @@ export default function VisualizerLayout<TStep extends Step>({
 
   useEffect(() => {
     const startQuiz = async () => {
-      const progress = await getProgress(user?.uid || "", algorithmKey);
-      if (!isPlaying && stepIndex === steps.length - 1) {
-        if (user)
-          saveProgress(user.uid, algorithmKey, {
-            visualizationCompleted: true,
-          });
+      try {
+        const progress = user
+          ? await getProgress(user.uid, algorithmKey)
+          : null;
 
-        if (progress?.quizCompleted) return;
-        const timer = setTimeout(async () => {
-          setShowQuiz(true);
-          setLocked(true);
-          clearTimeout(timer);
-        }, 500);
+        if (!isPlaying && stepIndex === steps.length - 1) {
+          if (user) {
+            saveProgress(user.uid, algorithmKey, {
+              visualizationCompleted: true,
+            });
+          }
 
-        return () => clearTimeout(timer);
+          if (user && progress?.quizCompleted) return;
+
+          const timer = setTimeout(() => {
+            setShowQuiz(true);
+            setLocked(true);
+            clearTimeout(timer);
+          }, 500);
+
+          return () => clearTimeout(timer);
+        }
+      } catch (err) {
+        console.error("Error starting quiz:", err);
+        if (!user) setShowQuiz(true);
       }
     };
 

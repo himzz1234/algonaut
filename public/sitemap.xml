@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+	<loc>https://algonaut.app/</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/explore</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/array</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/sorting</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/searching</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/recursion</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/list</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/bitmask</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/two-pointers</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/sliding-window</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://algonaut.app/learn/backtracking</loc>
+	<lastmod>2025-10-06T17:04:09+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+</urlset>

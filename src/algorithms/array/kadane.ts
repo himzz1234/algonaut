@@ -27,7 +27,7 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
       sum: { ids: [a[0].id], value: sum },
       max: { ids: [a[0].id], value: max },
     },
-    lines: [3],
+    lines: [2],
     explanation: `Start with the first element ${a[0].value} as both sum and max.`,
   };
 
@@ -48,7 +48,7 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
       type: "highlight",
       ids,
       role: "subarray",
-      lines: newCurrent >= value ? [3, 4] : [5, 6],
+      lines: newCurrent >= value ? [4, 5] : [6, 7],
       drag: false,
       pointers: {
         sum: { ids, value: sum },
@@ -71,7 +71,7 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
         type: "highlight",
         ids,
         role: "subarray",
-        lines: [7, 8],
+        lines: [8, 9],
         drag: false,
         pointers: {
           sum: { ids, value: sum },
@@ -84,7 +84,7 @@ export function* kadane(arr: Block[]): Generator<ArrayStep> {
 
   yield {
     type: "done",
-    lines: [9],
+    lines: [10],
     pointers: {
       sum: {
         ids: a.slice(startIndex, a.length).map((b) => b.id),
