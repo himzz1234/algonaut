@@ -26,11 +26,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     const data = await apiResponse.json();
+    console.log(data);
     if (!apiResponse.ok) throw new Error(data.message || "Failed to subscribe");
 
     return res.status(200).json({ success: true });
   } catch (err) {
-    console.error("Brevo API error:", err);
     return res.status(500).json({ error: "Internal server error" });
   }
 }
