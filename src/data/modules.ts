@@ -116,6 +116,20 @@ export const modules: Module[] = [
     level: "intermediate",
     algos: ["dfs", "bfs"],
   },
+  {
+    id: "m-intervals",
+    title: "Intervals",
+    description:
+      "Learn the core interval problems that appear in interviews: merging, intersections, scheduling, and sweep line techniques.",
+    level: "interview",
+    algos: [
+      "merge-intervals",
+      "insert-interval",
+      "non-overlapping-intervals",
+      "meeting-rooms-ii",
+      "employee-free-time",
+    ],
+  },
 ];
 
 // export const modules: Module[] = [

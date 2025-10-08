@@ -28,6 +28,13 @@ export type Cell = {
   weight: number;
 };
 
+export type Interval = {
+  id: number;
+  start: number;
+  end: number;
+  type?: "normal" | "gap";
+};
+
 export type Overlay =
   | {
       kind: "range";
@@ -391,6 +398,54 @@ export type RecursionTreeStep =
     })
   | (Step & {
       type: "done";
+    });
+
+export type IntervalStep =
+  | (Step & {
+      type: "init";
+      intervals: Interval[];
+      pointers?: Record<string, PointerValue>;
+    })
+  | (Step & {
+      type: "sort";
+      intervals: Interval[];
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "compare";
+      ids: [number, number];
+    })
+  | (Step & {
+      type: "merge";
+      ids: [number, number];
+      newInterval: Interval;
+      mergeAtAxis: boolean;
+    })
+  | (Step & {
+      type: "append";
+      interval: Interval;
+    })
+  | (Step & {
+      type: "remove";
+      id: number;
+    })
+  | (Step & {
+      type: "sweep";
+      position: number;
+      activeCount: number;
+      maxCount?: number;
+    })
+  | (Step & {
+      type: "gap";
+      interval: Interval;
+      style?: "discovered" | "final";
+    })
+  | (Step & {
+      type: "done";
+      result?: Interval[];
     });
 
 export type PathfindingStep =

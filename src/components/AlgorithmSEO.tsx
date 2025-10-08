@@ -17,52 +17,57 @@ export default function AlgorithmSEO() {
     sorting: {
       title: `Sorting: ${algorithmName} - Algonaut`,
       description:
-        "Learn sorting algorithms like Bubble Sort, Merge Sort, and Quick Sort with interactive visualizations that make complex concepts intuitive.",
+        "Learn sorting algorithms like Bubble Sort, Merge Sort, and Quick Sort with simple step-by-step visualizations.",
     },
     arrays: {
       title: `Array: ${algorithmName} - Algonaut`,
       description:
-        "Explore array algorithms like reversal, rotation, Kadane’s algorithm, and more — visualized step-by-step to build intuition.",
+        "Explore array problems like rotation, reversal, or finding subarrays with clear, easy-to-follow visuals.",
     },
     recursion: {
       title: `Recursion: ${algorithmName} - Algonaut`,
       description:
-        "Understand recursion like never before. Watch function calls and stacks unfold dynamically through visual explanation.",
+        "Understand recursion through animations that show how function calls and the call stack work.",
     },
     "two-pointers": {
       title: `Two Pointers: ${algorithmName} - Algonaut`,
       description:
-        "Master the two pointers technique with interactive examples and algorithm visualizations for arrays and strings.",
+        "Master the two pointers technique with simple visuals that explain how it helps solve array and string problems.",
     },
     searching: {
       title: `Searching: ${algorithmName} - Algonaut`,
       description:
-        "Learn searching algorithms like Binary Search and Linear Search through animated step-by-step visualizations.",
+        "See how Binary Search, Linear Search, and other search methods work through clear, animated examples.",
     },
     backtracking: {
       title: `Backtracking: ${algorithmName} - Algonaut`,
       description:
-        "Visualize backtracking algorithms such as N-Queens, Sudoku Solver, and Subset Generation to understand recursion and decision-making paths.",
+        "Watch how backtracking explores and undoes choices in problems like N-Queens or Sudoku.",
     },
     "sliding-window": {
       title: `Sliding Window: ${algorithmName} - Algonaut`,
       description:
-        "Explore sliding window techniques for optimizing subarray and substring problems with detailed interactive visualizations.",
+        "Learn how the sliding window technique helps solve subarray and substring problems efficiently.",
     },
     bitmask: {
       title: `Bitmasking: ${algorithmName} - Algonaut`,
       description:
-        "Learn bitmask techniques and problems through clear, animated visualizations that demystify binary operations and subset generation.",
+        "Understand bitmasking with simple visual explanations that show how bits can represent sets or states.",
     },
     linkedlist: {
       title: `Linked List: ${algorithmName} - Algonaut`,
       description:
-        "Understand linked list operations such as reversal, merging, and cycle detection through step-by-step animated visualizations.",
+        "See linked list operations like reversal, merging, and cycle detection come to life with step-by-step visuals.",
+    },
+    intervals: {
+      title: `Intervals: ${algorithmName} - Algonaut`,
+      description:
+        "Visualize interval problems like merging, insertion, and meeting rooms through clear and simple animations.",
     },
     general: {
       title: `${algorithmName} - Algonaut`,
       description:
-        "Learn algorithms through interactive, step-by-step visualizations. Master data structures and algorithms visually with Algonaut.",
+        "Learn algorithms visually with easy, interactive explanations that make every concept simple to understand.",
     },
   };
 

@@ -39,17 +39,19 @@ export function getBlockDimensions(
   isMobile: boolean,
   config: VisualizerConfig = BASE_CONFIG
 ) {
-  const blockWidth = isMobile ? 50 : config.BLOCK_WIDTH;
-  const blockHeight = isMobile ? 50 : config.BLOCK_HEIGHT;
-  const barWidth = isMobile ? 100 : config.BAR_WIDTH;
-  const barHeight = isMobile ? 35 : config.BAR_HEIGHT;
+  const scale = isMobile ? 0.8 : 1;
+
+  const blockWidth = config.BLOCK_WIDTH * scale;
+  const blockHeight = config.BLOCK_HEIGHT * scale;
+  const barWidth = config.BAR_WIDTH * scale;
+  const barHeight = config.BAR_HEIGHT * scale;
   const spacing = blockWidth + config.GAP;
-  const radius = isMobile ? 3 : config.RADIUS;
+  const radius = config.RADIUS * (isMobile ? 0.6 : 1);
 
   const FONT_SIZE = {
-    block: isMobile ? config.FONT_SIZE.block - 2 : config.FONT_SIZE.block,
-    pointer: isMobile ? config.FONT_SIZE.pointer - 2 : config.FONT_SIZE.pointer,
-    label: isMobile ? config.FONT_SIZE.label - 2 : config.FONT_SIZE.label,
+    block: config.FONT_SIZE.block * (isMobile ? 0.9 : 1),
+    pointer: config.FONT_SIZE.pointer * (isMobile ? 0.9 : 1),
+    label: config.FONT_SIZE.label * (isMobile ? 0.9 : 1),
   };
 
   return {
