@@ -15,9 +15,9 @@ export default function IntervalsPage() {
   const algorithm = searchParams.get("algorithm");
 
   const initialIntervals: Interval[] = [
+    { id: 3, start: 4, end: 9 },
     { id: 1, start: 0, end: 3 },
-    { id: 2, start: 4, end: 9 },
-    { id: 3, start: 8, end: 12 },
+    { id: 2, start: 8, end: 12 },
     { id: 4, start: 15, end: 18 },
   ];
 

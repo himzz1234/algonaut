@@ -3,52 +3,59 @@ import type { Interval, IntervalStep } from "../types";
 export function* mergeIntervals(
   intervals: Interval[]
 ): Generator<IntervalStep> {
-  const a = [...intervals].sort((iv1, iv2) => iv1.start - iv2.start);
-  if (a.length === 0) return;
-
-  const merged: Interval[] = [];
+  if (intervals.length === 0) return;
 
   yield {
     type: "init",
-    intervals: [...a],
-    explanation: `We need to merge overlapping intervals: ${a
-      .map((iv) => `[${iv.start},${iv.end}]`)
+    intervals: [...intervals],
+    explanation: `Start with the given intervals: ${intervals
+      .map((iv) => `[${iv.start}, ${iv.end}]`)
       .join(", ")}.`,
     lines: [0],
   };
 
+  const sorted = [...intervals].sort((a, b) => a.start - b.start);
+
   yield {
-    type: "highlight",
-    ids: a.map((iv) => iv.id),
-    explanation: `Sort intervals by start time → ${a
-      .map((iv) => `[${iv.start},${iv.end}]`)
+    type: "sort",
+    intervals: sorted,
+    explanation: `Intervals are now sorted by start time: ${sorted
+      .map((iv) => `[${iv.start}, ${iv.end}]`)
       .join(", ")}.`,
-    lines: [0],
+    lines: [1],
   };
 
-  merged.push({ ...a[0] });
+  const merged: Interval[] = [];
+  merged.push({ ...sorted[0] });
 
   yield {
     type: "highlight",
-    ids: [a[0].id],
-    explanation: `Start with the first interval [${a[0].start},${a[0].end}].`,
+    ids: [sorted[0].id],
+    explanation: `Begin with the first interval [${sorted[0].start}, ${sorted[0].end}].`,
     lines: [2],
   };
 
-  for (let i = 1; i < a.length; i++) {
-    const current = a[i];
+  for (let i = 1; i < sorted.length; i++) {
+    const current = sorted[i];
     const last = merged[merged.length - 1];
+
+    yield {
+      type: "highlight",
+      ids: [current.id],
+      explanation: `Now look at the next interval [${current.start}, ${current.end}].`,
+      lines: [3],
+    };
 
     yield {
       type: "compare",
       ids: [last.id, current.id],
-      explanation: `Compare [${last.start},${last.end}] with [${current.start},${current.end}].`,
-      lines: [3],
+      explanation: `Compare the current interval [${current.start}, ${current.end}] with the previous one [${last.start}, ${last.end}].`,
+      lines: [4, 5],
     };
 
     if (current.start <= last.end) {
       const newInterval: Interval = {
-        id: current.id,
+        id: last.id,
         start: last.start,
         end: Math.max(last.end, current.end),
       };
@@ -60,8 +67,8 @@ export function* mergeIntervals(
         ids: [last.id, current.id],
         newInterval,
         mergeAtAxis: true,
-        explanation: `They overlap → merge into [${newInterval.start},${newInterval.end}].`,
-        lines: [5, 6],
+        explanation: `These intervals overlap, so merge them into [${newInterval.start}, ${newInterval.end}].`,
+        lines: [6, 7],
       };
     } else {
       merged.push({ ...current });
@@ -69,8 +76,8 @@ export function* mergeIntervals(
       yield {
         type: "append",
         interval: { ...current },
-        explanation: `No overlap → add interval [${current.start},${current.end}] to result.`,
-        lines: [4],
+        explanation: `No overlap. Add [${current.start}, ${current.end}] to the merged list.`,
+        lines: [8, 9],
       };
     }
   }
@@ -78,9 +85,9 @@ export function* mergeIntervals(
   yield {
     type: "done",
     result: merged,
-    explanation: `All intervals processed. Final merged intervals: ${merged
-      .map((iv) => `[${iv.start},${iv.end}]`)
+    explanation: `All intervals checked. The merged result is ${merged
+      .map((iv) => `[${iv.start}, ${iv.end}]`)
       .join(", ")}.`,
-    lines: [7],
+    lines: [10],
   };
 }

@@ -5,7 +5,6 @@ import ModalProvider from "./context/ModalContext";
 import { AuthProvider } from "./context/AuthContext";
 import { ProgressProvider } from "./context/ProgressContext";
 import { AppLayout } from "./components/layout/AppLayout";
-
 import HomePage from "./pages/home";
 import LearnPage from "./pages/learn";
 import SortingPage from "./pages/learn/sorting";
@@ -20,6 +19,7 @@ import TwoPointersPage from "./pages/learn/two-pointers";
 import SlidingWindowPage from "./pages/learn/sliding-window";
 import BacktrackingPage from "./pages/learn/backtracking";
 import RecursionPage from "./pages/learn/recursion";
+import IntervalsPage from "./pages/learn/intervals";
 
 function App() {
   return (
@@ -50,6 +50,7 @@ function App() {
                   path="/learn/backtracking"
                   element={<BacktrackingPage />}
                 />
+                <Route path="/learn/intervals" element={<IntervalsPage />} />
                 <Route path="/explore" element={<ExplorePage />} />
                 <Route path="/user/:id" element={<ProfilePage />} />
                 <Route path="/user/:id/edit" element={<EditProfilePage />} />

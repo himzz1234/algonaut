@@ -6,6 +6,8 @@ import {
   BASE_CONFIG,
   getBlockDimensions,
 } from "../../../config/visualizerConfig";
+import { useOrientation } from "../../../hooks/useOrientation";
+import { COLORS } from "../../../config/visualizerColors";
 
 type Props = {
   steps: IntervalStep[];
@@ -13,95 +15,14 @@ type Props = {
 
 export default function IntervalsVisualizer({ steps }: Props) {
   const { stepIndex } = usePlayback();
-  const { barHeight, spacing, FONT_SIZE } = getBlockDimensions(false, {
-    ...BASE_CONFIG,
-    BAR_HEIGHT: 40,
-  });
-
-  function applyStep(
-    prev: {
-      intervals: Interval[];
-      depths: Record<number, number>;
-      highlight: { ids: number[]; role: string | null };
-      pointers: Record<string, any>;
-    },
-    step: IntervalStep
-  ) {
-    let { intervals, depths, highlight, pointers } = {
-      intervals: [...prev.intervals],
-      depths: { ...prev.depths },
-      highlight: { ...prev.highlight },
-      pointers: { ...prev.pointers },
-    };
-
-    switch (step.type) {
-      case "init":
-        intervals = step.intervals ?? [];
-        depths = {};
-        intervals.forEach((iv, i) => {
-          depths[iv.id] = i;
-        });
-        highlight = { ids: [], role: null };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "highlight":
-        highlight = { ids: step.ids ?? [], role: "current" };
-        pointers = step.pointers ?? {};
-
-        break;
-
-      case "compare":
-        highlight = { ids: step.ids, role: "compare" };
-        pointers = step.pointers ?? {};
-
-        break;
-
-      case "merge": {
-        const [idA, idB] = step.ids;
-        intervals = intervals.filter((iv) => iv.id !== idA && iv.id !== idB);
-        intervals.push(step.newInterval);
-        if (step.mergeAtAxis) depths[step.newInterval.id] = 0;
-        pointers = step.pointers ?? {};
-        highlight = { ids: [step.newInterval.id], role: "merge" };
-        break;
-      }
-
-      case "append":
-        depths[step.interval.id] = 0;
-        highlight = { ids: [step.interval.id], role: "current" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "remove":
-        intervals = intervals.filter((iv) => iv.id !== step.id);
-        highlight = { ids: [step.id], role: "remove" };
-        pointers = step.pointers ?? {};
-        break;
-
-      case "sweep":
-        pointers = { sweep: { value: step.activeCount, pos: step.position } };
-        break;
-
-      case "gap": {
-        const gapInterval = { ...step.interval, isGap: true };
-        intervals.push(gapInterval);
-        depths[gapInterval.id] = 1;
-        highlight = { ids: [gapInterval.id], role: null };
-        break;
-      }
-
-      case "done":
-        highlight = { ids: [], role: null };
-        intervals.forEach((iv) => {
-          depths[iv.id] = 0;
-        });
-        pointers = {};
-        break;
+  const { isMobile } = useOrientation();
+  const { barHeight, spacing, radius, FONT_SIZE } = getBlockDimensions(
+    isMobile,
+    {
+      ...BASE_CONFIG,
+      BAR_HEIGHT: 40,
     }
-
-    return { intervals, depths, highlight, pointers };
-  }
+  );
 
   const { intervals, depths, highlight, pointers } = useMemo(() => {
     let state = {
@@ -112,17 +33,129 @@ export default function IntervalsVisualizer({ steps }: Props) {
     };
 
     for (let i = 0; i <= stepIndex && i < steps.length; i++) {
-      state = applyStep(state, steps[i]);
+      const step = steps[i];
+
+      let { intervals, depths, highlight, pointers } = {
+        intervals: [...state.intervals],
+        depths: { ...state.depths },
+        highlight: { ...state.highlight },
+        pointers: { ...state.pointers },
+      };
+
+      switch (step.type) {
+        case "init":
+          intervals = step.intervals ?? [];
+          depths = {};
+          intervals.forEach((iv, i) => {
+            depths[iv.id] = i;
+          });
+          highlight = { ids: [], role: null };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "highlight":
+          highlight = { ids: step.ids ?? [], role: "current" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "sort":
+          intervals = step.intervals ?? [];
+          depths = {};
+          intervals.forEach((iv, i) => {
+            depths[iv.id] = i;
+          });
+          highlight = { ids: [], role: null };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "compare":
+          highlight = { ids: step.ids, role: "compare" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "merge": {
+          const [idA, idB] = step.ids;
+          intervals = intervals.filter((iv) => iv.id !== idA && iv.id !== idB);
+          intervals.push(step.newInterval);
+          if (step.mergeAtAxis) depths[step.newInterval.id] = 0;
+          pointers = step.pointers ?? {};
+          highlight = { ids: [step.newInterval.id], role: "merge" };
+          break;
+        }
+
+        case "append":
+          depths[step.interval.id] = 0;
+          highlight = { ids: [step.interval.id], role: "current" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "remove":
+          highlight = { ids: [step.id], role: "remove" };
+          intervals = intervals.filter((iv) => iv.id !== step.id);
+          pointers = step.pointers ?? {};
+          break;
+
+        case "sweep":
+          pointers = {
+            sweep: {
+              pos: step.position,
+              activeCount: step.activeCount,
+              maxCount: step.maxCount,
+            },
+          };
+
+          const activeIds =
+            step.position !== null
+              ? intervals
+                  .filter(
+                    (iv) => step.position >= iv.start && step.position <= iv.end
+                  )
+                  .map((iv) => iv.id)
+              : [];
+
+          highlight = { ids: activeIds ?? [], role: "current" };
+          break;
+
+        case "gap": {
+          const gapInterval = { ...step.interval, type: "gap" as "gap" };
+          intervals.push(gapInterval);
+          depths[gapInterval.id] = 0;
+          highlight = { ids: [gapInterval.id], role: null };
+          break;
+        }
+
+        case "done":
+          highlight = { ids: [], role: null };
+          intervals.forEach((iv) => {
+            depths[iv.id] = 0;
+          });
+          pointers = {};
+          break;
+      }
+
+      state = { intervals, depths, highlight, pointers };
     }
 
     return state;
   }, [steps, stepIndex]);
 
-  const minStart = Math.min(...intervals.map((iv) => iv.start), 0);
-  const maxEnd = Math.max(...intervals.map((iv) => iv.end), 1);
-  const axisLength = maxEnd - minStart || 1;
+  const initialIntervals =
+    "intervals" in (steps[0] ?? {}) &&
+    Array.isArray((steps[0] as any).intervals)
+      ? (steps[0] as any).intervals
+      : [];
 
-  const axisWidth = Math.max(intervals.length, 7) * spacing;
+  const initialMinStart = Math.min(
+    ...initialIntervals.map((iv: Interval) => iv.start),
+    0
+  );
+  const initialMaxEnd = Math.max(
+    ...initialIntervals.map((iv: Interval) => iv.end),
+    1
+  );
+
+  const axisLength = initialMaxEnd - initialMinStart || 1;
+  const axisWidth = Math.max(initialIntervals.length, 7) * spacing;
   const svgHeight = barHeight * 6;
   const axisY = svgHeight;
   const scale = axisWidth / axisLength;
@@ -130,7 +163,7 @@ export default function IntervalsVisualizer({ steps }: Props) {
   const stepType = steps[stepIndex]?.type ?? "init";
 
   return (
-    <motion.div className="w-full h-full flex py-16 justify-center items-center relative">
+    <motion.div className="w-full h-full flex justify-center items-center relative">
       <motion.svg
         width={axisWidth}
         height={svgHeight}
@@ -144,32 +177,30 @@ export default function IntervalsVisualizer({ steps }: Props) {
           {intervals.map((iv) => {
             const depth = depths[iv.id] ?? 0;
             const spacingBetween = 2;
-
-            const x = (iv.start - minStart) * scale + spacingBetween / 2;
+            const x = (iv.start - initialMinStart) * scale + spacingBetween / 2;
             const width = (iv.end - iv.start) * scale - spacingBetween;
-            const y = axisY - barHeight - depth * (barHeight + 15) - 20;
+            const y = axisY - barHeight - depth * (barHeight + 10) - 20;
 
             const isHighlighted = highlight.ids.includes(iv.id);
-            const isGap = iv.isGap === true;
+            const isGap = iv.type === "gap";
 
             const rectFill = isGap
               ? "rgba(34, 197, 94, 0.25)"
               : isHighlighted
               ? highlight.role === "merge"
-                ? "#22c55e"
+                ? COLORS.successGreen
                 : highlight.role === "compare"
-                ? "#f59e0b"
+                ? COLORS.accentYellow
                 : highlight.role === "current"
-                ? "#ef4444"
+                ? COLORS.dangerRed
                 : highlight.role === "remove"
-                ? "#ef4444"
+                ? COLORS.dangerRed
                 : highlight.role === "insert"
-                ? "#3b82f6"
-                : "#475569"
-              : "#475569";
+                ? COLORS.infoIndigo
+                : COLORS.neutralGray
+              : COLORS.neutralGray;
 
-            const stroke = isGap ? "#22c55e" : "none";
-            const strokeDasharray = isGap ? "6,3" : undefined;
+            const stroke = isGap ? COLORS.successGreen : "none";
 
             const labelsAtIndex = Object.entries(pointers)
               .filter(([_, value]) => value === iv.id)
@@ -193,19 +224,23 @@ export default function IntervalsVisualizer({ steps }: Props) {
                     height: barHeight,
                     opacity: isHighlighted ? 1 : 0.85,
                   }}
+                  exit={{
+                    opacity: 0,
+                    scaleY: 0,
+                    transition: { duration: 0.25 },
+                  }}
                   transition={{
                     type: "spring",
                     stiffness: 200,
                     damping: 25,
                   }}
-                  rx={4}
+                  rx={radius - 1}
                   fill={rectFill}
                   stroke={stroke}
-                  strokeWidth={isGap ? 1 : 0}
-                  strokeDasharray={strokeDasharray}
+                  strokeWidth={1}
                 />
 
-                {iv.isGap !== true && (
+                {iv.end - iv.start >= 2 ? (
                   <>
                     <motion.text
                       initial={{
@@ -220,7 +255,8 @@ export default function IntervalsVisualizer({ steps }: Props) {
                       }}
                       exit={{
                         opacity: 0,
-                        transition: { duration: 0 },
+                        y: y + barHeight / 2 + 10,
+                        transition: { duration: 0.2 },
                       }}
                       transition={{
                         type: "spring",
@@ -249,7 +285,8 @@ export default function IntervalsVisualizer({ steps }: Props) {
                       }}
                       exit={{
                         opacity: 0,
-                        transition: { duration: 0 },
+                        y: y + barHeight / 2 + 10,
+                        transition: { duration: 0.2 },
                       }}
                       transition={{
                         type: "spring",
@@ -265,6 +302,36 @@ export default function IntervalsVisualizer({ steps }: Props) {
                       {iv.end}
                     </motion.text>
                   </>
+                ) : (
+                  <motion.text
+                    initial={{
+                      x: x + width / 2,
+                      y: axisY - barHeight / 2,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      x: x + width / 2,
+                      y: y + barHeight / 2,
+                      opacity: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: y + barHeight / 2 + 10,
+                      transition: { duration: 0.2 },
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 25,
+                    }}
+                    fontFamily="Satoshi"
+                    fontSize={FONT_SIZE.block - 2}
+                    fill="white"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {iv.start}
+                  </motion.text>
                 )}
 
                 {labelsAtIndex.length > 0 && (
@@ -285,26 +352,45 @@ export default function IntervalsVisualizer({ steps }: Props) {
           })}
         </AnimatePresence>
 
-        {"sweep" in pointers && pointers.sweep && (
-          <g>
-            <line
-              x1={(pointers.sweep.pos - minStart) * scale}
-              x2={(pointers.sweep.pos - minStart) * scale}
+        {pointers.sweep && (
+          <motion.g
+            initial={false}
+            animate={{
+              x: (pointers.sweep.pos - initialMinStart) * scale,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 150,
+              damping: 25,
+            }}
+          >
+            <motion.line
+              x1={0}
+              x2={0}
               y1={0}
               y2={svgHeight}
-              stroke="#ef4444"
-              strokeWidth={1}
+              stroke={COLORS.dangerRed}
+              strokeWidth={1.5}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
             />
-            <text
-              x={(pointers.sweep.pos - minStart) * scale + 10}
-              y={20}
+
+            <motion.text
+              x={0}
+              y={-14}
               fontFamily="Satoshi"
               fontSize={FONT_SIZE.label}
               fill="white"
+              textAnchor="middle"
+              dominantBaseline="auto"
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
             >
-              active={pointers.sweep.value}
-            </text>
-          </g>
+              active = {pointers.sweep.activeCount}, max ={" "}
+              {pointers.sweep.maxCount}
+            </motion.text>
+          </motion.g>
         )}
 
         <line
@@ -317,8 +403,8 @@ export default function IntervalsVisualizer({ steps }: Props) {
         />
 
         {Array.from({ length: 6 }).map((_, i) => {
-          const value = minStart + (axisLength / 5) * i;
-          const x = (value - minStart) * scale;
+          const value = initialMinStart + (axisLength / 5) * i;
+          const x = (value - initialMinStart) * scale;
 
           return (
             <g key={i}>

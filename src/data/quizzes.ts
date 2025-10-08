@@ -724,7 +724,6 @@ export const quizzes: Record<string, Question[]> = {
       answer: 0,
     },
   ],
-
   "ll-merge-two-sorted": [
     {
       id: 1,
@@ -1121,7 +1120,6 @@ export const quizzes: Record<string, Question[]> = {
       options: [
         "To minimize time complexity and ensure overlapping intervals are adjacent",
         "To remove duplicates",
-        "To reduce memory usage",
         "Sorting is optional for merging intervals",
       ],
       answer: 0,
@@ -1136,11 +1134,10 @@ export const quizzes: Record<string, Question[]> = {
     {
       id: 3,
       question: "What is the overall time complexity of merging n intervals?",
-      options: ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
+      options: ["O(n)", "O(n log n)", "O(n^2)"],
       answer: 1,
     },
   ],
-
   "insert-interval": [
     {
       id: 1,
@@ -1150,7 +1147,6 @@ export const quizzes: Record<string, Question[]> = {
         "Append it and re-run merge intervals on the entire list",
         "Use binary search to find correct position, then merge as needed",
         "Compare with every interval linearly",
-        "Sort only by end times and insert at the end",
       ],
       answer: 1,
     },
@@ -1165,7 +1161,45 @@ export const quizzes: Record<string, Question[]> = {
       id: 3,
       question:
         "What is the worst-case time complexity for inserting a new interval into a list of n intervals?",
-      options: ["O(log n)", "O(n)", "O(n log n)", "O(1)"],
+      options: ["O(log n)", "O(n)", "O(n log n)"],
+      answer: 1,
+    },
+  ],
+  "non-overlapping-intervals": [
+    {
+      id: 1,
+      question:
+        "Why do we sort the intervals by their end times in this algorithm?",
+      options: [
+        "It helps us greedily keep intervals that finish earliest and avoid overlaps",
+        "Sorting by start times gives the same result",
+        "Sorting is not necessary; we can check overlaps in any order",
+      ],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question:
+        "True or False: We only need to compare each interval with the last kept interval to decide whether to remove it.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "What does the variable tracking the number of removed intervals represent?",
+      options: [
+        "The number of intervals that overlap and must be discarded",
+        "The number of intervals kept so far",
+        "The total number of comparisons made",
+      ],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question:
+        "What is the overall time complexity of finding the minimum number of intervals to remove?",
+      options: ["O(n)", "O(n log n)", "O(n^2)"],
       answer: 1,
     },
   ],
@@ -1175,11 +1209,11 @@ export const quizzes: Record<string, Question[]> = {
       question:
         "What is the first step to find common free time among employees?",
       options: [
-        "Take the union of all schedules and merge overlaps",
         "Find intersection of intervals employee by employee",
         "Sort by end times and pick the smallest",
+        "Take the union of all schedules and merge overlaps",
       ],
-      answer: 0,
+      answer: 2,
     },
     {
       id: 2,
@@ -1204,7 +1238,6 @@ export const quizzes: Record<string, Question[]> = {
         "Number of unique meetings",
         "Maximum number of rooms needed at the same time",
         "Minimum number of overlapping intervals",
-        "The sum of all meeting durations",
       ],
       answer: 1,
     },
@@ -1222,7 +1255,6 @@ export const quizzes: Record<string, Question[]> = {
       options: [
         "The solution still works but is slower",
         "We might count overlaps incorrectly",
-        "We only need to sort starts, not ends",
         "No effect, as we iterate linearly",
       ],
       answer: 1,
