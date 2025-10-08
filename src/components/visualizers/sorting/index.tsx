@@ -166,7 +166,7 @@ export default function SortingVisualizer({ steps }: Props) {
               key={block.id}
               animate={{
                 x: pos * spacing,
-                y: depth * blockHeight + 30,
+                y: depth * (blockHeight + 30),
               }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >
