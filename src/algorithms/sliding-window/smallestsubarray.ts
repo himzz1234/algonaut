@@ -11,7 +11,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
     type: "init",
     array: [...a],
     lines: [0],
-    explanation: `Start with start=0, currSum=0, minLen=∞, target=${k}.`,
+    explanation: `We need to find the shortest subarray with sum > ${k} of any window size.`,
   };
 
   let start = 0;
@@ -26,7 +26,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
     const windowIds = window.map((b) => b.id);
 
     yield {
-      type: "highlight",
+      type: "expand",
       ids: windowIds,
       pointers: {
         sum: { ids: windowIds, value: currSum, pos: "top" },
@@ -41,7 +41,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
           : {}),
       },
       lines: [2, 3],
-      explanation: `Expand → add ${a[end].value}, sum=${currSum}.`,
+      explanation: `Expand window by adding ${a[end].value}, sum becomes ${currSum}.`,
     };
 
     while (currSum > k) {
@@ -63,7 +63,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
             minLen: { ids: currentWindowIds, value: minLen, pos: "bottom" },
           },
           lines: [5],
-          explanation: `New smaller window found → len=${minLen}, sum=${currSum}.`,
+          explanation: `New smaller valid window found with length ${minLen} and sum ${currSum} >= ${k}.`,
         };
       }
 
@@ -74,7 +74,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
       const newWindowIds = newWindow.map((b) => b.id);
 
       yield {
-        type: "highlight",
+        type: "shrink",
         ids: newWindowIds,
         pointers: {
           ...(currSum !== 0
@@ -98,8 +98,10 @@ export function* smallestSubarrayWithSumGreaterThanK(
         },
         lines: [6, 7],
         explanation: newWindowIds.length
-          ? `Shrink → remove ${a[start - 1].value}, sum=${currSum}.`
-          : `Window empty → sum=0.`,
+          ? `Remove ${
+              a[start - 1].value
+            } to shrink the window and minimize length.`
+          : `No elements left in the window. Sum reset to 0.`,
       };
     }
   }
@@ -120,7 +122,7 @@ export function* smallestSubarrayWithSumGreaterThanK(
     lines: [8],
     explanation:
       minLen === Infinity
-        ? `No subarray with sum > ${k}.`
-        : `Done → smallest subarray len=${minLen}, sum>${k}.`,
+        ? `No subarray found with sum > ${k}.`
+        : `Done. The smallest subarray is of length ${minLen} and sum > ${k}.`,
   };
 }

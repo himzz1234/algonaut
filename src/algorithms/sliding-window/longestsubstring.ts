@@ -15,7 +15,7 @@ export function* longestSubstringWithoutRepeat(
     type: "init",
     array: [...a],
     lines: [0],
-    explanation: `Start with start=0, maxLen=0, seen={}.`,
+    explanation: `We need to find the longest substring without repeating characters.`,
   };
 
   let start = 0;
@@ -23,54 +23,93 @@ export function* longestSubstringWithoutRepeat(
   let bestRange: [number, number] = [0, 0];
   const seen = new Map<number, number>();
 
+  const getSeenPointer = () => {
+    if (seen.size === 0) {
+      return {
+        ids: [a[0].id],
+        value: "{ }" as unknown as number,
+        pos: "top" as const,
+      };
+    }
+    return {
+      ids: Array.from(seen.values()).map((idx) => a[idx].id),
+      value: `{ ${Array.from(seen.entries())
+        .map(([charCode, idx]) => `${String.fromCharCode(charCode)}:${idx}`)
+        .join(", ")} }` as unknown as number,
+      pos: "top" as const,
+    };
+  };
+
+  const getMaxPointer = () => {
+    if (maxLen === 0) {
+      return {
+        ids: [a[0].id],
+        value: 0,
+        pos: "bottom" as const,
+      };
+    }
+    return {
+      ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
+      value: maxLen,
+      pos: "bottom" as const,
+    };
+  };
+
   for (let end = 0; end < a.length; end++) {
     const code = a[end].value;
     const duplicateFound = seen.has(code) && seen.get(code)! >= start;
 
+    yield {
+      type: "check",
+      id: a[end].id,
+      pointers: {
+        seen: getSeenPointer(),
+        maxlen: getMaxPointer(),
+      },
+      lines: [2],
+      explanation: duplicateFound
+        ? `Check if '${
+            a[end].label
+          }' exists in seen. Yes, it exists at index ${seen.get(code)!}.`
+        : `Check if '${a[end].label}' exists in seen. No, it does not exist in the current window.`,
+    };
+
     if (duplicateFound) {
-      start = seen.get(code)! + 1;
+      const duplicateIndex = seen.get(code)!;
+      while (start <= duplicateIndex) {
+        const removeChar = a[start].label;
+        seen.delete(a[start].value);
+
+        const currentWindowIds = a.slice(start + 1, end).map((b) => b.id);
+        yield {
+          type: "shrink",
+          ids: currentWindowIds,
+          pointers: {
+            seen: getSeenPointer(),
+            maxlen: getMaxPointer(),
+          },
+          lines: [3],
+          explanation: `Remove '${removeChar}' from the window to make space for the next '${removeChar}'.`,
+        };
+
+        start++;
+      }
     }
 
     seen.set(code, end);
-
-    for (const [charCode, idx] of Array.from(seen.entries())) {
-      if (idx < start) seen.delete(charCode);
-    }
-
-    const currentWindow = a.slice(start, end + 1);
-    const currentWindowIds = currentWindow.map((b) => b.id);
-    const currentWindowLen = currentWindow.length;
-
-    const seenStr = `{ ${Array.from(seen.entries())
-      .map(([charCode, idx]) => `${String.fromCharCode(charCode)}:${idx}`)
-      .join(", ")} }`;
-
+    const currentWindowIds = a.slice(start, end + 1).map((b) => b.id);
     yield {
-      type: "highlight",
+      type: "expand",
       ids: currentWindowIds,
       pointers: {
-        seen: {
-          ids: currentWindowIds,
-          value: seenStr as unknown as number,
-          pos: "top",
-        },
-        maxlen: {
-          ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
-          value: a.slice(bestRange[0], bestRange[1] + 1).length,
-          pos: "bottom",
-        },
+        seen: getSeenPointer(),
+        maxlen: getMaxPointer(),
       },
-      lines: duplicateFound ? [2, 3] : [4, 5],
-      explanation: duplicateFound
-        ? `Found duplicate '${
-            a[end].label
-          }' → move start to ${start}, window="${currentWindow
-            .map((b) => b.label)
-            .join("")}", len=${currentWindowLen}`
-        : `Add '${a[end].label}' → window="${currentWindow
-            .map((b) => b.label)
-            .join("")}", len=${currentWindowLen}`,
+      lines: [4, 5],
+      explanation: `Add '${a[end].label}' with index ${end} to the window.`,
     };
+
+    const currentWindowLen = end - start + 1;
 
     if (currentWindowLen > maxLen) {
       maxLen = currentWindowLen;
@@ -78,17 +117,13 @@ export function* longestSubstringWithoutRepeat(
 
       yield {
         type: "found",
-        ids: currentWindowIds,
+        ids: a.slice(start, end + 1).map((b) => b.id),
         pointers: {
-          seen: {
-            ids: currentWindowIds,
-            value: seenStr as unknown as number,
-            pos: "top",
-          },
-          maxlen: { ids: currentWindowIds, value: maxLen, pos: "bottom" },
+          seen: getSeenPointer(),
+          maxlen: getMaxPointer(),
         },
         lines: [6, 7],
-        explanation: `Update maxLen → ${maxLen} (best so far).`,
+        explanation: `Update max length to ${maxLen}. This is the best so far.`,
       };
     }
   }
@@ -101,12 +136,12 @@ export function* longestSubstringWithoutRepeat(
     type: "found",
     ids: finalWindowIds,
     pointers: {
-      maxlen: { ids: finalWindowIds, value: maxLen },
+      maxlen: getMaxPointer(),
     },
     lines: [8],
-    explanation: `Done → longest substring="${a
+    explanation: `Done. The longest substring is "${a
       .slice(bestRange[0], bestRange[1] + 1)
       .map((b) => b.label)
-      .join("")}", len=${maxLen}.`,
+      .join("")}" with length ${maxLen}.`,
   };
 }

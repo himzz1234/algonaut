@@ -25,7 +25,13 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
       pointers: {} as Record<string, PointerValue<false>>,
       highlight: {
         ids: [] as number[],
-        mode: null as "current" | "found" | null,
+        mode: null as
+          | "current"
+          | "found"
+          | "expand"
+          | "shrink"
+          | "check"
+          | null,
       },
     };
 
@@ -45,6 +51,30 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
 
         case "highlight":
           highlight = { ids: step.ids ?? [], mode: "current" };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "expand":
+          highlight = {
+            ids: step.ids ?? [],
+            mode: "expand",
+          };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "shrink":
+          highlight = {
+            ids: step.ids ?? [],
+            mode: "shrink",
+          };
+          pointers = step.pointers ?? {};
+          break;
+
+        case "check":
+          highlight = {
+            ids: [step.id],
+            mode: "check",
+          };
           pointers = step.pointers ?? {};
           break;
 
@@ -74,13 +104,22 @@ export default function SlidingWindowVisualizer({ steps }: Props) {
           const pos = positions[block.id] ?? 0;
           const isHighlighted = highlight.ids.includes(block.id);
 
-          let rectFill = isHighlighted
-            ? highlight.mode === "current"
-              ? COLORS.dangerRed
-              : highlight.mode === "found"
-              ? COLORS.successGreen
-              : COLORS.neutralGray
-            : COLORS.neutralGray;
+          let rectFill = COLORS.neutralGray;
+          if (isHighlighted) {
+            switch (highlight.mode) {
+              case "current":
+              case "shrink":
+                rectFill = COLORS.dangerRed;
+                break;
+              case "found":
+              case "expand":
+                rectFill = COLORS.successGreen;
+                break;
+              case "check":
+                rectFill = COLORS.accentYellow;
+                break;
+            }
+          }
 
           return (
             <motion.g

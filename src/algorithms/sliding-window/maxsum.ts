@@ -1,5 +1,4 @@
-import type { Block } from "../types";
-import type { SlidingWindowStep } from "../types";
+import type { Block, SlidingWindowStep } from "../types";
 
 export function* maxSumSubarrayK(
   arr: Block[],
@@ -13,19 +12,16 @@ export function* maxSumSubarrayK(
     array: [...a],
     k,
     lines: [0],
-    explanation: `We want the maximum sum of a subarray of size ${k} in [${a
-      .map((b) => b.value)
-      .join(", ")}].`,
+    explanation: `We need to find the max sum of window of size ${k}.`,
   };
 
   let sum = 0;
   for (let i = 0; i < k; i++) sum += a[i].value;
-
   let maxSum = sum;
   let bestRange: [number, number] = [0, k - 1];
 
   yield {
-    type: "highlight",
+    type: "expand",
     ids: a.slice(0, k).map((b) => b.id),
     pointers: {
       sum: {
@@ -40,25 +36,21 @@ export function* maxSumSubarrayK(
       },
     },
     lines: [1, 2],
-    explanation: `First window: [${a
-      .slice(0, k)
-      .map((b) => b.value)
-      .join(", ")}], sum = ${sum}.`,
+    explanation: `Start with the first window that sum up to ${sum}.`,
   };
 
   for (let right = k; right < a.length; right++) {
     const left = right - k;
-    const exiting = a[left].value;
-    const entering = a[right].value;
+    const exitingBlock = a[left];
+    const enteringBlock = a[right];
 
-    sum = sum - exiting + entering;
-
+    sum -= exitingBlock.value;
     yield {
-      type: "highlight",
-      ids: a.slice(left + 1, right + 1).map((b) => b.id),
+      type: "shrink",
+      ids: a.slice(left + 1, right).map((b) => b.id),
       pointers: {
         sum: {
-          ids: a.slice(left + 1, right + 1).map((b) => b.id),
+          ids: a.slice(left + 1, right).map((b) => b.id),
           value: sum,
           pos: "top",
         },
@@ -68,8 +60,29 @@ export function* maxSumSubarrayK(
           pos: "bottom",
         },
       },
-      lines: [3, 4],
-      explanation: `Move window → drop ${exiting}, add ${entering}, new sum = ${sum}.`,
+      lines: [3],
+      explanation: `Remove ${exitingBlock.value} since adding a new element would exceed window size ${k}.`,
+    };
+
+    sum += enteringBlock.value;
+    const currentIds = a.slice(left + 1, right + 1).map((b) => b.id);
+    yield {
+      type: "expand",
+      ids: currentIds,
+      pointers: {
+        sum: {
+          ids: currentIds,
+          value: sum,
+          pos: "top",
+        },
+        maxSum: {
+          ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
+          value: maxSum,
+          pos: "bottom",
+        },
+      },
+      lines: [4],
+      explanation: `Add ${enteringBlock.value} to maintain the window size and update the sum to ${sum}.`,
     };
 
     if (sum > maxSum) {
@@ -78,24 +91,21 @@ export function* maxSumSubarrayK(
 
       yield {
         type: "found",
-        ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
+        ids: currentIds,
         pointers: {
           sum: {
-            ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
+            ids: currentIds,
             value: sum,
             pos: "top",
           },
           maxSum: {
-            ids: a.slice(bestRange[0], bestRange[1] + 1).map((b) => b.id),
+            ids: currentIds,
             value: maxSum,
             pos: "bottom",
           },
         },
-        lines: [5, 6],
-        explanation: `Found bigger sum = ${maxSum} at window [${a
-          .slice(bestRange[0], bestRange[1] + 1)
-          .map((b) => b.value)
-          .join(", ")}].`,
+        lines: [5],
+        explanation: `This window gives a new max sum of ${maxSum}.`,
       };
     }
   }
@@ -110,10 +120,7 @@ export function* maxSumSubarrayK(
         pos: "bottom",
       },
     },
-    lines: [7],
-    explanation: `Done. Max sum = ${maxSum} from window [${a
-      .slice(bestRange[0], bestRange[1] + 1)
-      .map((b) => b.value)
-      .join(", ")}].`,
+    lines: [6],
+    explanation: `Done. The largest window sum is ${maxSum}.`,
   };
 }

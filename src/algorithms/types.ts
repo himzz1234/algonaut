@@ -295,13 +295,16 @@ export type SlidingWindowStep =
       ids: number[];
     })
   | (Step & {
-      type: "update";
-      value: number;
+      type: "check";
+      id: number;
     })
   | (Step & {
-      type: "check";
-      condition: string;
-      result: boolean;
+      type: "expand";
+      ids: number[];
+    })
+  | (Step & {
+      type: "shrink";
+      ids: number[];
     })
   | (Step & {
       type: "found";
