@@ -79,7 +79,7 @@ export default function AlgorithmInfo({
           </div>
           <div className="bg-[#141414] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex justify-between items-center">
             <span className="text-gray-400">Space:</span>
-            <span className="text-green-400 font-medium">
+            <span className="text-green-400 font-medium whitespace-nowrap">
               {complexities?.space}
             </span>
           </div>

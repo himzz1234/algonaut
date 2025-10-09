@@ -417,7 +417,7 @@ export const algorithms: Record<string, AlgorithmMeta> = {
       best: "O(n)",
       average: "O(n)",
       worst: "O(n)",
-      space: "O(min(n, charset))",
+      space: "O(min(n, set))",
     },
     pseudocode: [
       "function longestUniqueSubstr(str):",
