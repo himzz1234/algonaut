@@ -109,13 +109,13 @@ export const modules: Module[] = [
       "letter-combinations-phone",
     ],
   },
-  {
-    id: "m-graphs-intro",
-    title: "Graphs (Intro)",
-    description: "Model connections; explore with BFS/DFS.",
-    level: "intermediate",
-    algos: ["dfs", "bfs"],
-  },
+  // {
+  //   id: "m-graphs-intro",
+  //   title: "Graphs (Intro)",
+  //   description: "Model connections; explore with BFS/DFS.",
+  //   level: "intermediate",
+  //   algos: ["dfs", "bfs"],
+  // },
   {
     id: "m-intervals",
     title: "Intervals",
