@@ -1,6 +1,8 @@
 import { useCallback, useState } from "react";
 import AlgoRow from "./AlgoRow";
 import { algorithms } from "../data/algorithms";
+import type { ModuleIntro } from "../data/modules";
+import { Link } from "react-router-dom";
 
 type Module = {
   id: string;
@@ -8,6 +10,7 @@ type Module = {
   description: string;
   level: "beginner" | "intermediate" | "interview";
   algos: string[];
+  intro?: ModuleIntro;
 };
 
 type LearningPathSectionProps = {
@@ -92,6 +95,23 @@ export function LearningPathSection({
             </summary>
 
             <ul className="px-3 sm:px-4 pb-3 sm:pb-4 space-y-2 sm:space-y-2">
+              {m.intro && (
+                <li key={`${m.id}-intro`}>
+                  <Link
+                    target="_blank"
+                    to={`/learn/${m.id}`}
+                    className="relative flex items-center justify-between rounded-lg border border-gray-700/50 px-3 py-2 sm:px-4 sm:py-4
+                      transition-all duration-300 hover:scale-[1.01] hover:border-green-400/50 hover:shadow-md overflow-hidden"
+                  >
+                    <span className="text-gray-200 text-sm sm:text-base font-medium">
+                      An Introduction
+                    </span>
+                    <span className="ml-auto text-sm text-gray-400 italic">
+                      Start here
+                    </span>
+                  </Link>
+                </li>
+              )}
               {m.algos.map((algoId) => {
                 const algo = algorithms[algoId];
                 if (!algo) return null;

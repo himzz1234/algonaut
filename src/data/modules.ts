@@ -1,14 +1,34 @@
+import { sortingIntro } from "./intros/sortingIntro";
+
+export type IntroSection = {
+  title?: string;
+  blocks: {
+    type: "text" | "list" | "image" | "code" | "quote";
+    content?: string;
+    items?: string[];
+    src?: string;
+  }[];
+};
+
+export type ModuleIntro = {
+  heading: string;
+  difficulty?: string;
+  estimatedTime?: string;
+  sections: IntroSection[];
+};
+
 export type Module = {
   id: string;
   title: string;
   description: string;
   level: "beginner" | "intermediate" | "interview";
   algos: string[];
+  intro?: ModuleIntro;
 };
 
 export const modules: Module[] = [
   {
-    id: "m-sorting",
+    id: "sorting",
     title: "Sorting Algorithms",
     description:
       "Learn and practice fundamental sorting algorithms, from simple quadratic methods to efficient divide-and-conquer approaches.",
@@ -20,9 +40,10 @@ export const modules: Module[] = [
       "merge-sort",
       "quick-sort",
     ],
+    intro: sortingIntro,
   },
   {
-    id: "m-arrays",
+    id: "arrays",
     title: "Arrays",
     description:
       "Master fundamental array operations and patterns commonly asked in coding interviews.",
@@ -38,7 +59,7 @@ export const modules: Module[] = [
     ],
   },
   {
-    id: "m-recursion",
+    id: "recursion",
     title: "Recursion Basics",
     description:
       "Understand recursion and the call stack through simple, classic problems.",
@@ -46,7 +67,7 @@ export const modules: Module[] = [
     algos: ["factorial", "fibonacci", "sum-n"],
   },
   {
-    id: "m-bits",
+    id: "bitmask",
     title: "Bit Manipulation",
     description:
       "Learn how to use bitwise operations to solve problems efficiently.",
@@ -64,7 +85,7 @@ export const modules: Module[] = [
     ],
   },
   {
-    id: "m-two-pointers",
+    id: "two-pointers",
     title: "Two Pointers & Sliding Window",
     description:
       "Master the two-pointers technique and its powerful extension, the sliding window pattern.",
@@ -81,7 +102,7 @@ export const modules: Module[] = [
     ],
   },
   {
-    id: "m-linked-lists",
+    id: "linked-lists",
     title: "Linked Lists",
     description:
       "Work with pointers, traversal, and in-place edits. Focused on singly linked lists (common interview patterns).",
@@ -97,7 +118,7 @@ export const modules: Module[] = [
     ],
   },
   {
-    id: "m-backtracking",
+    id: "backtracking",
     title: "Backtracking",
     description:
       "Explore search spaces with recursion and pruning to efficiently generate combinations, permutations, and solutions to constraint problems.",
@@ -110,14 +131,7 @@ export const modules: Module[] = [
     ],
   },
   {
-    id: "m-graphs-intro",
-    title: "Graphs (Intro)",
-    description: "Model connections; explore with BFS/DFS.",
-    level: "intermediate",
-    algos: ["dfs", "bfs"],
-  },
-  {
-    id: "m-intervals",
+    id: "intervals",
     title: "Intervals",
     description:
       "Learn the core interval problems that appear in interviews: merging, intersections, scheduling, and sweep line techniques.",

@@ -9,10 +9,16 @@ import {
 } from "../../../algorithms/sorting/index";
 import SortingVisualizer from "../../../components/visualizers/sorting";
 import VisualizerLayoutWrapper from "../../../components/layout/VisualizerLayoutWrapper";
+import { sortingIntro } from "../../../data/intros/sortingIntro";
+import IntroLayout from "../../../components/layout/IntroLayout";
 
 export default function SortingPage() {
   const [searchParams] = useSearchParams();
   const algorithm = searchParams.get("algorithm");
+
+  if (!algorithm) {
+    return <IntroLayout moduleId="sorting" intro={sortingIntro} />;
+  }
 
   const initialArray: Block[] = [
     { id: 1, value: 50 },
