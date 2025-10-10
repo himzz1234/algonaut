@@ -353,36 +353,19 @@ export default function TwoPointersVisualizer({ steps }: Props) {
 
           const isAbove = idx % 2 === 0;
           const yBase = isAbove
-            ? -10
-            : +blockHeight + 10 + Math.floor(idx / 2) * 50;
+            ? -7.5
+            : blockHeight + 10 + Math.floor(idx / 2) * 50;
 
-          const height = 15;
+          const height = 10;
+          const topY = isAbove ? yBase - height : yBase + height;
 
           return (
             <motion.g key={label}>
               <motion.line
                 x1={minX}
-                y1={yBase}
-                x2={minX}
-                y2={isAbove ? yBase - height : yBase + height}
-                stroke="white"
-                strokeWidth={2}
-              />
-
-              <motion.line
-                x1={maxX}
-                y1={yBase}
+                y1={topY}
                 x2={maxX}
-                y2={isAbove ? yBase - height : yBase + height}
-                stroke="white"
-                strokeWidth={2}
-              />
-
-              <motion.line
-                x1={minX}
-                y1={isAbove ? yBase - height : yBase + height}
-                x2={maxX}
-                y2={isAbove ? yBase - height : yBase + height}
+                y2={topY}
                 stroke="white"
                 strokeWidth={2}
               />
@@ -393,20 +376,29 @@ export default function TwoPointersVisualizer({ steps }: Props) {
                   x1={x}
                   y1={yBase}
                   x2={x}
-                  y2={isAbove ? yBase - height : yBase + height}
+                  y2={topY}
                   stroke="white"
                   strokeWidth={2}
                 />
               ))}
 
+              <motion.line
+                x1={midX}
+                y1={topY}
+                x2={midX}
+                y2={isAbove ? topY - 15 : topY + 15}
+                stroke="white"
+                strokeWidth={2}
+              />
+
               <motion.text
                 initial={{
                   x: midX,
-                  y: isAbove ? yBase - height - 20 : yBase + height + 20,
+                  y: isAbove ? topY - 30 : topY + 30,
                 }}
                 animate={{
                   x: midX,
-                  y: isAbove ? yBase - height - 20 : yBase + height + 20,
+                  y: isAbove ? topY - 30 : topY + 30,
                 }}
                 fontFamily="Satoshi"
                 fontSize={FONT_SIZE.pointer}
