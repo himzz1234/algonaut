@@ -1,6 +1,8 @@
-import type { Block, BacktrackingStep, TreeNode } from "../types";
+import type { Block, BacktrackingTreeStep, TreeNode } from "../types";
 
-export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
+export function* generateSubsets(
+  arr: Block[]
+): Generator<BacktrackingTreeStep> {
   const a = [...arr];
 
   yield {
@@ -39,7 +41,7 @@ export function* generateSubsets(arr: Block[]): Generator<BacktrackingStep> {
   function* backtrack(
     start: number,
     parentId: number
-  ): Generator<BacktrackingStep> {
+  ): Generator<BacktrackingTreeStep> {
     yield {
       type: "found",
       ids: [...path.map((b) => b.id)],

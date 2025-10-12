@@ -20,32 +20,54 @@ export function PseudoCodeBlock<TStep extends Step>({
 
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [highlightBox, setHighlightBox] = useState<{
-    top: number;
-    height: number;
-  } | null>(null);
+  const [highlightBoxes, setHighlightBoxes] = useState<
+    { top: number; height: number }[]
+  >([]);
 
   const activeLines = steps[stepIndex].lines ?? [];
   useLayoutEffect(() => {
     if (activeLines.length === 0) {
-      setHighlightBox(null);
+      setHighlightBoxes([]);
       return;
     }
 
-    const firstIdx = Math.min(...activeLines);
-    const lastIdx = Math.max(...activeLines);
+    const sorted = [...activeLines].sort((a, b) => a - b);
 
-    const firstEl = lineRefs.current[firstIdx];
-    const lastEl = lineRefs.current[lastIdx];
+    const groups: number[][] = [];
+    let currentGroup: number[] = [sorted[0]];
 
-    if (firstEl && lastEl) {
-      const top = firstEl.offsetTop;
-      const height = lastEl.offsetTop + lastEl.offsetHeight - firstEl.offsetTop;
+    for (let i = 1; i < sorted.length; i++) {
+      if (sorted[i] === sorted[i - 1] + 1) {
+        currentGroup.push(sorted[i]);
+      } else {
+        groups.push(currentGroup);
+        currentGroup = [sorted[i]];
+      }
+    }
+    groups.push(currentGroup);
 
-      setHighlightBox({ top, height });
-      firstEl.scrollIntoView({
+    const newBoxes = groups
+      .map((group) => {
+        const firstEl = lineRefs.current[group[0]];
+        const lastEl = lineRefs.current[group[group.length - 1]];
+        if (firstEl && lastEl) {
+          const top = firstEl.offsetTop;
+          const height =
+            lastEl.offsetTop + lastEl.offsetHeight - firstEl.offsetTop;
+          return { top, height };
+        }
+        return null;
+      })
+      .filter(Boolean) as { top: number; height: number }[];
+
+    setHighlightBoxes(newBoxes);
+
+    const lastGroup = groups[groups.length - 1];
+    const lastEl = lineRefs.current[lastGroup[lastGroup.length - 1]];
+    if (lastEl) {
+      lastEl.scrollIntoView({
         behavior: "smooth",
-        block: "nearest",
+        block: "end",
       });
     }
   }, [activeLines]);
@@ -67,17 +89,17 @@ export function PseudoCodeBlock<TStep extends Step>({
           ref={containerRef}
         >
           <AnimatePresence>
-            {highlightBox && (
+            {highlightBoxes.map((box, i) => (
               <motion.div
-                key={activeLines.join(",")}
+                key={i}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                style={{ top: highlightBox.top, height: highlightBox.height }}
+                style={{ top: box.top, height: box.height }}
                 className="absolute left-0 right-0 bg-green-500/20 border-green-400 pointer-events-none"
               />
-            )}
+            ))}
           </AnimatePresence>
 
           <div className="relative">

@@ -1,8 +1,8 @@
-import type { Block, BacktrackingStep, TreeNode } from "../types";
+import type { Block, BacktrackingTreeStep, TreeNode } from "../types";
 
 export function* generatePermutations(
   arr: Block[]
-): Generator<BacktrackingStep> {
+): Generator<BacktrackingTreeStep> {
   const a = [...arr];
 
   yield {
@@ -38,7 +38,7 @@ export function* generatePermutations(
     explanation: "Start from the root node with an empty path {}.",
   };
 
-  function* backtrack(parentId: number): Generator<BacktrackingStep> {
+  function* backtrack(parentId: number): Generator<BacktrackingTreeStep> {
     if (path.length === a.length) {
       yield {
         type: "found",

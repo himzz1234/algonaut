@@ -1049,6 +1049,121 @@ export const quizzes: Record<string, Question[]> = {
       answer: 2,
     },
   ],
+  "n-queens": [
+    {
+      id: 1,
+      question:
+        "True or False: In the N-Queens problem, two queens can never be in the same column.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question:
+        "For N = 4, how many distinct solutions exist for the N-Queens problem?",
+      options: ["2", "4", "8"],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "Why do we place queens row by row in the backtracking approach?",
+      options: [
+        "To ensure each row contains at most one queen",
+        "To speed up the search",
+        "To avoid diagonal checks",
+      ],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question:
+        "What happens if no valid column is found for a queen in the current row?",
+      options: [
+        "We remove the queen from the previous row and try a new column",
+        "We stop the algorithm",
+        "We restart the entire board",
+      ],
+      answer: 0,
+    },
+  ],
+  "rat-in-a-maze": [
+    {
+      id: 1,
+      question:
+        "True or False: The rat can only move right and down in all maze problems.",
+      options: ["True", "False"],
+      answer: 1,
+    },
+    {
+      id: 2,
+      question: "Why do we use a visited array in the rat in a maze algorithm?",
+      options: [
+        "To avoid visiting the same cell multiple times",
+        "To count total moves",
+        "To speed up maze generation",
+      ],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "What happens when the rat reaches a blocked or already visited cell?",
+      options: [
+        "It backtracks and tries a different path",
+        "It removes the block",
+        "It ignores the maze",
+      ],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question: "What triggers a backtrack step in the maze traversal?",
+      options: [
+        "No valid moves from the current cell",
+        "Reaching the goal",
+        "Stepping on a cell with value 1",
+      ],
+      answer: 0,
+    },
+  ],
+  "sudoku-solver": [
+    {
+      id: 1,
+      question:
+        "True or False: A number in Sudoku must be unique in its row, column, and subgrid.",
+      options: ["True", "False"],
+      answer: 0,
+    },
+    {
+      id: 2,
+      question: "Why do we check Sudoku constraints before placing a number?",
+      options: [
+        "To avoid violating rules and prune the search early",
+        "To fill random values quickly",
+        "To keep the board symmetric",
+      ],
+      answer: 0,
+    },
+    {
+      id: 3,
+      question:
+        "What happens if no valid number can be placed in an empty cell?",
+      options: [
+        "We backtrack to the previous cell",
+        "We skip the cell",
+        "We restart the puzzle",
+      ],
+      answer: 0,
+    },
+    {
+      id: 4,
+      question:
+        "For a 4×4 Sudoku, what is the maximum number of possibilities per cell?",
+      options: ["4", "16", "8"],
+      answer: 0,
+    },
+  ],
   "letter-combinations-phone": [
     {
       id: 1,

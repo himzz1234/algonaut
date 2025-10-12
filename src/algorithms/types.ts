@@ -26,6 +26,7 @@ export type Cell = {
   row: number;
   col: number;
   weight: number;
+  label?: number;
 };
 
 export type Interval = {
@@ -315,6 +316,41 @@ export type SlidingWindowStep =
     });
 
 export type BacktrackingStep =
+  | (Step & {
+      type: "init";
+      grid: Block[][];
+      showBlankCells?: Boolean;
+    })
+  | (Step & {
+      type: "highlight";
+      ids: number[];
+    })
+  | (Step & {
+      type: "candidate";
+      ids: number[];
+      label?: string;
+    })
+  | (Step & {
+      type: "pick";
+      ids: number[];
+      label?: string;
+    })
+  | (Step & { type: "check"; ids: number[] })
+  | (Step & {
+      type: "unpick";
+      ids: number[];
+      label?: string;
+    })
+  | (Step & {
+      type: "found";
+      ids: number[];
+    })
+  | (Step & {
+      type: "done";
+      ids: number[];
+    });
+
+export type BacktrackingTreeStep =
   | (Step & {
       type: "init";
       array: Block[];

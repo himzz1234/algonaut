@@ -1,9 +1,9 @@
-import type { Block, BacktrackingStep, TreeNode } from "../types";
+import type { Block, BacktrackingTreeStep, TreeNode } from "../types";
 
 export function* generateCombinationSum(
   arr: Block[],
   target: number
-): Generator<BacktrackingStep> {
+): Generator<BacktrackingTreeStep> {
   const a = [...arr].sort((x, y) => (x.value ?? 0) - (y.value ?? 0));
   const n = a.length;
 
@@ -42,7 +42,7 @@ export function* generateCombinationSum(
     start: number,
     remaining: number,
     parentId: number
-  ): Generator<BacktrackingStep> {
+  ): Generator<BacktrackingTreeStep> {
     if (remaining === 0) {
       yield {
         type: "found",

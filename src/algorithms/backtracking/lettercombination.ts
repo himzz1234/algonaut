@@ -1,4 +1,4 @@
-import type { Block, BacktrackingStep, TreeNode } from "../types";
+import type { Block, BacktrackingTreeStep, TreeNode } from "../types";
 
 const phoneMap: Record<string, string[]> = {
   "2": ["a", "b", "c"],
@@ -13,7 +13,7 @@ const phoneMap: Record<string, string[]> = {
 
 export function* generateLetterCombinations(
   digits: string
-): Generator<BacktrackingStep> {
+): Generator<BacktrackingTreeStep> {
   const arr: Block[] = digits.split("").map((d, idx) => ({
     id: idx + 1,
     label: d,
@@ -23,7 +23,7 @@ export function* generateLetterCombinations(
   const permanentPointers: Record<string, number> = {};
   arr.forEach((b) => {
     if (b.label) {
-      permanentPointers[`"${phoneMap[b.label]?.join("") || ""}"`] = b.id;
+      permanentPointers[`'${phoneMap[b.label]?.join("") || ""}'`] = b.id;
     }
   });
 
@@ -63,7 +63,7 @@ export function* generateLetterCombinations(
   function* backtrack(
     index: number,
     parentId: number
-  ): Generator<BacktrackingStep> {
+  ): Generator<BacktrackingTreeStep> {
     if (index === digits.length) {
       yield {
         type: "found",

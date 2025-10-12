@@ -14,5 +14,6 @@ export default function RecursionVisualizer({ mode, steps }: Props) {
   if (mode === "tree") {
     return <TreeVisualizer steps={steps as RecursionTreeStep[]} />;
   }
+
   return <StackVisualizer steps={steps as RecursionStep[]} />;
 }

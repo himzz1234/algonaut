@@ -28,7 +28,7 @@ export const BASE_CONFIG: VisualizerConfig = {
 
 export const GRID_CONFIG = {
   GAP: 5,
-  CELL_SIZE: 50,
+  CELL_SIZE: 55,
   RADIUS: 4,
   FONT_SIZE: {
     cell: 16,
@@ -66,13 +66,14 @@ export function getBlockDimensions(
 }
 
 export function getGridDimensions(isMobile: boolean, config = GRID_CONFIG) {
+  const gap = isMobile ? 3 : config.GAP;
   const cellSize = isMobile ? 30 : config.CELL_SIZE;
-  const spacing = cellSize + config.GAP;
+  const spacing = cellSize + gap;
   const radius = isMobile ? 2 : config.RADIUS;
 
   const FONT_SIZE = {
     cell: isMobile ? config.FONT_SIZE.cell - 4 : config.FONT_SIZE.cell,
   };
 
-  return { cellSize, spacing, radius, FONT_SIZE };
+  return { cellSize, spacing, radius, FONT_SIZE, gap };
 }
