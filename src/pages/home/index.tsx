@@ -11,14 +11,6 @@ export default function HomePage() {
     <div className="overflow-x-hidden">
       <Helmet>
         <title>Algonaut</title>
-        <meta
-          name="description"
-          content="Learn algorithms and data structures through beautiful visualizations, guided learning paths, and interactive quizzes. Become an algorithm pro with Algonaut."
-        />
-        <meta
-          name="keywords"
-          content="algorithms, data structures, visualizer, sorting, recursion, graph algorithms, learn programming, algonaut"
-        />
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
