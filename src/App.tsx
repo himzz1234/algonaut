@@ -20,6 +20,7 @@ import SlidingWindowPage from "./pages/learn/sliding-window";
 import BacktrackingPage from "./pages/learn/backtracking";
 import RecursionPage from "./pages/learn/recursion";
 import IntervalsPage from "./pages/learn/intervals";
+import GraphPage from "./pages/learn/graphs";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
                   element={<BacktrackingPage />}
                 />
                 <Route path="/learn/intervals" element={<IntervalsPage />} />
+                <Route path="/learn/graphs" element={<GraphPage />} />
                 <Route path="/explore" element={<ExplorePage />} />
                 <Route path="/user/:id" element={<ProfilePage />} />
                 <Route path="/user/:id/edit" element={<EditProfilePage />} />

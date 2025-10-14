@@ -4,10 +4,6 @@ export type Block = {
   label?: string;
 };
 
-export type VariableBlock = Block & {
-  label: string;
-};
-
 export type Node = Block & {
   next: Node | null;
   prev?: Node | null;
@@ -19,6 +15,18 @@ export type TreeNode = {
   children: TreeNode[];
   depth: number;
   parentId: number;
+};
+
+export type GraphEdge = {
+  id: string;
+  from: number;
+  to: number;
+  weight?: number;
+};
+
+export type GraphNode = {
+  id: number;
+  label: string | number;
 };
 
 export type Cell = {
@@ -487,71 +495,45 @@ export type IntervalStep =
       result?: Interval[];
     });
 
-export type PathfindingStep =
-  | {
+export type GraphStep =
+  | (Step & {
       type: "init";
-      grid: Cell[][];
-      start: { row: number; col: number };
-      target: { row: number; col: number };
-      lines?: [];
-    }
-  | {
-      type: "visit";
+      nodes: GraphNode[];
+      edges: GraphEdge[];
+      directed?: boolean;
+      weighted?: boolean;
+      structure?: "queue" | "stack" | "priority-queue";
+    })
+  | (Step & {
+      type: "highlight-node";
+      ids: number[];
+    })
+  | (Step & {
+      type: "highlight-edge";
+      edgeIds: string[];
+    })
+  | (Step & {
+      type: "visit-node";
       id: number;
-      current: { row: number; col: number };
-      lines?: [];
-    }
-  | {
-      type: "expand";
-      from: number;
-      neighbors: number[];
-      lines?: [];
-    }
-  | {
+      label?: string;
+    })
+  | (Step & {
       type: "enqueue";
       id: number;
-      priority?: number;
-      lines?: [];
-    }
-  | {
-      type: "relax";
-      from: number;
-      to: number;
-      newDistance: number;
-      lines?: [];
-    }
-  | {
-      type: "compare";
-      a: number;
-      b: number;
-      relation: "<" | ">" | "=";
-      lines?: [];
-    }
-  | {
-      type: "mark_visited";
+    })
+  | (Step & {
+      type: "dequeue";
       id: number;
-      lines?: [];
-    }
-  | {
-      type: "dead_end";
+    })
+  | (Step & {
+      type: "update-distance";
       id: number;
-      lines?: [];
-    }
-  | {
-      type: "backtrack";
-      id: number;
-      lines?: [];
-    }
-  | {
-      type: "path_found";
-      path: number[];
-      lines?: [];
-    }
-  | {
-      type: "no_path";
-      lines?: [];
-    }
-  | {
+      value: number;
+    })
+  | (Step & {
+      type: "add-to-result";
+      edgeId: string;
+    })
+  | (Step & {
       type: "done";
-      lines?: [];
-    };
+    });
