@@ -32,7 +32,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <ul className="hidden md:flex items-center gap-8 flex-1 justify-end mr-8">
+        <ul className="hidden md:flex items-center gap-4 flex-1 justify-end mr-6">
           <li
             className={`cursor-pointer transition-colors ${
               isCurrent("learn")
@@ -53,22 +53,31 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {!loading && (
-          <div className="flex items-center gap-4">
-            {!user ? (
-              <button
-                onClick={() => openModal(<AuthPanel />)}
-                className="hidden md:block px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-500 rounded-md transition-colors"
-              >
-                Login
-              </button>
-            ) : (
-              <div className="flex items-center gap-3">
-                <AvatarMenu user={user} />
-              </div>
-            )}
-          </div>
-        )}
+        <div className="flex gap-2">
+          <Link
+            target="_blank"
+            to="https://www.buymeacoffee.com/himanshuhim1230"
+            className="hidden md:flex bg-green-600 hover:bg-green-500 rounded-md w-40 py-1.5 px-3"
+          >
+            <img src="/images/buy-me-a-coffee.png" alt="Buy Me A Coffee" />
+          </Link>
+          {!loading && (
+            <div className="flex">
+              {!user ? (
+                <button
+                  onClick={() => openModal(<AuthPanel />)}
+                  className="hidden md:block px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-500 rounded-md transition-colors"
+                >
+                  Login
+                </button>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <AvatarMenu user={user} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
@@ -120,6 +129,13 @@ export default function Navbar() {
                   </button>
                 </li>
               )}
+              <Link
+                target="_blank"
+                to="https://www.buymeacoffee.com/himanshuhim1230"
+                className="bg-green-600 hover:bg-green-500 rounded-md w-36 py-1.5 px-3"
+              >
+                <img src="/images/buy-me-a-coffee.png" alt="Buy Me A Coffee" />
+              </Link>
             </ul>
           </motion.div>
         )}
